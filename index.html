@@ -2,594 +2,556 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title id="page-title">Restaurant Menu</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
-        /* --- CSS VARIABLES & THEME --- */
+        /* --- iOS NATIVE THEME VARIABLES --- */
         :root {
-            --primary: #d9480f; /* Dhaba Orange */
-            --primary-hover: #b03808;
-            --primary-light: #fff0e6;
-            --secondary: #f59f00;
-            --bg-color: #f4f6f8; /* Slightly cooler background for contrast */
-            --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border: #f1f5f9;
-            --veg: #16a34a;
-            --nonveg: #dc2626;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
-            --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
-            --radius: 20px; /* Softer, more app-like corners */
+            --ios-bg: #f2f2f7; /* iOS System Grouped Background */
+            --ios-card: #ffffff;
+            --ios-blue: #007aff;
+            --ios-orange: #ff9500; /* Primary Brand Color */
+            --ios-green: #34c759;
+            --ios-red: #ff3b30;
+            --ios-text-main: #000000;
+            --ios-text-muted: #8e8e93;
+            --ios-separator: rgba(60, 60, 67, 0.15);
+            --ios-blur-bg: rgba(255, 255, 255, 0.85);
+            --safe-area-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 120px; overflow-x: hidden; }
-        button { cursor: pointer; border: none; background: none; outline: none; transition: all 0.2s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        /* Native iOS Font Stack */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--ios-bg); 
+            color: var(--ios-text-main); 
+            padding-bottom: calc(85px + var(--safe-area-bottom)); /* Space for bottom bar */
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button { cursor: pointer; border: none; background: none; outline: none; }
         .hidden { display: none !important; }
 
         /* --- HEADER --- */
-        header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; padding: 15px 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .brand h1 { font-size: 1.3rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-        .table-badge { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(217, 72, 15, 0.2); }
+        header { 
+            position: sticky; top: 0; z-index: 50; 
+            background: var(--ios-blur-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 0.5px solid var(--ios-separator); 
+            padding-top: max(15px, env(safe-area-inset-top)); /* Notch support */
+        }
+        .brand h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px; }
+        .table-badge { background: rgba(255, 149, 0, 0.15); color: var(--ios-orange); padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
 
-        /* --- SEARCH & STICKY FILTERS --- */
-        .controls-section { margin-bottom: 20px; }
-        .search-bar { display: flex; align-items: center; background: var(--card-bg); padding: 14px 18px; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; margin-bottom: 15px; }
-        .search-bar:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(217, 72, 15, 0.1); }
-        .search-bar i { color: var(--text-muted); font-size: 1.3rem; margin-right: 12px; }
-        .search-bar input { border: none; outline: none; width: 100%; font-size: 1rem; color: var(--text-dark); background: transparent; }
+        /* --- SEARCH & FILTERS --- */
+        .search-bar { 
+            display: flex; align-items: center; background: #e3e3e8; padding: 10px 15px; 
+            border-radius: 10px; margin-bottom: 15px; 
+        }
+        .search-bar i { color: var(--ios-text-muted); font-size: 1.2rem; margin-right: 8px; }
+        .search-bar input { border: none; background: transparent; width: 100%; font-size: 1rem; color: var(--ios-text-main); outline: none; }
+        .search-bar input::placeholder { color: var(--ios-text-muted); }
         
-        /* Sticky Container for Categories */
-        .sticky-nav { position: sticky; top: 65px; background: var(--bg-color); z-index: 40; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; margin: -10px 0 10px 0; }
-        
-        .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 10px; width: 100%; padding-right: 10px; }
+        .sticky-nav { 
+            position: sticky; top: max(60px, env(safe-area-inset-top) + 45px); 
+            background: var(--ios-bg); z-index: 40; padding: 10px 0; margin: -10px 0 10px 0; 
+        }
+        .filters { display: flex; overflow-x: auto; scrollbar-width: none; gap: 10px; padding-right: 15px; align-items: center; }
         .filters::-webkit-scrollbar { display: none; }
         
-        .category-tabs { display: flex; gap: 8px; }
-        .tab-btn { background: white; border: 1px solid transparent; padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 500; white-space: nowrap; transition: 0.3s; color: var(--text-muted); box-shadow: var(--shadow-sm); }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(217, 72, 15, 0.25); font-weight: 600; }
-        
-        .diet-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; background: white; padding: 8px 14px; border-radius: 30px; border: 1px solid var(--border); flex-shrink: 0; box-shadow: var(--shadow-sm); }
-        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        input:checked + .slider { background-color: var(--veg); }
-        input:checked + .slider:before { transform: translateX(16px); }
-
-        /* --- MENU GRID & ENTRANCE ANIMATION --- */
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .tab-btn { 
+            background: var(--ios-card); padding: 8px 16px; border-radius: 16px; 
+            font-size: 0.9rem; font-weight: 500; white-space: nowrap; color: var(--ios-text-main); 
+            border: 0.5px solid var(--ios-separator); box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
+        .tab-btn.active { background: var(--ios-text-main); color: white; border-color: var(--ios-text-main); }
 
-        .section-title { font-size: 1.2rem; margin-bottom: 15px; font-weight: 700; color: var(--text-dark); padding-left: 5px; }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 15px; margin-bottom: 40px; }
+        /* --- MENU GRID --- */
+        .section-title { font-size: 1.3rem; margin: 10px 0 15px 5px; font-weight: 700; letter-spacing: -0.5px; }
+        .menu-grid { display: flex; flex-direction: column; gap: 12px; }
         
-        @media(min-width: 600px) {
-            .menu-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+        .menu-card { 
+            background: var(--ios-card); border-radius: 16px; padding: 12px; 
+            display: flex; gap: 12px; cursor: pointer; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
         }
+        .menu-card:active { background: #f2f2f7; }
         
-        .menu-card { background: var(--card-bg); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; gap: 15px; cursor: pointer; position: relative; animation: slideUpFade 0.4s ease forwards; opacity: 0; }
-        /* Stagger animations for list effect */
-        .menu-card:nth-child(1) { animation-delay: 0.05s; }
-        .menu-card:nth-child(2) { animation-delay: 0.1s; }
-        .menu-card:nth-child(3) { animation-delay: 0.15s; }
-        .menu-card:nth-child(4) { animation-delay: 0.2s; }
-        
-        .menu-card:active { transform: scale(0.98); background: #fafafa; }
-        
-        .item-image { width: 105px; height: 105px; border-radius: 14px; flex-shrink: 0; overflow: hidden; background: #f1f5f9; position: relative; }
+        .item-image { width: 90px; height: 90px; border-radius: 12px; overflow: hidden; background: #e5e5ea; flex-shrink: 0; }
         .item-image img { width: 100%; height: 100%; object-fit: cover; }
         
-        .item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-right: 2px; }
-        .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .item-title { font-weight: 600; font-size: 1rem; line-height: 1.3; color: var(--text-dark); margin-right: 8px; }
-        .diet-icon { font-size: 0.85rem; margin-top: 3px; }
-        .veg-icon { color: var(--veg); }
-        .nonveg-icon { color: var(--nonveg); }
-        .item-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .item-title { font-weight: 600; font-size: 1rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .diet-icon { font-size: 0.7rem; margin-bottom: 2px; }
+        .veg-icon { color: var(--ios-green); }
+        .nonveg-icon { color: var(--ios-red); }
+        .item-desc { font-size: 0.8rem; color: var(--ios-text-muted); line-height: 1.3; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
         
-        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .price { font-weight: 700; color: var(--text-dark); font-size: 1.1rem; }
-        
-        /* App-like pill button */
-        .add-btn { background: var(--primary-light); color: var(--primary); border: 1px solid rgba(217, 72, 15, 0.2); padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; z-index: 2; position: relative; }
-        .add-btn:active { background: var(--primary); color: white; transform: scale(0.92); }
+        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .price { font-weight: 600; font-size: 1.05rem; }
+        .add-btn { 
+            background: rgba(255, 149, 0, 0.1); color: var(--ios-orange); 
+            padding: 6px 16px; border-radius: 16px; font-weight: 600; font-size: 0.9rem; 
+        }
+        .add-btn:active { background: rgba(255, 149, 0, 0.2); }
 
-        /* --- MOBILE BOTTOM-SHEET MODAL --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(2px); display: flex; align-items: flex-end; justify-content: center; }
-        @media(min-width: 600px) { .modal-overlay { align-items: center; padding: 20px; } }
+        /* --- NATIVE BOTTOM TAB BAR --- */
+        .ios-tab-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: calc(65px + var(--safe-area-bottom));
+            background: var(--ios-blur-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid var(--ios-separator); z-index: 100;
+            display: flex; justify-content: space-around; align-items: flex-start;
+            padding-top: 10px; padding-bottom: var(--safe-area-bottom);
+        }
+        .tab-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: var(--ios-text-muted); width: 33%; position: relative;
+        }
+        .tab-item i { font-size: 1.6rem; }
+        .tab-item span { font-size: 0.65rem; font-weight: 500; }
+        .tab-item.active { color: var(--ios-orange); }
         
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        
-        /* The Bottom Sheet */
-        .item-modal { background: white; border-radius: 28px 28px 0 0; width: 100%; max-width: 500px; overflow: hidden; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; max-height: 90vh; }
-        @media(min-width: 600px) { .item-modal { border-radius: 24px; transform: translateY(30px) scale(0.95); } }
-        
-        .modal-overlay.active .item-modal { transform: translateY(0) scale(1); }
-        
-        /* Pull indicator line for bottom sheet */
-        .modal-pull-indicator { width: 40px; height: 5px; background: rgba(255,255,255,0.8); border-radius: 10px; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 10; }
-        
-        .modal-img-container { height: 280px; width: 100%; position: relative; background: #f1f5f9; }
-        .modal-img { width: 100%; height: 100%; object-fit: cover; }
-        .close-modal { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; color: var(--text-dark); border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; z-index: 10; }
-        
-        .modal-content { padding: 25px 20px 35px 20px; overflow-y: auto; }
-        .modal-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .modal-title { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); line-height: 1.2; padding-right: 15px; }
-        .modal-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
-        .modal-tags { display: flex; gap: 8px; margin-bottom: 15px; }
-        .tag { background: #f1f5f9; color: var(--text-muted); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-        
-        .modal-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-        
-        .modal-action-row { display: flex; gap: 15px; align-items: center; }
-        .modal-add-btn { flex: 1; background: var(--primary); color: white; padding: 16px; border-radius: 30px; font-weight: 600; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(217, 72, 15, 0.3); transition: 0.2s; }
-        .modal-add-btn:active { transform: scale(0.96); }
-
-        /* --- FLOATING CART (App Style) --- */
-        @keyframes pulseCart {
-            0% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.05); }
-            100% { transform: translateX(-50%) scale(1); }
+        .cart-badge {
+            position: absolute; top: -2px; right: calc(50% - 15px);
+            background: var(--ios-red); color: white;
+            font-size: 0.6rem; font-weight: 700;
+            padding: 2px 6px; border-radius: 10px;
+            border: 2px solid white; display: none;
         }
 
-        .floating-cart { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 450px; background: var(--primary); color: white; border-radius: 20px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 30px rgba(217, 72, 15, 0.4); z-index: 90; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .floating-cart.hidden { transform: translate(-50%, 150%); }
-        .floating-cart.pulse { animation: pulseCart 0.3s ease; }
+        /* --- iOS BOTTOM SHEET MODALS (Item Details & Cart) --- */
+        .sheet-overlay { 
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 200; 
+            opacity: 0; visibility: hidden; transition: 0.3s; 
+        }
+        .sheet-overlay.active { opacity: 1; visibility: visible; }
         
-        .cart-summary { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1rem; }
-        .cart-summary-text { display: flex; flex-direction: column; align-items: flex-start; }
-        .cart-summary i { font-size: 1.8rem; }
-        .float-total { font-size: 0.8rem; opacity: 0.9; font-weight: 500; }
+        .ios-sheet { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: var(--ios-bg); border-radius: 20px 20px 0 0; 
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            z-index: 210; max-height: 90vh; display: flex; flex-direction: column;
+            padding-bottom: var(--safe-area-bottom);
+        }
+        .sheet-overlay.active + .ios-sheet, .sheet-overlay.active ~ .ios-sheet.active { transform: translateY(0); }
+        
+        .sheet-handle { width: 36px; height: 5px; background: #c7c7cc; border-radius: 3px; margin: 8px auto; }
+        .sheet-header { padding: 10px 20px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--ios-separator); }
+        .sheet-header h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
+        .close-sheet { background: #e5e5ea; border-radius: 15px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--ios-text-muted); }
 
-        /* --- CART DRAWER --- */
-        .cart-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
-        .cart-overlay.active { opacity: 1; visibility: visible; }
-        
-        .cart-drawer { position: fixed; right: -100%; top: 0; bottom: 0; width: 100%; max-width: 450px; background: var(--bg-color); z-index: 100; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
-        .cart-drawer.active { right: 0; }
-        
-        .drawer-header { padding: 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); z-index: 2; }
-        .drawer-header h2 { font-size: 1.2rem; font-weight: 700; }
-        .close-drawer { font-size: 2rem; color: var(--text-dark); margin-right: -5px; }
-        
-        .drawer-content { flex-grow: 1; overflow-y: auto; padding: 20px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-        .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 5px; font-weight: 600; }
-        .qty-controls { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 6px; border-radius: 30px; border: 1px solid var(--border); }
-        .qty-btn { width: 32px; height: 32px; background: white; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: var(--primary); }
-        .qty-btn:active { transform: scale(0.9); background: var(--primary-light); }
-        
-        .checkout-box { background: white; padding: 25px 20px; border-top: 1px solid var(--border); box-shadow: 0 -10px 20px rgba(0,0,0,0.04); z-index: 2; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .radio-label { display: block; text-align: center; padding: 12px; border: 2px solid var(--border); border-radius: 16px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s; color: var(--text-muted); background: white; }
-        input[type="radio"] { display: none; }
-        input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
-        input[type="radio"]:disabled + .radio-label { opacity: 0.4; cursor: not-allowed; background: #f8fafc; }
-        
-        .instructions-input { width: 100%; border: 1px solid var(--border); padding: 14px; border-radius: 16px; font-size: 0.9rem; resize: none; outline: none; background: #f8fafc; transition: 0.3s; }
-        .instructions-input:focus { border-color: var(--primary); background: white; }
+        /* ITEM DETAILS SHEET SPECIFIC */
+        .item-sheet-img { width: 100%; height: 250px; object-fit: cover; }
+        .item-sheet-content { padding: 20px; overflow-y: auto; }
+        .ios-primary-btn { 
+            background: var(--ios-orange); color: white; width: 100%; padding: 16px; 
+            border-radius: 14px; font-weight: 600; font-size: 1.05rem; 
+            display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 20px;
+        }
+        .ios-primary-btn:active { opacity: 0.8; }
+        .ios-primary-btn:disabled { background: #c7c7cc; color: white; opacity: 1; }
 
-        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); align-items: center; }
-        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 18px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(217, 72, 15, 0.3); transition: 0.2s; }
-        .place-order-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; color: #94a3b8; }
-        .place-order-btn:not(:disabled):active { transform: scale(0.96); }
-
-        /* --- TOAST & SUCCESS --- */
-        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.9rem; font-weight: 500; z-index: 1100; opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); white-space: nowrap; }
-        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-
-        .success-screen { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .check-circle { font-size: 6rem; color: var(--veg); margin-bottom: 10px; }
-        .receipt-card { background: white; padding: 25px; border-radius: 24px; box-shadow: var(--shadow-md); width: 100%; max-width: 400px; margin-top: 25px; text-align: left; border: 1px solid var(--border); }
-        .receipt-card p { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 10px; color: var(--text-dark); font-weight: 500; }
+        /* --- CART & CHECKOUT SHEET SPECIFIC --- */
+        .cart-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
+        .cart-item { 
+            background: var(--ios-card); padding: 12px; border-radius: 12px; 
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; 
+        }
+        .cart-item h4 { font-size: 0.9rem; margin-bottom: 4px; font-weight: 500; }
+        .qty-controls { display: flex; align-items: center; gap: 15px; background: #f2f2f7; padding: 4px 10px; border-radius: 8px; }
+        .qty-btn { font-size: 1.2rem; color: var(--ios-orange); font-weight: 600; padding: 0 5px; }
         
+        .checkout-section { background: var(--ios-card); padding: 20px; border-top: 0.5px solid var(--ios-separator); }
+        
+        /* User Details Form */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--ios-text-muted); margin-bottom: 5px; text-transform: uppercase; font-weight: 600; }
+        .ios-input { 
+            width: 100%; background: #f2f2f7; border: none; padding: 14px; 
+            border-radius: 10px; font-size: 1rem; color: var(--ios-text-main); outline: none;
+        }
+        .ios-input::placeholder { color: var(--ios-text-muted); }
+        
+        .segmented-control { 
+            display: flex; background: #e5e5ea; padding: 3px; border-radius: 8px; margin-bottom: 15px; 
+        }
+        .seg-label { 
+            flex: 1; text-align: center; padding: 8px; font-size: 0.85rem; font-weight: 500; 
+            border-radius: 6px; cursor: pointer; transition: 0.2s; 
+        }
+        .seg-input { display: none; }
+        .seg-input:checked + .seg-label { background: var(--ios-card); box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-weight: 600; }
+
+        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-top: 10px; margin-bottom: 15px; }
+
+        /* --- ORDERS VIEW --- */
+        .orders-list { padding: 15px; }
+        .order-card { 
+            background: var(--ios-card); border-radius: 16px; padding: 15px; 
+            margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+        }
+        .order-header { display: flex; justify-content: space-between; border-bottom: 0.5px solid var(--ios-separator); padding-bottom: 10px; margin-bottom: 10px; }
+        .status-badge { background: rgba(52, 199, 89, 0.15); color: var(--ios-green); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+
     </style>
 </head>
 <body>
 
     <header>
         <div class="brand">
-            <i class='bx bx-restaurant'></i>
-            <h1 id="brand-name">Loading...</h1>
+            <h1 id="brand-name">Shivam Ka Dhaba</h1>
         </div>
         <div class="table-badge" id="table-display">Table 04</div>
     </header>
 
-    <div class="container" id="main-app">
-        
-        <div class="controls-section">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" id="search-input" placeholder="Search for dishes..." onkeyup="filterMenu()">
-            </div>
+    <div id="view-menu" class="container view">
+        <div class="search-bar">
+            <i class='bx bx-search'></i>
+            <input type="text" id="search-input" placeholder="Search dishes..." onkeyup="filterMenu()">
         </div>
         
         <div class="sticky-nav">
-            <div class="filters">
-                <div class="category-tabs" id="category-tabs">
-                    </div>
-                <div class="diet-toggle">
-                    <span>Veg</span>
-                    <label class="switch">
-                        <input type="checkbox" id="veg-toggle" onchange="filterMenu()">
-                        <span class="slider"></span>
-                    </label>
+            <div class="filters" id="category-tabs">
                 </div>
-            </div>
         </div>
 
-        <h2 class="section-title" id="current-category-title">All Items</h2>
+        <h2 class="section-title" id="current-category-title">Menu</h2>
         <div class="menu-grid" id="menu-container">
             </div>
-
     </div>
 
-    <div class="modal-overlay" id="item-modal-overlay" onclick="closeModal(event)">
-        <div class="item-modal" id="item-modal-card">
-            <div class="modal-pull-indicator"></div>
-            <div class="modal-img-container">
-                <img src="" alt="Dish" class="modal-img" id="modal-img">
-                <button class="close-modal" onclick="closeModal(event, true)"><i class='bx bx-x'></i></button>
-            </div>
-            <div class="modal-content">
-                <div class="modal-header-row">
-                    <h2 class="modal-title" id="modal-title">Dish Name</h2>
-                    <span class="modal-price" id="modal-price">₹0</span>
-                </div>
-                <div class="modal-tags">
-                    <span class="tag" id="modal-diet-tag"><i class='bx bx-stop-circle'></i> Veg</span>
-                    <span class="tag"><i class='bx bxs-hot'></i> Best Seller</span>
-                </div>
-                <p class="modal-desc" id="modal-desc">Description goes here.</p>
-                
-                <div class="modal-action-row">
-                    <button class="modal-add-btn" id="modal-add-action">
-                        Add item <i class='bx bx-plus-circle' style="font-size:1.3rem;"></i>
-                    </button>
-                </div>
+    <div id="view-orders" class="container view hidden">
+        <h2 class="section-title" style="margin-top: 10px;">Your Orders</h2>
+        <div class="orders-list" id="orders-container">
+            <div style="text-align: center; color: var(--ios-text-muted); margin-top: 40px;">
+                <i class='bx bx-receipt' style="font-size: 3rem; margin-bottom: 10px;"></i>
+                <p>No orders placed yet.</p>
             </div>
         </div>
     </div>
 
-    <button class="floating-cart hidden" id="floating-cart" onclick="toggleCart()">
-        <div class="cart-summary">
-            <i class='bx bx-shopping-bag'></i>
-            <div class="cart-summary-text">
-                <span id="float-qty">0 Items</span>
-                <span class="float-total" id="float-subtotal">₹0</span>
-            </div>
-        </div>
-        <div style="font-weight: 700; font-size: 1.1rem; display: flex; align-items: center;">
-            View Cart <i class='bx bx-chevron-right' style="font-size: 1.5rem; margin-top: 2px;"></i>
-        </div>
-    </button>
+    <div class="sheet-overlay" id="sheet-overlay" onclick="closeAllSheets()"></div>
 
-    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
-    <aside class="cart-drawer" id="cart-drawer">
-        <div class="drawer-header">
-            <h2>Your Cart</h2>
-            <button class="close-drawer" onclick="toggleCart()"><i class='bx bx-x'></i></button>
-        </div>
+    <div class="ios-sheet" id="item-sheet">
+        <div class="sheet-handle"></div>
+        <img src="" alt="Dish" class="item-sheet-img" id="modal-img">
+        <button class="close-sheet" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.8);" onclick="closeAllSheets()"><i class='bx bx-x'></i></button>
         
-        <div class="drawer-content" id="cart-items">
+        <div class="item-sheet-content">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 5px;" id="modal-title">Name</h2>
+                <span style="font-size: 1.3rem; font-weight: 700; color: var(--ios-orange);" id="modal-price">₹0</span>
             </div>
-
-        <div class="checkout-box">
-            <div class="input-group">
-                <label>Order Type</label>
-                <div class="radio-grid">
-                    <div>
-                        <input type="radio" name="orderType" id="dine-in" value="Dine-In" checked onchange="handleCheckoutRules()">
-                        <label for="dine-in" class="radio-label">Dine-In</label>
-                    </div>
-                    <div>
-                        <input type="radio" name="orderType" id="takeaway" value="Takeaway" onchange="handleCheckoutRules()">
-                        <label for="takeaway" class="radio-label">Takeaway</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>Payment Method</label>
-                <div class="radio-grid">
-                    <div>
-                        <input type="radio" name="payMethod" id="pay-upi" value="UPI" checked>
-                        <label for="pay-upi" class="radio-label">Pay Now (UPI)</label>
-                    </div>
-                    <div>
-                        <input type="radio" name="payMethod" id="pay-cash" value="Cash">
-                        <label for="pay-cash" class="radio-label">Pay Cash</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="input-group" style="margin-bottom: 5px;">
-                <textarea id="special-instructions" class="instructions-input" rows="2" placeholder="Any cooking instructions? (e.g., Less spicy)"></textarea>
-            </div>
-
-            <div class="total-row" style="margin-top: 15px;">
-                <span>Total Amount</span>
-                <span id="drawer-total" style="color: var(--primary); font-size: 1.4rem;">₹0</span>
-            </div>
-            <button class="place-order-btn" id="checkout-btn" onclick="placeOrder()">
-                Place Order <i class='bx bx-check-shield' style="font-size:1.3rem;"></i>
+            <p style="font-size: 0.8rem; color: var(--ios-text-muted); margin-bottom: 15px;" id="modal-diet-tag">Veg</p>
+            <p style="font-size: 0.95rem; line-height: 1.5; color: var(--ios-text-main);" id="modal-desc">Desc</p>
+            
+            <button class="ios-primary-btn" id="modal-add-action">
+                Add to Cart
             </button>
         </div>
-    </aside>
-
-    <div class="toast" id="toast">
-        <i class='bx bx-check-circle' style="color: var(--veg); font-size: 1.2rem;"></i> <span>Added to Cart!</span>
     </div>
 
-    <div class="container hidden" id="success-screen">
-        <div class="success-screen">
-            <i class='bx bxs-check-circle check-circle'></i>
-            <h1 style="color: var(--text-dark); font-size: 2rem;">Order Placed!</h1>
-            <p style="color: var(--text-muted); margin-top: 10px; font-size: 1rem;">The kitchen has received your order.</p>
-            
-            <div class="receipt-card">
-                <h3 style="margin-bottom: 18px; border-bottom: 2px solid var(--border); padding-bottom: 12px; color: var(--primary);">Order #SKD-8891</h3>
-                <p><strong>Order Type:</strong> <span id="receipt-type"></span></p>
-                <p><strong>Payment:</strong> <span id="receipt-pay"></span></p>
-                <p><strong>Table No:</strong> <span id="receipt-table">04</span></p>
-                <p style="border:none; margin-top: 20px; font-size: 1.3rem;"><strong>Total Paid:</strong> <strong style="color: var(--primary);" id="receipt-total"></strong></p>
+    <div class="ios-sheet" id="cart-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+            <h2>Your Cart</h2>
+            <button class="close-sheet" onclick="closeAllSheets()"><i class='bx bx-x'></i></button>
+        </div>
+        
+        <div class="cart-content" id="cart-items">
             </div>
 
-            <button onclick="location.reload()" style="margin-top: 35px; background: white; border: 2px solid var(--border); padding: 14px 30px; border-radius: 30px; font-weight: 600; font-size: 1.05rem; color: var(--text-dark); box-shadow: var(--shadow-sm); width: 100%; max-width: 400px;">Start New Order</button>
+        <div class="checkout-section">
+            
+            <div class="form-group">
+                <label>Contact Details (Required)</label>
+                <input type="text" id="cust-name" class="ios-input" placeholder="Your Name" style="margin-bottom: 8px;" onkeyup="validateCheckout()">
+                <input type="tel" id="cust-phone" class="ios-input" placeholder="Phone Number (10 digits)" maxlength="10" onkeyup="validateCheckout()">
+            </div>
+
+            <div class="segmented-control">
+                <input type="radio" name="orderType" id="dine-in" class="seg-input" value="Dine-In" checked onchange="handleCheckoutRules()">
+                <label for="dine-in" class="seg-label">Dine-In</label>
+                
+                <input type="radio" name="orderType" id="takeaway" class="seg-input" value="Takeaway" onchange="handleCheckoutRules()">
+                <label for="takeaway" class="seg-label">Takeaway</label>
+            </div>
+
+            <div class="total-row">
+                <span>Total</span>
+                <span id="drawer-total">₹0</span>
+            </div>
+
+            <button class="ios-primary-btn" id="checkout-btn" onclick="placeOrder()" disabled>
+                Place Order
+            </button>
         </div>
     </div>
 
+    <nav class="ios-tab-bar">
+        <button class="tab-item active" id="tab-menu" onclick="switchTab('menu')">
+            <i class='bx bxs-food-menu'></i>
+            <span>Menu</span>
+        </button>
+        <button class="tab-item" id="tab-cart" onclick="openCartSheet()">
+            <div class="cart-badge" id="cart-badge">0</div>
+            <i class='bx bx-shopping-bag'></i>
+            <span>Cart</span>
+        </button>
+        <button class="tab-item" id="tab-orders" onclick="switchTab('orders')">
+            <i class='bx bx-receipt'></i>
+            <span>Orders</span>
+        </button>
+    </nav>
+
     <script>
-        const config = {
-            restaurantName: "Shivam Ka Dhaba",
-            currencySymbol: "₹"
-        };
+        const config = { restaurantName: "Shivam Ka Dhaba", currencySymbol: "₹" };
 
         const menuData = [
             { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', desc: 'Tender chicken simmered in a rich, creamy tomato and cashew gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80' },
-            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy, finished with fresh cream.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
             { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', desc: 'Whole black lentils slow-cooked overnight with butter and cream.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80' },
-            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', desc: 'Freshly baked flatbread from the tandoor, topped with minced garlic and butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80' },
-            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', desc: 'Boneless chicken chunks marinated in spiced yogurt and roasted over charcoal.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80' },
-            { id: 6, name: 'Hot Gulab Jamun (2 pcs)', category: 'Desserts', price: 90, diet: 'veg', desc: 'Soft milk-solid dumplings deep-fried and soaked in warm sugar syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=400&q=80' },
-            { id: 7, name: 'Kulhad Masala Chai', category: 'Beverages', price: 40, diet: 'veg', desc: 'Strong Indian tea brewed with crushed ginger, cardamom, served in a clay cup.', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?auto=format&fit=crop&w=400&q=80' }
+            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', desc: 'Fresh flatbread topped with minced garlic and butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80' },
+            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', desc: 'Boneless chicken chunks roasted over charcoal.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80' },
+            { id: 6, name: 'Hot Gulab Jamun (2 pcs)', category: 'Desserts', price: 90, diet: 'veg', desc: 'Soft dumplings soaked in warm sugar syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=400&q=80' }
         ];
 
         let cart = {};
+        let pastOrders = [];
         let activeCategory = 'All';
-        const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts', 'Beverages'];
+        const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts'];
 
         window.onload = () => {
-            document.getElementById('page-title').innerText = `${config.restaurantName} - Menu`;
+            document.title = config.restaurantName;
             document.getElementById('brand-name').innerText = config.restaurantName;
             renderTabs();
             filterMenu();
         };
 
+        // --- NAVIGATION TABS ---
+        function switchTab(viewName) {
+            // Update UI tabs
+            document.getElementById('tab-menu').classList.remove('active');
+            document.getElementById('tab-orders').classList.remove('active');
+            document.getElementById('tab-' + viewName).classList.add('active');
+
+            // Update Views
+            document.getElementById('view-menu').classList.add('hidden');
+            document.getElementById('view-orders').classList.add('hidden');
+            document.getElementById('view-' + viewName).classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0,0);
+        }
+
+        // --- MENU RENDERING ---
         function renderTabs() {
             const container = document.getElementById('category-tabs');
             container.innerHTML = categories.map(cat => `
-                <button class="tab-btn ${cat === activeCategory ? 'active' : ''}" onclick="switchCategory('${cat}')">
-                    ${cat}
-                </button>
+                <button class="tab-btn ${cat === activeCategory ? 'active' : ''}" onclick="switchCategory('${cat}')">${cat}</button>
             `).join('');
-            
-            // Auto scroll category tabs to active item on mobile
-            const activeBtn = container.querySelector('.active');
-            if(activeBtn) {
-                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            }
         }
 
         function switchCategory(category) {
             activeCategory = category;
-            document.getElementById('current-category-title').innerText = category === 'All' ? 'All Items' : category;
             renderTabs();
             filterMenu();
         }
 
         function filterMenu() {
             const searchQuery = document.getElementById('search-input').value.toLowerCase();
-            const vegOnly = document.getElementById('veg-toggle').checked;
-            
             const filtered = menuData.filter(item => {
                 const matchCategory = activeCategory === 'All' || item.category === activeCategory;
-                const matchSearch = item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery);
-                const matchDiet = vegOnly ? item.diet === 'veg' : true;
-                return matchCategory && matchSearch && matchDiet;
+                const matchSearch = item.name.toLowerCase().includes(searchQuery);
+                return matchCategory && matchSearch;
             });
 
             const container = document.getElementById('menu-container');
-            
             if (filtered.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); background: white; border-radius: 20px;"><i class='bx bx-search' style='font-size: 3rem; margin-bottom: 10px; opacity: 0.3;'></i><p>No dishes found.</p></div>`;
+                container.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--ios-text-muted);">No dishes found.</div>`;
                 return;
             }
 
             container.innerHTML = filtered.map(item => `
-                <div class="menu-card" onclick="openModal(${item.id})">
-                    <div class="item-image">
-                        <img src="${item.image}" alt="${item.name}" loading="lazy">
-                    </div>
+                <div class="menu-card" onclick="openItemSheet(${item.id})">
                     <div class="item-details">
                         <div>
-                            <div class="item-header">
+                            <div style="display:flex; align-items:center; gap:4px; margin-bottom:4px;">
+                                <i class='bx bx-stop-circle ${item.diet === 'veg' ? 'veg-icon' : 'nonveg-icon'} diet-icon'></i>
                                 <h3 class="item-title">${item.name}</h3>
-                                <i class='bx bx-stop-circle diet-icon ${item.diet === 'veg' ? 'veg-icon' : 'nonveg-icon'}'></i>
                             </div>
+                            <span class="price">${config.currencySymbol}${item.price}</span>
                             <p class="item-desc">${item.desc}</p>
                         </div>
                         <div class="item-footer">
-                            <span class="price">${config.currencySymbol}${item.price}</span>
-                            <button class="add-btn" onclick="event.stopPropagation(); addToCart(${item.id})">Add <i class='bx bx-plus'></i></button>
+                            <button class="add-btn" onclick="event.stopPropagation(); addToCart(${item.id})">Add</button>
                         </div>
                     </div>
+                    <div class="item-image"><img src="${item.image}" loading="lazy"></div>
                 </div>
             `).join('');
         }
 
-        function openModal(itemId) {
+        // --- SHEET LOGIC ---
+        function openItemSheet(itemId) {
             const item = menuData.find(i => i.id === itemId);
-            if (!item) return;
-
             document.getElementById('modal-img').src = item.image;
             document.getElementById('modal-title').innerText = item.name;
             document.getElementById('modal-price').innerText = `${config.currencySymbol}${item.price}`;
             document.getElementById('modal-desc').innerText = item.desc;
+            document.getElementById('modal-diet-tag').innerHTML = item.diet === 'veg' ? `<span style="color:var(--ios-green)">● Pure Veg</span>` : `<span style="color:var(--ios-red)">● Non-Veg</span>`;
             
-            const dietTag = document.getElementById('modal-diet-tag');
-            if (item.diet === 'veg') {
-                dietTag.innerHTML = `<i class='bx bx-stop-circle' style='color: var(--veg)'></i> Pure Veg`;
-            } else {
-                dietTag.innerHTML = `<i class='bx bx-stop-circle' style='color: var(--nonveg)'></i> Non-Veg`;
-            }
-
-            const actionBtn = document.getElementById('modal-add-action');
-            actionBtn.onclick = () => {
-                addToCart(item.id);
-                closeModal(null, true);
-            };
-
-            document.getElementById('item-modal-overlay').classList.add('active');
-            document.body.style.overflow = 'hidden'; 
+            document.getElementById('modal-add-action').onclick = () => { addToCart(item.id); closeAllSheets(); };
+            
+            document.getElementById('sheet-overlay').classList.add('active');
+            document.getElementById('item-sheet').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeModal(event, forceClose = false) {
-            if (forceClose || (event && event.target.id === 'item-modal-overlay')) {
-                document.getElementById('item-modal-overlay').classList.remove('active');
-                document.body.style.overflow = 'auto'; 
-            }
+        function openCartSheet() {
+            document.getElementById('sheet-overlay').classList.add('active');
+            document.getElementById('cart-sheet').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            validateCheckout();
         }
 
+        function closeAllSheets() {
+            document.getElementById('sheet-overlay').classList.remove('active');
+            document.getElementById('item-sheet').classList.remove('active');
+            document.getElementById('cart-sheet').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- CART LOGIC ---
         function addToCart(itemId) {
-            if (cart[itemId]) {
-                cart[itemId].qty += 1;
-            } else {
+            if (cart[itemId]) cart[itemId].qty += 1;
+            else {
                 const item = menuData.find(i => i.id === itemId);
                 cart[itemId] = { ...item, qty: 1 };
             }
             updateCartData();
-            showToast();
-            triggerCartPulse();
         }
 
         function updateQty(itemId, change) {
-            if (cart[itemId]) {
-                cart[itemId].qty += change;
-                if (cart[itemId].qty <= 0) delete cart[itemId];
-                updateCartData();
-            }
-        }
-
-        function triggerCartPulse() {
-            const cartBtn = document.getElementById('floating-cart');
-            cartBtn.classList.remove('pulse');
-            void cartBtn.offsetWidth; // trigger reflow
-            cartBtn.classList.add('pulse');
+            cart[itemId].qty += change;
+            if (cart[itemId].qty <= 0) delete cart[itemId];
+            updateCartData();
         }
 
         function updateCartData() {
             const cartArray = Object.values(cart);
-            let totalQty = 0;
-            let totalPrice = 0;
-
+            let totalQty = 0; let totalPrice = 0;
             const container = document.getElementById('cart-items');
             
             if (cartArray.length === 0) {
-                container.innerHTML = '<div style="text-align:center; margin-top:60px; color:#94a3b8;"><i class="bx bx-shopping-bag" style="font-size:4rem; margin-bottom:15px; opacity: 0.3;"></i><p>Your cart is empty.</p></div>';
-                document.getElementById('floating-cart').classList.add('hidden');
-                document.getElementById('checkout-btn').disabled = true;
+                container.innerHTML = '<div style="text-align:center; margin-top:40px; color:var(--ios-text-muted);">Cart is empty</div>';
                 document.getElementById('drawer-total').innerText = `${config.currencySymbol}0`;
+                document.getElementById('cart-badge').style.display = 'none';
+                validateCheckout();
                 return;
             }
 
             container.innerHTML = cartArray.map(item => {
-                totalQty += item.qty;
-                totalPrice += (item.price * item.qty);
+                totalQty += item.qty; totalPrice += (item.price * item.qty);
                 return `
                     <div class="cart-item">
-                        <div class="cart-item-info">
-                            <h4><i class='bx bx-stop-circle ${item.diet === 'veg' ? 'veg-icon' : 'nonveg-icon'}' style="font-size:0.85rem"></i> ${item.name}</h4>
-                            <span style="color: var(--primary); font-weight: 700; font-size: 1.05rem;">${config.currencySymbol}${item.price * item.qty}</span>
+                        <div>
+                            <h4>${item.name}</h4>
+                            <span style="font-weight:600;">${config.currencySymbol}${item.price * item.qty}</span>
                         </div>
                         <div class="qty-controls">
                             <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
-                            <span style="font-weight: 700; width: 20px; text-align: center;">${item.qty}</span>
+                            <span style="font-weight: 600; width: 16px; text-align: center;">${item.qty}</span>
                             <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
                         </div>
                     </div>
                 `;
             }).join('');
 
-            document.getElementById('float-qty').innerText = `${totalQty} Item${totalQty > 1 ? 's' : ''}`;
-            document.getElementById('float-subtotal').innerText = `${config.currencySymbol}${totalPrice}`;
             document.getElementById('drawer-total').innerText = `${config.currencySymbol}${totalPrice}`;
-            document.getElementById('floating-cart').classList.remove('hidden');
-            document.getElementById('checkout-btn').disabled = false;
+            
+            // Update Tab Badge
+            const badge = document.getElementById('cart-badge');
+            badge.innerText = totalQty;
+            badge.style.display = 'block';
+            
+            validateCheckout();
         }
 
-        function toggleCart() {
-            document.getElementById('cart-drawer').classList.toggle('active');
-            document.getElementById('cart-overlay').classList.toggle('active');
-            if(document.getElementById('cart-drawer').classList.contains('active')){
-                 document.body.style.overflow = 'hidden';
-            } else {
-                 document.body.style.overflow = 'auto';
-            }
-        }
-
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
-
+        // --- CHECKOUT & VALIDATION ---
         function handleCheckoutRules() {
             const isTakeaway = document.getElementById('takeaway').checked;
-            const cashRadio = document.getElementById('pay-cash');
-            const upiRadio = document.getElementById('pay-upi');
-            
-            if (isTakeaway) {
-                cashRadio.disabled = true;
-                upiRadio.checked = true;
+            if(isTakeaway) {
                 document.getElementById('table-display').style.display = 'none';
             } else {
-                cashRadio.disabled = false;
                 document.getElementById('table-display').style.display = 'block';
             }
         }
 
-        function placeOrder() {
-            const orderType = document.querySelector('input[name="orderType"]:checked').value;
-            const payMethod = document.querySelector('input[name="payMethod"]:checked').value;
-            const total = document.getElementById('drawer-total').innerText;
+        function validateCheckout() {
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const cartHasItems = Object.keys(cart).length > 0;
+            const btn = document.getElementById('checkout-btn');
 
-            toggleCart();
-            document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('floating-cart').classList.add('hidden');
-            document.querySelector('header').classList.add('hidden');
-            document.getElementById('success-screen').classList.remove('hidden');
-
-            document.getElementById('receipt-type').innerText = orderType;
-            document.getElementById('receipt-pay').innerText = payMethod;
-            document.getElementById('receipt-table').innerText = orderType === 'Takeaway' ? 'N/A' : '04';
-            document.getElementById('receipt-total').innerText = total;
+            // Basic validation: Name not empty, Phone is 10 digits
+            const isValid = name.length > 2 && phone.length === 10 && !isNaN(phone) && cartHasItems;
             
-            window.scrollTo(0,0);
+            btn.disabled = !isValid;
+        }
+
+        // --- PLACE ORDER ---
+        function placeOrder() {
+            const name = document.getElementById('cust-name').value;
+            const type = document.querySelector('input[name="orderType"]:checked').value;
+            const total = document.getElementById('drawer-total').innerText;
+            const orderId = "SKD-" + Math.floor(1000 + Math.random() * 9000);
+
+            // Save order to history
+            pastOrders.unshift({ id: orderId, name, type, total, date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+            
+            // Clear Cart
+            cart = {};
+            updateCartData();
+            document.getElementById('cust-name').value = '';
+            document.getElementById('cust-phone').value = '';
+            
+            closeAllSheets();
+            renderOrders();
+            switchTab('orders'); // Jump to orders view
+            
+            // Simple native-like alert
+            setTimeout(() => alert(`Order ${orderId} placed successfully! The kitchen is preparing your food.`), 300);
+        }
+
+        // --- ORDERS VIEW ---
+        function renderOrders() {
+            const container = document.getElementById('orders-container');
+            if (pastOrders.length === 0) return;
+
+            container.innerHTML = pastOrders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <span style="font-weight: 700;">Order #${order.id}</span>
+                        <span class="status-badge">Preparing</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--ios-text-muted); margin-bottom: 5px;">
+                        <span>${order.type} • ${order.date}</span>
+                    </div>
+                    <div style="font-weight: 600; font-size: 1.1rem; color: var(--ios-text-main); margin-top: 10px;">
+                        Total Paid: ${order.total}
+                    </div>
+                </div>
+            `).join('');
         }
     </script>
 </body>
