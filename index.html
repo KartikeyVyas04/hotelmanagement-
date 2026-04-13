@@ -2,162 +2,200 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title id="page-title">Restaurant Menu</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
         /* --- CSS VARIABLES & THEME --- */
         :root {
-            --primary: #d9480f; /* Changed to a warm, appetizing tandoori orange for the Dhaba theme */
+            --primary: #d9480f; /* Dhaba Orange */
             --primary-hover: #b03808;
+            --primary-light: #fff0e6;
             --secondary: #f59f00;
-            --bg-color: #f8fafc;
+            --bg-color: #f4f6f8; /* Slightly cooler background for contrast */
             --card-bg: #ffffff;
             --text-dark: #1e293b;
             --text-muted: #64748b;
-            --border: #e2e8f0;
-            --veg: #22c55e;
-            --nonveg: #ef4444;
-            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            --radius: 16px;
+            --border: #f1f5f9;
+            --veg: #16a34a;
+            --nonveg: #dc2626;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+            --radius: 20px; /* Softer, more app-like corners */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 100px; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 120px; overflow-x: hidden; }
         button { cursor: pointer; border: none; background: none; outline: none; transition: all 0.2s; }
         .hidden { display: none !important; }
 
-        /* --- HEADER & TOP BAR --- */
-        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; padding: 15px 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .brand h1 { font-size: 1.4rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-        .table-badge { background: var(--secondary); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 2px 4px rgba(245, 159, 0, 0.4); }
+        /* --- HEADER --- */
+        header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; padding: 15px 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .brand h1 { font-size: 1.3rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .table-badge { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(217, 72, 15, 0.2); }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
 
-        /* --- SEARCH & FILTERS --- */
-        .controls-section { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        .search-bar { display: flex; align-items: center; background: var(--card-bg); padding: 14px 18px; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; }
+        /* --- SEARCH & STICKY FILTERS --- */
+        .controls-section { margin-bottom: 20px; }
+        .search-bar { display: flex; align-items: center; background: var(--card-bg); padding: 14px 18px; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; margin-bottom: 15px; }
         .search-bar:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(217, 72, 15, 0.1); }
         .search-bar i { color: var(--text-muted); font-size: 1.3rem; margin-right: 12px; }
-        .search-bar input { border: none; outline: none; width: 100%; font-size: 1rem; color: var(--text-dark); }
+        .search-bar input { border: none; outline: none; width: 100%; font-size: 1rem; color: var(--text-dark); background: transparent; }
         
-        .filters { display: flex; justify-content: space-between; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 10px; padding-bottom: 5px; }
+        /* Sticky Container for Categories */
+        .sticky-nav { position: sticky; top: 65px; background: var(--bg-color); z-index: 40; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; margin: -10px 0 10px 0; }
+        
+        .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 10px; width: 100%; padding-right: 10px; }
         .filters::-webkit-scrollbar { display: none; }
-        .category-tabs { display: flex; gap: 10px; }
-        .tab-btn { background: white; border: 1px solid var(--border); padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; white-space: nowrap; transition: 0.3s; color: var(--text-muted); }
-        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(217, 72, 15, 0.2); }
         
-        .diet-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500; background: white; padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border); flex-shrink: 0; }
-        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .category-tabs { display: flex; gap: 8px; }
+        .tab-btn { background: white; border: 1px solid transparent; padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 500; white-space: nowrap; transition: 0.3s; color: var(--text-muted); box-shadow: var(--shadow-sm); }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(217, 72, 15, 0.25); font-weight: 600; }
+        
+        .diet-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; background: white; padding: 8px 14px; border-radius: 30px; border: 1px solid var(--border); flex-shrink: 0; box-shadow: var(--shadow-sm); }
+        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         input:checked + .slider { background-color: var(--veg); }
-        input:checked + .slider:before { transform: translateX(18px); }
+        input:checked + .slider:before { transform: translateX(16px); }
 
-        /* --- MENU GRID --- */
-        .section-title { font-size: 1.3rem; margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--text-dark); }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        /* --- MENU GRID & ENTRANCE ANIMATION --- */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title { font-size: 1.2rem; margin-bottom: 15px; font-weight: 700; color: var(--text-dark); padding-left: 5px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 15px; margin-bottom: 40px; }
         
-        .menu-card { background: var(--card-bg); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; gap: 15px; cursor: pointer; position: relative; overflow: hidden; }
-        .menu-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--secondary); }
+        @media(min-width: 600px) {
+            .menu-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+        }
         
-        .item-image { width: 110px; height: 110px; border-radius: 12px; flex-shrink: 0; overflow: hidden; background: #f1f5f9; }
-        .item-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .menu-card:hover .item-image img { transform: scale(1.08); }
+        .menu-card { background: var(--card-bg); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; gap: 15px; cursor: pointer; position: relative; animation: slideUpFade 0.4s ease forwards; opacity: 0; }
+        /* Stagger animations for list effect */
+        .menu-card:nth-child(1) { animation-delay: 0.05s; }
+        .menu-card:nth-child(2) { animation-delay: 0.1s; }
+        .menu-card:nth-child(3) { animation-delay: 0.15s; }
+        .menu-card:nth-child(4) { animation-delay: 0.2s; }
         
-        .item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-right: 5px; }
+        .menu-card:active { transform: scale(0.98); background: #fafafa; }
+        
+        .item-image { width: 105px; height: 105px; border-radius: 14px; flex-shrink: 0; overflow: hidden; background: #f1f5f9; position: relative; }
+        .item-image img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-right: 2px; }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .item-title { font-weight: 600; font-size: 1.05rem; line-height: 1.3; color: var(--text-dark); margin-right: 10px; }
-        .diet-icon { font-size: 0.9rem; margin-top: 3px; }
+        .item-title { font-weight: 600; font-size: 1rem; line-height: 1.3; color: var(--text-dark); margin-right: 8px; }
+        .diet-icon { font-size: 0.85rem; margin-top: 3px; }
         .veg-icon { color: var(--veg); }
         .nonveg-icon { color: var(--nonveg); }
-        .item-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .item-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
-        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-        .price { font-weight: 700; color: var(--text-dark); font-size: 1.15rem; }
-        .add-btn { background: rgba(217, 72, 15, 0.08); color: var(--primary); border: 1px solid rgba(217, 72, 15, 0.2); padding: 6px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; z-index: 2; position: relative; }
-        .add-btn:hover { background: var(--primary); color: white; }
-        .add-btn:active { transform: scale(0.92); }
+        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .price { font-weight: 700; color: var(--text-dark); font-size: 1.1rem; }
+        
+        /* App-like pill button */
+        .add-btn { background: var(--primary-light); color: var(--primary); border: 1px solid rgba(217, 72, 15, 0.2); padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; z-index: 2; position: relative; }
+        .add-btn:active { background: var(--primary); color: white; transform: scale(0.92); }
 
-        /* --- ITEM DETAILS MODAL --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+        /* --- MOBILE BOTTOM-SHEET MODAL --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(2px); display: flex; align-items: flex-end; justify-content: center; }
+        @media(min-width: 600px) { .modal-overlay { align-items: center; padding: 20px; } }
+        
         .modal-overlay.active { opacity: 1; visibility: visible; }
         
-        .item-modal { background: white; border-radius: 24px; width: 100%; max-width: 420px; overflow: hidden; transform: translateY(30px) scale(0.95); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; max-height: 90vh; }
+        /* The Bottom Sheet */
+        .item-modal { background: white; border-radius: 28px 28px 0 0; width: 100%; max-width: 500px; overflow: hidden; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; max-height: 90vh; }
+        @media(min-width: 600px) { .item-modal { border-radius: 24px; transform: translateY(30px) scale(0.95); } }
+        
         .modal-overlay.active .item-modal { transform: translateY(0) scale(1); }
         
-        .modal-img-container { height: 260px; width: 100%; position: relative; background: #f1f5f9; }
-        .modal-img { width: 100%; height: 100%; object-fit: cover; }
-        .close-modal { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; color: var(--text-dark); border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
-        .close-modal:active { transform: scale(0.9); }
+        /* Pull indicator line for bottom sheet */
+        .modal-pull-indicator { width: 40px; height: 5px; background: rgba(255,255,255,0.8); border-radius: 10px; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 10; }
         
-        .modal-content { padding: 25px; overflow-y: auto; }
+        .modal-img-container { height: 280px; width: 100%; position: relative; background: #f1f5f9; }
+        .modal-img { width: 100%; height: 100%; object-fit: cover; }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; color: var(--text-dark); border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; z-index: 10; }
+        
+        .modal-content { padding: 25px 20px 35px 20px; overflow-y: auto; }
         .modal-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); line-height: 1.2; padding-right: 15px; }
+        .modal-title { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); line-height: 1.2; padding-right: 15px; }
         .modal-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
         .modal-tags { display: flex; gap: 8px; margin-bottom: 15px; }
-        .tag { background: #f1f5f9; color: var(--text-muted); padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+        .tag { background: #f1f5f9; color: var(--text-muted); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
         
         .modal-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
         
         .modal-action-row { display: flex; gap: 15px; align-items: center; }
-        .modal-add-btn { flex: 1; background: var(--primary); color: white; padding: 15px; border-radius: 14px; font-weight: 600; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 16px rgba(217, 72, 15, 0.2); transition: 0.2s; }
-        .modal-add-btn:active { transform: scale(0.96); box-shadow: 0 4px 8px rgba(217, 72, 15, 0.2); }
+        .modal-add-btn { flex: 1; background: var(--primary); color: white; padding: 16px; border-radius: 30px; font-weight: 600; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(217, 72, 15, 0.3); transition: 0.2s; }
+        .modal-add-btn:active { transform: scale(0.96); }
 
-        /* --- FLOATING CART & DRAWER --- */
-        .floating-cart { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: var(--primary); color: white; border-radius: 30px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 24px rgba(217, 72, 15, 0.35); z-index: 90; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --- FLOATING CART (App Style) --- */
+        @keyframes pulseCart {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        .floating-cart { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 450px; background: var(--primary); color: white; border-radius: 20px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 30px rgba(217, 72, 15, 0.4); z-index: 90; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .floating-cart.hidden { transform: translate(-50%, 150%); }
-        .cart-summary { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.05rem; }
-        .cart-summary i { font-size: 1.5rem; }
+        .floating-cart.pulse { animation: pulseCart 0.3s ease; }
+        
+        .cart-summary { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1rem; }
+        .cart-summary-text { display: flex; flex-direction: column; align-items: flex-start; }
+        .cart-summary i { font-size: 1.8rem; }
+        .float-total { font-size: 0.8rem; opacity: 0.9; font-weight: 500; }
 
-        .cart-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(3px); }
+        /* --- CART DRAWER --- */
+        .cart-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         
         .cart-drawer { position: fixed; right: -100%; top: 0; bottom: 0; width: 100%; max-width: 450px; background: var(--bg-color); z-index: 100; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
         .cart-drawer.active { right: 0; }
         
-        .drawer-header { padding: 20px 25px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .drawer-header h2 { font-size: 1.3rem; font-weight: 700; }
-        .close-drawer { font-size: 1.8rem; color: var(--text-dark); }
+        .drawer-header { padding: 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); z-index: 2; }
+        .drawer-header h2 { font-size: 1.2rem; font-weight: 700; }
+        .close-drawer { font-size: 2rem; color: var(--text-dark); margin-right: -5px; }
         
         .drawer-content { flex-grow: 1; overflow-y: auto; padding: 20px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 16px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
         .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 5px; font-weight: 600; }
-        .qty-controls { display: flex; align-items: center; gap: 12px; background: #f1f5f9; padding: 6px; border-radius: 10px; }
-        .qty-btn { width: 30px; height: 30px; background: white; border-radius: 8px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-weight: 600; }
-        .qty-btn:active { transform: scale(0.9); }
+        .qty-controls { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 6px; border-radius: 30px; border: 1px solid var(--border); }
+        .qty-btn { width: 32px; height: 32px; background: white; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: var(--primary); }
+        .qty-btn:active { transform: scale(0.9); background: var(--primary-light); }
         
-        .checkout-box { background: white; padding: 25px; border-top: 1px solid var(--border); box-shadow: 0 -10px 20px rgba(0,0,0,0.03); }
-        .input-group { margin-bottom: 18px; }
-        .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .radio-label { display: block; text-align: center; padding: 12px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: 0.2s; color: var(--text-muted); }
+        .checkout-box { background: white; padding: 25px 20px; border-top: 1px solid var(--border); box-shadow: 0 -10px 20px rgba(0,0,0,0.04); z-index: 2; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .radio-label { display: block; text-align: center; padding: 12px; border: 2px solid var(--border); border-radius: 16px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s; color: var(--text-muted); background: white; }
         input[type="radio"] { display: none; }
-        input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: rgba(217, 72, 15, 0.05); color: var(--primary); }
-        input[type="radio"]:disabled + .radio-label { opacity: 0.5; cursor: not-allowed; background: #f8fafc; }
+        input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+        input[type="radio"]:disabled + .radio-label { opacity: 0.4; cursor: not-allowed; background: #f8fafc; }
         
-        .instructions-input { width: 100%; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-size: 0.95rem; resize: none; outline: none; background: #f8fafc; transition: 0.3s; }
-        .instructions-input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(217, 72, 15, 0.1); }
+        .instructions-input { width: 100%; border: 1px solid var(--border); padding: 14px; border-radius: 16px; font-size: 0.9rem; resize: none; outline: none; background: #f8fafc; transition: 0.3s; }
+        .instructions-input:focus { border-color: var(--primary); background: white; }
 
-        .total-row { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); align-items: center; }
-        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 16px; border-radius: 14px; font-size: 1.15rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 16px rgba(217, 72, 15, 0.2); transition: 0.2s; }
-        .place-order-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
-        .place-order-btn:not(:disabled):active { transform: scale(0.98); }
+        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); align-items: center; }
+        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 18px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(217, 72, 15, 0.3); transition: 0.2s; }
+        .place-order-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; color: #94a3b8; }
+        .place-order-btn:not(:disabled):active { transform: scale(0.96); }
 
         /* --- TOAST & SUCCESS --- */
-        .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: 500; z-index: 1100; opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); }
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.9rem; font-weight: 500; z-index: 1100; opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); white-space: nowrap; }
         .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
-        .success-screen { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .check-circle { font-size: 5rem; color: var(--veg); margin-bottom: 20px; }
-        .receipt-card { background: white; padding: 30px; border-radius: 20px; box-shadow: var(--shadow-md); width: 100%; max-width: 400px; margin-top: 20px; text-align: left; border: 1px solid var(--border); }
-        .receipt-card p { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 8px; color: var(--text-dark); }
+        .success-screen { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .check-circle { font-size: 6rem; color: var(--veg); margin-bottom: 10px; }
+        .receipt-card { background: white; padding: 25px; border-radius: 24px; box-shadow: var(--shadow-md); width: 100%; max-width: 400px; margin-top: 25px; text-align: left; border: 1px solid var(--border); }
+        .receipt-card p { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 10px; color: var(--text-dark); font-weight: 500; }
         
     </style>
 </head>
@@ -178,13 +216,14 @@
                 <i class='bx bx-search'></i>
                 <input type="text" id="search-input" placeholder="Search for dishes..." onkeyup="filterMenu()">
             </div>
-            
+        </div>
+        
+        <div class="sticky-nav">
             <div class="filters">
                 <div class="category-tabs" id="category-tabs">
                     </div>
-                
                 <div class="diet-toggle">
-                    <span>Veg Only</span>
+                    <span>Veg</span>
                     <label class="switch">
                         <input type="checkbox" id="veg-toggle" onchange="filterMenu()">
                         <span class="slider"></span>
@@ -201,6 +240,7 @@
 
     <div class="modal-overlay" id="item-modal-overlay" onclick="closeModal(event)">
         <div class="item-modal" id="item-modal-card">
+            <div class="modal-pull-indicator"></div>
             <div class="modal-img-container">
                 <img src="" alt="Dish" class="modal-img" id="modal-img">
                 <button class="close-modal" onclick="closeModal(event, true)"><i class='bx bx-x'></i></button>
@@ -212,13 +252,13 @@
                 </div>
                 <div class="modal-tags">
                     <span class="tag" id="modal-diet-tag"><i class='bx bx-stop-circle'></i> Veg</span>
-                    <span class="tag"><i class='bx bx-time-five'></i> 15-20 Min</span>
+                    <span class="tag"><i class='bx bxs-hot'></i> Best Seller</span>
                 </div>
                 <p class="modal-desc" id="modal-desc">Description goes here.</p>
                 
                 <div class="modal-action-row">
                     <button class="modal-add-btn" id="modal-add-action">
-                        Add to Order <i class='bx bx-plus-circle'></i>
+                        Add item <i class='bx bx-plus-circle' style="font-size:1.3rem;"></i>
                     </button>
                 </div>
             </div>
@@ -228,17 +268,20 @@
     <button class="floating-cart hidden" id="floating-cart" onclick="toggleCart()">
         <div class="cart-summary">
             <i class='bx bx-shopping-bag'></i>
-            <span id="float-qty">0 Items</span>
+            <div class="cart-summary-text">
+                <span id="float-qty">0 Items</span>
+                <span class="float-total" id="float-subtotal">₹0</span>
+            </div>
         </div>
         <div style="font-weight: 700; font-size: 1.1rem; display: flex; align-items: center;">
-            View Cart <i class='bx bx-chevron-right' style="font-size: 1.4rem; margin-top: 2px;"></i>
+            View Cart <i class='bx bx-chevron-right' style="font-size: 1.5rem; margin-top: 2px;"></i>
         </div>
     </button>
 
     <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
     <aside class="cart-drawer" id="cart-drawer">
         <div class="drawer-header">
-            <h2>Your Order</h2>
+            <h2>Your Cart</h2>
             <button class="close-drawer" onclick="toggleCart()"><i class='bx bx-x'></i></button>
         </div>
         
@@ -274,75 +317,67 @@
                 </div>
             </div>
 
-            <div class="input-group">
-                <textarea id="special-instructions" class="instructions-input" rows="2" placeholder="Any cooking instructions? (e.g., Make it extra spicy)"></textarea>
+            <div class="input-group" style="margin-bottom: 5px;">
+                <textarea id="special-instructions" class="instructions-input" rows="2" placeholder="Any cooking instructions? (e.g., Less spicy)"></textarea>
             </div>
 
-            <div class="total-row">
+            <div class="total-row" style="margin-top: 15px;">
                 <span>Total Amount</span>
-                <span id="drawer-total" style="color: var(--primary);">₹0</span>
+                <span id="drawer-total" style="color: var(--primary); font-size: 1.4rem;">₹0</span>
             </div>
             <button class="place-order-btn" id="checkout-btn" onclick="placeOrder()">
-                Place Order <i class='bx bx-check-shield'></i>
+                Place Order <i class='bx bx-check-shield' style="font-size:1.3rem;"></i>
             </button>
         </div>
     </aside>
 
     <div class="toast" id="toast">
-        <i class='bx bx-check-circle' style="color: var(--veg); font-size: 1.2rem;"></i> <span>Item added to cart!</span>
+        <i class='bx bx-check-circle' style="color: var(--veg); font-size: 1.2rem;"></i> <span>Added to Cart!</span>
     </div>
 
     <div class="container hidden" id="success-screen">
         <div class="success-screen">
             <i class='bx bxs-check-circle check-circle'></i>
-            <h1 style="color: var(--primary);">Order Placed!</h1>
-            <p style="color: var(--text-muted); margin-top: 10px; font-size: 1.1rem;">Your order has been sent to the kitchen directly.</p>
+            <h1 style="color: var(--text-dark); font-size: 2rem;">Order Placed!</h1>
+            <p style="color: var(--text-muted); margin-top: 10px; font-size: 1rem;">The kitchen has received your order.</p>
             
             <div class="receipt-card">
-                <h3 style="margin-bottom: 18px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; color: var(--primary);">Order Details (#SKD-8891)</h3>
+                <h3 style="margin-bottom: 18px; border-bottom: 2px solid var(--border); padding-bottom: 12px; color: var(--primary);">Order #SKD-8891</h3>
                 <p><strong>Order Type:</strong> <span id="receipt-type"></span></p>
                 <p><strong>Payment:</strong> <span id="receipt-pay"></span></p>
                 <p><strong>Table No:</strong> <span id="receipt-table">04</span></p>
                 <p style="border:none; margin-top: 20px; font-size: 1.3rem;"><strong>Total Paid:</strong> <strong style="color: var(--primary);" id="receipt-total"></strong></p>
             </div>
 
-            <button onclick="location.reload()" style="margin-top: 35px; background: white; border: 2px solid var(--border); padding: 12px 25px; border-radius: 12px; font-weight: 600; font-size: 1.05rem; color: var(--text-dark); transition: 0.2s;">Start New Order</button>
+            <button onclick="location.reload()" style="margin-top: 35px; background: white; border: 2px solid var(--border); padding: 14px 30px; border-radius: 30px; font-weight: 600; font-size: 1.05rem; color: var(--text-dark); box-shadow: var(--shadow-sm); width: 100%; max-width: 400px;">Start New Order</button>
         </div>
     </div>
 
     <script>
-        // --- 1. DYNAMIC CONFIGURATION ---
-        // You can change these variables from your admin panel later.
         const config = {
             restaurantName: "Shivam Ka Dhaba",
             currencySymbol: "₹"
         };
 
-        // --- 2. DATA WITH DHABA/INDIAN THEME ---
         const menuData = [
-            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', desc: 'Tender chicken simmered in a rich, creamy tomato and cashew gravy. A North Indian classic.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80' },
-            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy, finished with fresh cream.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=800&q=80' },
-            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', desc: 'Whole black lentils slow-cooked overnight with butter and cream for a rich, smoky flavor.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80' },
-            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', desc: 'Freshly baked flatbread from the tandoor, topped with minced garlic and melted butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=800&q=80' },
-            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', desc: 'Boneless chicken chunks marinated in spiced yogurt and roasted over charcoal.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=80' },
-            { id: 6, name: 'Hot Gulab Jamun (2 pcs)', category: 'Desserts', price: 90, diet: 'veg', desc: 'Soft milk-solid dumplings deep-fried and soaked in warm, rose-scented sugar syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=800&q=80' },
-            { id: 7, name: 'Kulhad Masala Chai', category: 'Beverages', price: 40, diet: 'veg', desc: 'Strong Indian tea brewed with crushed ginger, cardamom, and served in an earthen clay cup.', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?auto=format&fit=crop&w=800&q=80' },
-            { id: 8, name: 'Sweet Punjabi Lassi', category: 'Beverages', price: 80, diet: 'veg', desc: 'Thick, churned sweet yogurt topped with malai (cream) and chopped pistachios.', image: 'https://images.unsplash.com/photo-1628186259062-817ab3c4af48?auto=format&fit=crop&w=800&q=80' }
+            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', desc: 'Tender chicken simmered in a rich, creamy tomato and cashew gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy, finished with fresh cream.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', desc: 'Whole black lentils slow-cooked overnight with butter and cream.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80' },
+            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', desc: 'Freshly baked flatbread from the tandoor, topped with minced garlic and butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80' },
+            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', desc: 'Boneless chicken chunks marinated in spiced yogurt and roasted over charcoal.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80' },
+            { id: 6, name: 'Hot Gulab Jamun (2 pcs)', category: 'Desserts', price: 90, diet: 'veg', desc: 'Soft milk-solid dumplings deep-fried and soaked in warm sugar syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=400&q=80' },
+            { id: 7, name: 'Kulhad Masala Chai', category: 'Beverages', price: 40, diet: 'veg', desc: 'Strong Indian tea brewed with crushed ginger, cardamom, served in a clay cup.', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?auto=format&fit=crop&w=400&q=80' }
         ];
 
-        // --- 3. STATE ---
         let cart = {};
         let activeCategory = 'All';
         const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts', 'Beverages'];
 
-        // --- 4. INIT & RENDER ---
         window.onload = () => {
-            // Apply Dynamic Configuration globally
             document.getElementById('page-title').innerText = `${config.restaurantName} - Menu`;
             document.getElementById('brand-name').innerText = config.restaurantName;
-
             renderTabs();
-            filterMenu(); // Fixed rendering bug
+            filterMenu();
         };
 
         function renderTabs() {
@@ -352,6 +387,12 @@
                     ${cat}
                 </button>
             `).join('');
+            
+            // Auto scroll category tabs to active item on mobile
+            const activeBtn = container.querySelector('.active');
+            if(activeBtn) {
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         }
 
         function switchCategory(category) {
@@ -375,7 +416,7 @@
             const container = document.getElementById('menu-container');
             
             if (filtered.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); background: white; border-radius: 16px; border: 1px dashed var(--border);"><i class='bx bx-search' style='font-size: 3rem; margin-bottom: 10px; opacity: 0.5;'></i><p>No dishes found matching your search.</p></div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); background: white; border-radius: 20px;"><i class='bx bx-search' style='font-size: 3rem; margin-bottom: 10px; opacity: 0.3;'></i><p>No dishes found.</p></div>`;
                 return;
             }
 
@@ -401,7 +442,6 @@
             `).join('');
         }
 
-        // --- 5. ITEM DETAILS MODAL LOGIC ---
         function openModal(itemId) {
             const item = menuData.find(i => i.id === itemId);
             if (!item) return;
@@ -435,7 +475,6 @@
             }
         }
 
-        // --- 6. CART LOGIC ---
         function addToCart(itemId) {
             if (cart[itemId]) {
                 cart[itemId].qty += 1;
@@ -445,6 +484,7 @@
             }
             updateCartData();
             showToast();
+            triggerCartPulse();
         }
 
         function updateQty(itemId, change) {
@@ -455,6 +495,13 @@
             }
         }
 
+        function triggerCartPulse() {
+            const cartBtn = document.getElementById('floating-cart');
+            cartBtn.classList.remove('pulse');
+            void cartBtn.offsetWidth; // trigger reflow
+            cartBtn.classList.add('pulse');
+        }
+
         function updateCartData() {
             const cartArray = Object.values(cart);
             let totalQty = 0;
@@ -463,7 +510,7 @@
             const container = document.getElementById('cart-items');
             
             if (cartArray.length === 0) {
-                container.innerHTML = '<div style="text-align:center; margin-top:60px; color:#94a3b8;"><i class="bx bx-shopping-bag" style="font-size:4rem; margin-bottom:15px; opacity: 0.5;"></i><p style="font-size: 1.1rem;">Your cart is feeling light!</p></div>';
+                container.innerHTML = '<div style="text-align:center; margin-top:60px; color:#94a3b8;"><i class="bx bx-shopping-bag" style="font-size:4rem; margin-bottom:15px; opacity: 0.3;"></i><p>Your cart is empty.</p></div>';
                 document.getElementById('floating-cart').classList.add('hidden');
                 document.getElementById('checkout-btn').disabled = true;
                 document.getElementById('drawer-total').innerText = `${config.currencySymbol}0`;
@@ -488,13 +535,13 @@
                 `;
             }).join('');
 
-            document.getElementById('float-qty').innerText = `${totalQty} Item${totalQty > 1 ? 's' : ''} | ${config.currencySymbol}${totalPrice}`;
+            document.getElementById('float-qty').innerText = `${totalQty} Item${totalQty > 1 ? 's' : ''}`;
+            document.getElementById('float-subtotal').innerText = `${config.currencySymbol}${totalPrice}`;
             document.getElementById('drawer-total').innerText = `${config.currencySymbol}${totalPrice}`;
             document.getElementById('floating-cart').classList.remove('hidden');
             document.getElementById('checkout-btn').disabled = false;
         }
 
-        // --- 7. UI INTERACTIONS ---
         function toggleCart() {
             document.getElementById('cart-drawer').classList.toggle('active');
             document.getElementById('cart-overlay').classList.toggle('active');
@@ -508,7 +555,7 @@
         function showToast() {
             const toast = document.getElementById('toast');
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+            setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
         function handleCheckoutRules() {
@@ -526,7 +573,6 @@
             }
         }
 
-        // --- 8. PLACE ORDER ---
         function placeOrder() {
             const orderType = document.querySelector('input[name="orderType"]:checked').value;
             const payMethod = document.querySelector('input[name="payMethod"]:checked').value;
