@@ -651,7 +651,7 @@
             --border: #e9e9eb;
             --veg: #0f8a65;
             --nonveg: #e43b4f;
-            --gold: #d97706; /* For Bestseller tag */
+            --gold: #d97706; 
             
             --shadow-sm: 0 2px 4px rgba(40, 44, 63, 0.08);
             --shadow-md: 0 4px 14px rgba(40, 44, 63, 0.1);
@@ -663,8 +663,7 @@
         html { touch-action: manipulation; font-size: 15px; } 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* Extra bottom padding so the cart banner & nav bar don't hide the last menu item */
-        body { background-color: var(--card-bg); color: var(--text-dark); padding-bottom: 150px; overflow-x: hidden; }
+        body { background-color: var(--card-bg); color: var(--text-dark); padding-bottom: 120px; overflow-x: hidden; }
         button { cursor: pointer; border: none; background: none; outline: none; transition: 0.2s ease; }
         .hidden { display: none !important; }
 
@@ -680,7 +679,7 @@
         .scan-btn:active { background: #fff5eb; }
 
         .container { max-width: 800px; margin: 0 auto; padding: 0; }
-        .content-padding { padding: 16px; }
+        .content-padding { padding: 16px; padding-bottom: 100px; } /* Prevent orders hiding behind bottom nav */
 
         /* --- SEARCH --- */
         .search-container { padding: 16px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
@@ -701,7 +700,7 @@
         .hero-price { color: #f0f0f0; font-weight: 600; font-size: 0.95rem; }
         .hero-add { background: white; color: var(--success); padding: 4px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
 
-        /* --- STICKY FILTERS (ALIGNED FOR MOBILE) --- */
+        /* --- STICKY FILTERS --- */
         .sticky-nav { position: sticky; top: 68px; background: var(--card-bg); z-index: 40; padding: 12px 0; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px -6px rgba(0,0,0,0.1); }
         .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 12px; width: 100%; padding: 0 16px; -webkit-overflow-scrolling: touch; }
         .filters::-webkit-scrollbar { display: none; }
@@ -737,33 +736,34 @@
         .item-image-container { width: 130px; height: 130px; flex-shrink: 0; position: relative; border-radius: var(--radius-sm); overflow: visible; }
         .item-image-container img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-sm); background: #f2f6fc; }
         
-        /* The Classic Overlapping ADD Button */
         .add-btn { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); background: white; color: var(--success); border: 1px solid #d4d5d9; padding: 8px 24px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 3px 8px rgba(0,0,0,0.1); width: 85%; display: flex; justify-content: center; align-items: center; }
         .add-btn:active { background: #f2f6fc; }
 
         .qty-controls-overlay { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); background: white; border: 1px solid var(--success); padding: 4px 8px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 3px 8px rgba(0,0,0,0.1); width: 85%; display: flex; justify-content: space-between; align-items: center; color: var(--success); }
         .qty-controls-overlay button { color: var(--success); font-size: 1.2rem; font-weight: 600; padding: 0 8px; }
 
-        /* --- BOTTOM NAVIGATION BAR (Perfectly Aligned) --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 80; padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box; }
+        /* --- BOTTOM NAVIGATION BAR --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(60px + env(safe-area-inset-bottom, 0px)); background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 80; padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.65rem; font-weight: 600; gap: 4px; flex: 1; height: 100%; text-transform: uppercase; letter-spacing: 0.5px; padding-top: 4px; }
         .nav-item i { font-size: 1.5rem; line-height: 1; }
         .nav-item.active { color: var(--text-dark); }
         .nav-item.active i { color: var(--primary); }
 
-        /* --- SWIGGY GREEN CART BANNER (Sits just above bottom nav) --- */
-        .cart-banner { position: fixed; bottom: 80px; left: 16px; right: 16px; max-width: 768px; margin: 0 auto; background: var(--success); color: white; border-radius: 8px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(96, 178, 70, 0.3); z-index: 70; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; }
+        /* --- GREEN CART BANNER --- */
+        /* Increased z-index to stay above bottom nav if needed, positioned explicitly above nav */
+        .cart-banner { position: fixed; bottom: calc(75px + env(safe-area-inset-bottom, 0px)); left: 16px; right: 16px; max-width: 768px; margin: 0 auto; background: var(--success); color: white; border-radius: 8px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(96, 178, 70, 0.3); z-index: 85; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; }
         .cart-banner.hidden { transform: translateY(150px); opacity: 0; pointer-events: none; }
         .cart-banner-info { display: flex; flex-direction: column; }
         .cart-banner-items { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
         .cart-banner-price { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 4px; }
         .cart-banner-action { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 4px; letter-spacing: 0.5px; }
 
-        /* --- CHECKOUT DRAWER (Cards Layout) --- */
+        /* --- CHECKOUT DRAWER (BUG FIXES APPLIED) --- */
         .cart-overlay { position: fixed; inset: 0; background: rgba(40, 44, 63, 0.7); z-index: 90; opacity: 0; visibility: hidden; transition: 0.3s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         
-        .cart-drawer { position: fixed; bottom: -100%; left: 0; right: 0; height: 90vh; background: var(--bg-color); z-index: 100; transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-radius: 20px 20px 0 0; }
+        /* dvh units ensure the drawer stays perfectly sized even with browser address bars */
+        .cart-drawer { position: fixed; bottom: -100%; left: 0; right: 0; height: 88dvh; background: var(--bg-color); z-index: 100; transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-radius: 20px 20px 0 0; }
         @media(min-width: 800px) { .cart-drawer { max-width: 500px; right: 0; left: auto; height: 100vh; border-radius: 0; bottom: 0; transform: translateX(100%); transition: transform 0.4s; } .cart-drawer.active { transform: translateX(0); bottom: 0; } }
         .cart-drawer.active { bottom: 0; }
         
@@ -786,7 +786,6 @@
         .cart-item-controls button { color: var(--success); font-size: 1.2rem; padding: 0 4px; }
         .cart-item-price { font-weight: 600; font-size: 0.9rem; width: 60px; text-align: right; }
 
-        /* NEW: Bill Details Breakdown */
         .bill-details { border-top: 1px dashed var(--border); margin-top: 16px; padding-top: 16px; display: flex; flex-direction: column; gap: 8px; }
         .bill-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
         .bill-total { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px; font-size: 1.05rem; font-weight: 700; color: var(--text-dark); }
@@ -800,19 +799,21 @@
         input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: #fff5eb; color: var(--primary); }
         input[type="radio"]:disabled + .radio-label { opacity: 0.4; cursor: not-allowed; background: #f9f9f9; }
 
-        .checkout-footer { background: white; padding: 16px; border-top: 1px solid var(--border); flex-shrink: 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+        /* FIXED: Added robust padding-bottom so the button never overlaps bottom device navigation */
+        .checkout-footer { background: white; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 16px)); border-top: 1px solid var(--border); flex-shrink: 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); }
         .place-order-btn { width: 100%; background: var(--success); color: white; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- ACTIVE ORDER TRACKING --- */
+        /* --- ACTIVE ORDER TRACKING (BUG FIXES APPLIED) --- */
         .empty-orders { text-align: center; color: var(--text-muted); padding: 60px 20px; font-weight: 500; }
         .active-order-card { background: white; border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px; border: 1px solid var(--border); }
         .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 12px; margin-bottom: 16px; }
         .order-id { font-weight: 700; font-size: 1rem; color: var(--text-dark); }
         .order-total { font-weight: 700; color: var(--text-dark); font-size: 1rem; }
         
+        /* FIXED: Tracking Stepper Width Bounds */
         .tracking-stepper { display: flex; justify-content: space-between; position: relative; margin: 20px 0 10px 0; }
-        .tracking-stepper::before { content: ''; position: absolute; top: 12px; left: 15%; right: 15%; height: 2px; background: var(--border); z-index: 1; }
-        .progress-bar { position: absolute; top: 12px; left: 15%; width: 0%; height: 2px; background: var(--success); z-index: 2; transition: width 0.5s ease; }
+        .step-track { position: absolute; top: 12px; left: 16%; width: 68%; height: 2px; background: var(--border); z-index: 1; }
+        .progress-bar { height: 100%; background: var(--success); transition: width 0.5s ease; border-radius: 2px; }
         
         .step { display: flex; flex-direction: column; align-items: center; z-index: 3; gap: 8px; width: 33%; }
         .step-icon { width: 26px; height: 26px; border-radius: 50%; background: white; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--text-muted); }
@@ -821,8 +822,8 @@
         .step.active .step-label { color: var(--text-dark); }
         .order-details-list { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
 
-        /* NEW: Toast Notification */
-        .toast { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); background: #282c3f; color: white; padding: 10px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 500; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        /* Toast Notification */
+        .toast { position: fixed; bottom: calc(85px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: #282c3f; color: white; padding: 10px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 500; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
         .toast.show { opacity: 1; }
     </style>
 </head>
@@ -877,12 +878,7 @@
 
         <div id="view-orders" class="hidden content-padding">
             <h2 class="section-title" style="margin: 0 0 16px 0;">Active Orders</h2>
-            <div id="tracking-container">
-                <div class="empty-orders">
-                    <i class='bx bx-receipt' style="font-size: 4rem; opacity: 0.2; margin-bottom: 16px;"></i>
-                    <p>No active orders right now.</p>
-                </div>
-            </div>
+            <div id="tracking-container"></div>
         </div>
 
     </main>
@@ -981,7 +977,6 @@
     <script>
         const config = { restaurantName: "Shivam Ka Dhaba", currencySymbol: "₹", taxRate: 0.05 };
 
-        // Added 'tag' property for Bestsellers
         const menuData = [
             { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', isHero: true, tag: 'Bestseller', desc: 'Tender chicken in rich, creamy tomato and cashew gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80' },
             { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', isHero: true, tag: 'Must Try', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
@@ -1003,22 +998,22 @@
             
             handleQRLogic();
             loadUserData();
-            loadPersistentOrders(); // NEW: Load history
+            loadPersistentOrders(); 
             renderHero(); 
             renderTabs();
             filterMenu();
         };
 
-        // NEW: Load Orders from Local Storage
         function loadPersistentOrders() {
             const savedOrders = localStorage.getItem('skd_active_orders');
             if (savedOrders) {
                 activeOrders = JSON.parse(savedOrders);
                 renderTracking();
-                // Re-trigger kitchen simulation for pending orders
                 activeOrders.forEach(o => {
                     if (o.status === 'placed' || o.status === 'preparing') simulateKitchenProgress(o.id);
                 });
+            } else {
+                renderTracking(); // Render empty state
             }
         }
 
@@ -1026,7 +1021,6 @@
             localStorage.setItem('skd_active_orders', JSON.stringify(activeOrders));
         }
 
-        // NEW: Live Toast Notification
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = message;
@@ -1137,7 +1131,6 @@
                        </div>`
                     : `<button class="add-btn" onclick="event.stopPropagation(); addToCart(${item.id})">ADD</button>`;
 
-                // NEW: Inject Tag if exists
                 let tagHTML = item.tag ? `<span class="item-tag"><i class='bx bxs-star'></i> ${item.tag}</span>` : '';
 
                 return `
@@ -1161,7 +1154,7 @@
             if (cart[itemId]) cart[itemId].qty += 1;
             else cart[itemId] = { ...menuData.find(i => i.id === itemId), qty: 1 };
             updateCartData();
-            showToast("Added to Cart"); // NEW
+            showToast("Added to Cart"); 
         }
 
         function updateQty(itemId, change) {
@@ -1170,7 +1163,6 @@
             updateCartData();
         }
 
-        // NEW: Clear Cart Logic
         function clearCart() {
             if(!confirm("Are you sure you want to clear your cart?")) return;
             cart = {};
@@ -1191,7 +1183,6 @@
                 document.getElementById('cart-banner').classList.add('hidden');
                 document.getElementById('checkout-btn').disabled = true;
                 
-                // Zero out bill
                 document.getElementById('bill-subtotal').innerText = `${config.currencySymbol}0`;
                 document.getElementById('bill-taxes').innerText = `${config.currencySymbol}0`;
                 document.getElementById('bill-grand-total').innerText = `${config.currencySymbol}0`;
@@ -1216,7 +1207,6 @@
                 `;
             }).join('');
 
-            // NEW: Detailed Bill Calculation
             const taxAmount = Math.round(itemTotal * config.taxRate);
             const grandTotal = itemTotal + taxAmount;
 
@@ -1258,7 +1248,6 @@
 
             localStorage.setItem('skd_user_profile', JSON.stringify({ name, phone }));
 
-            // Using Grand Total instead of subtotal
             const itemTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
             const taxAmount = Math.round(itemTotal * config.taxRate);
             const grandTotal = itemTotal + taxAmount;
@@ -1271,7 +1260,7 @@
             };
             
             activeOrders.unshift(newOrder);
-            savePersistentOrders(); // NEW: Save to history
+            savePersistentOrders(); 
 
             cart = {};
             updateCartData();
@@ -1280,7 +1269,7 @@
             switchView('orders');
             renderTracking();
             simulateKitchenProgress(newOrder.id);
-            showToast("Order Placed Successfully!"); // NEW
+            showToast("Order Placed Successfully!"); 
         }
 
         function renderTracking() {
@@ -1306,7 +1295,9 @@
                     <div class="order-details-list">${order.items}</div>
                     
                     <div class="tracking-stepper">
-                        <div class="progress-bar" id="progress-${order.id}" style="width: ${order.status === 'placed' ? '0%' : (order.status === 'preparing' ? '50%' : '100%')}"></div>
+                        <div class="step-track">
+                            <div class="progress-bar" id="progress-${order.id}" style="width: ${order.status === 'placed' ? '0%' : (order.status === 'preparing' ? '50%' : '100%')}"></div>
+                        </div>
                         <div class="step ${order.status === 'placed' || order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}">
                             <div class="step-icon"><i class='bx bx-check'></i></div>
                             <span class="step-label">Received</span>
@@ -1325,7 +1316,6 @@
         }
 
         function simulateKitchenProgress(orderId) {
-            // Wait 5 seconds, move to preparing
             setTimeout(() => {
                 const order = activeOrders.find(o => o.id === orderId);
                 if(order && order.status === 'placed') {
@@ -1334,7 +1324,6 @@
                     renderTracking();
                     showToast(`Order #${orderId} is being prepared!`);
                     
-                    // Wait 10 more seconds, move to ready
                     setTimeout(() => {
                         const orderReady = activeOrders.find(o => o.id === orderId);
                         if(orderReady && orderReady.status === 'preparing') {
