@@ -611,13 +611,13 @@
     <style>
         :root {
             /* Swiggy-inspired Color Palette */
-            --primary: #fc8019; /* Swiggy Orange */
+            --primary: #fc8019; 
             --primary-hover: #e06c10;
-            --success: #60b246; /* Swiggy Green for 'ADD' */
-            --bg-color: #eef0f5; /* Light grey app background */
+            --success: #60b246; 
+            --bg-color: #eef0f5; 
             --card-bg: #ffffff;
-            --text-dark: #282c3f; /* Swiggy Dark Text */
-            --text-muted: #686b78; /* Swiggy Light Text */
+            --text-dark: #282c3f; 
+            --text-muted: #686b78; 
             --border: #e9e9eb;
             --veg: #0f8a65;
             --nonveg: #e43b4f;
@@ -631,7 +631,9 @@
         /* --- ANTI-ZOOM & BASE --- */
         html { touch-action: manipulation; font-size: 15px; } 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--card-bg); color: var(--text-dark); padding-bottom: 120px; overflow-x: hidden; }
+        
+        /* Extra bottom padding so the cart banner & nav bar don't hide the last menu item */
+        body { background-color: var(--card-bg); color: var(--text-dark); padding-bottom: 150px; overflow-x: hidden; }
         button { cursor: pointer; border: none; background: none; outline: none; transition: 0.2s ease; }
         .hidden { display: none !important; }
 
@@ -649,14 +651,28 @@
         .container { max-width: 800px; margin: 0 auto; padding: 0; }
         .content-padding { padding: 16px; }
 
-        /* --- SEARCH & FILTERS --- */
+        /* --- SEARCH --- */
         .search-container { padding: 16px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
         .search-bar { display: flex; align-items: center; background: #f2f6fc; padding: 12px 16px; border-radius: var(--radius-sm); transition: all 0.3s; }
         .search-bar i { color: var(--text-muted); font-size: 1.2rem; margin-right: 10px; }
         .search-bar input { border: none; outline: none; width: 100%; font-size: 0.9rem; color: var(--text-dark); background: transparent; font-weight: 500; }
         
-        .sticky-nav { position: sticky; top: 68px; background: var(--card-bg); z-index: 40; padding: 12px 16px; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px -6px rgba(0,0,0,0.1); }
-        .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 10px; width: 100%; }
+        /* --- HERO SECTION --- */
+        .hero-section { padding-top: 16px; background: var(--card-bg); }
+        .hero-title { font-size: 1.1rem; font-weight: 700; margin: 0 16px 12px 16px; color: var(--text-dark); letter-spacing: 0.5px; }
+        .hero-carousel { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 16px 16px 16px; -webkit-overflow-scrolling: touch; }
+        .hero-carousel::-webkit-scrollbar { display: none; }
+        .hero-card { min-width: 240px; height: 140px; border-radius: var(--radius-md); overflow: hidden; position: relative; scroll-snap-align: center; box-shadow: var(--shadow-sm); cursor: pointer; flex-shrink: 0; }
+        .hero-card img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; }
+        .hero-name { color: white; font-weight: 600; font-size: 1rem; margin-bottom: 4px; line-height: 1.2; }
+        .hero-price-row { display: flex; justify-content: space-between; align-items: center; }
+        .hero-price { color: #f0f0f0; font-weight: 600; font-size: 0.95rem; }
+        .hero-add { background: white; color: var(--success); padding: 4px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
+
+        /* --- STICKY FILTERS (ALIGNED FOR MOBILE) --- */
+        .sticky-nav { position: sticky; top: 68px; background: var(--card-bg); z-index: 40; padding: 12px 0; border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px -6px rgba(0,0,0,0.1); }
+        .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 12px; width: 100%; padding: 0 16px; -webkit-overflow-scrolling: touch; }
         .filters::-webkit-scrollbar { display: none; }
         
         .diet-toggle { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 600; background: white; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); flex-shrink: 0; }
@@ -667,6 +683,7 @@
         input:checked + .slider { background-color: var(--veg); }
         input:checked + .slider:before { transform: translateX(12px); }
 
+        .category-tabs { display: flex; gap: 10px; }
         .tab-btn { background: white; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; color: var(--text-muted); }
         .tab-btn.active { background: #3e4152; color: white; border-color: #3e4152; }
 
@@ -695,22 +712,22 @@
         .qty-controls-overlay { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); background: white; border: 1px solid var(--success); padding: 4px 8px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 3px 8px rgba(0,0,0,0.1); width: 85%; display: flex; justify-content: space-between; align-items: center; color: var(--success); }
         .qty-controls-overlay button { color: var(--success); font-size: 1.2rem; font-weight: 600; padding: 0 8px; }
 
-        /* --- BOTTOM NAVIGATION BAR --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 80; padding-bottom: env(safe-area-inset-bottom, 0px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.65rem; font-weight: 600; gap: 4px; width: 50%; height: 100%; text-transform: uppercase; letter-spacing: 0.5px; }
-        .nav-item i { font-size: 1.4rem; }
+        /* --- BOTTOM NAVIGATION BAR (Perfectly Aligned) --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 80; padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.65rem; font-weight: 600; gap: 4px; flex: 1; height: 100%; text-transform: uppercase; letter-spacing: 0.5px; padding-top: 4px; }
+        .nav-item i { font-size: 1.5rem; line-height: 1; }
         .nav-item.active { color: var(--text-dark); }
         .nav-item.active i { color: var(--primary); }
 
-        /* --- SWIGGY GREEN CART BANNER --- */
-        .cart-banner { position: fixed; bottom: 75px; left: 16px; right: 16px; max-width: 768px; margin: 0 auto; background: var(--success); color: white; border-radius: 8px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(96, 178, 70, 0.3); z-index: 70; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; }
+        /* --- SWIGGY GREEN CART BANNER (Sits just above bottom nav) --- */
+        .cart-banner { position: fixed; bottom: 80px; left: 16px; right: 16px; max-width: 768px; margin: 0 auto; background: var(--success); color: white; border-radius: 8px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(96, 178, 70, 0.3); z-index: 70; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; }
         .cart-banner.hidden { transform: translateY(150px); opacity: 0; pointer-events: none; }
         .cart-banner-info { display: flex; flex-direction: column; }
         .cart-banner-items { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
         .cart-banner-price { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 4px; }
         .cart-banner-action { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 4px; letter-spacing: 0.5px; }
 
-        /* --- CHECKOUT DRAWER (DECLUTTERED) --- */
+        /* --- CHECKOUT DRAWER (Cards Layout) --- */
         .cart-overlay { position: fixed; inset: 0; background: rgba(40, 44, 63, 0.7); z-index: 90; opacity: 0; visibility: hidden; transition: 0.3s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         
@@ -722,10 +739,8 @@
         .drawer-header h2 { font-size: 1.1rem; font-weight: 700; }
         .close-drawer { font-size: 1.5rem; color: var(--text-dark); background: #f2f6fc; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
         
-        /* Scrollable content with gaps between cards */
         .drawer-content { flex-grow: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
         
-        /* Clean Cards for Checkout */
         .checkout-card { background: white; border-radius: var(--radius-md); padding: 16px; box-shadow: var(--shadow-sm); }
         .card-title { font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
         .card-title i { font-size: 1.2rem; color: var(--text-muted); }
@@ -746,13 +761,11 @@
         input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: #fff5eb; color: var(--primary); }
         input[type="radio"]:disabled + .radio-label { opacity: 0.4; cursor: not-allowed; background: #f9f9f9; }
 
-        .checkout-footer { background: white; padding: 16px; border-top: 1px solid var(--border); flex-shrink: 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); }
+        .checkout-footer { background: white; padding: 16px; border-top: 1px solid var(--border); flex-shrink: 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
         .place-order-btn { width: 100%; background: var(--success); color: white; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* --- ACTIVE ORDER TRACKING --- */
         .empty-orders { text-align: center; color: var(--text-muted); padding: 60px 20px; font-weight: 500; }
-        .empty-orders img { width: 150px; margin-bottom: 20px; opacity: 0.5; }
-        
         .active-order-card { background: white; border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px; border: 1px solid var(--border); }
         .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 12px; margin-bottom: 16px; }
         .order-id { font-weight: 700; font-size: 1rem; color: var(--text-dark); }
@@ -797,6 +810,11 @@
                 </div>
             </div>
             
+            <div class="hero-section" id="hero-section">
+                <h2 class="hero-title">Top Picks For You</h2>
+                <div class="hero-carousel" id="hero-carousel"></div>
+            </div>
+
             <div class="sticky-nav">
                 <div class="filters">
                     <div class="diet-toggle">
@@ -855,7 +873,6 @@
         </div>
         
         <div class="drawer-content">
-            
             <div class="checkout-card">
                 <h3 class="card-title"><i class='bx bx-shopping-bag'></i> Order Summary</h3>
                 <div class="cart-items-list" id="cart-items"></div>
@@ -909,12 +926,12 @@
         const config = { restaurantName: "Shivam Ka Dhaba", currencySymbol: "₹" };
 
         const menuData = [
-            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', desc: 'Tender chicken in rich, creamy tomato and cashew gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80' },
-            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
-            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', desc: 'Whole black lentils slow-cooked overnight with butter and cream.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80' },
-            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', desc: 'Freshly baked flatbread topped with minced garlic and butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80' },
-            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', desc: 'Boneless chicken chunks marinated in spiced yogurt and roasted.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80' },
-            { id: 6, name: 'Hot Gulab Jamun', category: 'Desserts', price: 90, diet: 'veg', desc: 'Soft milk-solid dumplings deep-fried and soaked in warm syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=400&q=80' }
+            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', isHero: true, desc: 'Tender chicken in rich, creamy tomato and cashew gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', isHero: true, desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', isHero: false, desc: 'Whole black lentils slow-cooked overnight with butter and cream.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80' },
+            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', isHero: false, desc: 'Freshly baked flatbread topped with minced garlic and butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80' },
+            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', isHero: true, desc: 'Boneless chicken chunks marinated in spiced yogurt and roasted.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80' },
+            { id: 6, name: 'Hot Gulab Jamun', category: 'Desserts', price: 90, diet: 'veg', isHero: false, desc: 'Soft milk-solid dumplings deep-fried and soaked in warm syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=400&q=80' }
         ];
 
         let cart = {};
@@ -929,6 +946,7 @@
             
             handleQRLogic();
             loadUserData();
+            renderHero(); // Restored logic
             renderTabs();
             filterMenu();
         };
@@ -959,7 +977,6 @@
             }
         }
 
-        // Mock function for the "Scan Table" button
         function simulateScan() {
             const tableNum = prompt("Simulating QR Scan. Enter Table Number (e.g., 5):");
             if(tableNum) setTable(tableNum);
@@ -981,6 +998,30 @@
                 document.getElementById('customer-name').value = user.name;
                 document.getElementById('customer-phone').value = user.phone;
             }
+        }
+
+        // Restored Hero Rendering Function
+        function renderHero() {
+            const container = document.getElementById('hero-carousel');
+            const heroes = menuData.filter(i => i.isHero);
+            
+            if(heroes.length === 0) {
+                document.getElementById('hero-section').style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = heroes.map(item => `
+                <div class="hero-card" onclick="addToCart(${item.id})">
+                    <img src="${item.image}">
+                    <div class="hero-overlay">
+                        <span class="hero-name">${item.name}</span>
+                        <div class="hero-price-row">
+                            <span class="hero-price">${config.currencySymbol}${item.price}</span>
+                            <span class="hero-add">ADD</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderTabs() {
@@ -1008,7 +1049,6 @@
             document.getElementById('menu-container').innerHTML = filtered.map(item => {
                 const qty = cart[item.id] ? cart[item.id].qty : 0;
                 
-                // Swiggy style ADD button or QTY controls overlaying image
                 let actionHTML = qty > 0 
                     ? `<div class="qty-controls-overlay">
                         <button onclick="event.stopPropagation(); updateQty(${item.id}, -1)">-</button>
@@ -1046,7 +1086,7 @@
         }
 
         function updateCartData() {
-            filterMenu(); // Re-render menu to update ADD buttons to QTY controls
+            filterMenu(); 
 
             const cartArray = Object.values(cart);
             let totalQty = 0; let totalPrice = 0;
@@ -1078,7 +1118,6 @@
                 `;
             }).join('');
 
-            // Update Green Banner
             document.getElementById('banner-qty').innerText = `${totalQty} ITEM${totalQty > 1 ? 'S' : ''}`;
             document.getElementById('banner-price').innerHTML = `${config.currencySymbol}${totalPrice} <span style="font-size:0.7rem; font-weight:500;">plus taxes</span>`;
             document.getElementById('drawer-total-btn').innerHTML = `${config.currencySymbol}${totalPrice} <i class='bx bx-chevron-right'></i>`;
