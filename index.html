@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cabo Sphere - Premium Menu</title>
+    <title id="page-title">Restaurant Menu</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -11,10 +11,9 @@
     <style>
         /* --- CSS VARIABLES & THEME --- */
         :root {
-            --primary: #006D77;
-            --primary-hover: #005058;
-            --secondary: #83C5BE;
-            --accent: #E29578;
+            --primary: #d9480f; /* Changed to a warm, appetizing tandoori orange for the Dhaba theme */
+            --primary-hover: #b03808;
+            --secondary: #f59f00;
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-dark: #1e293b;
@@ -36,14 +35,14 @@
         /* --- HEADER & TOP BAR --- */
         header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; padding: 15px 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
         .brand h1 { font-size: 1.4rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-        .table-badge { background: var(--secondary); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 2px 4px rgba(131, 197, 190, 0.4); }
+        .table-badge { background: var(--secondary); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 2px 4px rgba(245, 159, 0, 0.4); }
 
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 
         /* --- SEARCH & FILTERS --- */
         .controls-section { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
         .search-bar { display: flex; align-items: center; background: var(--card-bg); padding: 14px 18px; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; }
-        .search-bar:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 109, 119, 0.1); }
+        .search-bar:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(217, 72, 15, 0.1); }
         .search-bar i { color: var(--text-muted); font-size: 1.3rem; margin-right: 12px; }
         .search-bar input { border: none; outline: none; width: 100%; font-size: 1rem; color: var(--text-dark); }
         
@@ -51,7 +50,7 @@
         .filters::-webkit-scrollbar { display: none; }
         .category-tabs { display: flex; gap: 10px; }
         .tab-btn { background: white; border: 1px solid var(--border); padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; white-space: nowrap; transition: 0.3s; color: var(--text-muted); }
-        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(0, 109, 119, 0.2); }
+        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(217, 72, 15, 0.2); }
         
         .diet-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500; background: white; padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border); flex-shrink: 0; }
         .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
@@ -82,7 +81,7 @@
         
         .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
         .price { font-weight: 700; color: var(--text-dark); font-size: 1.15rem; }
-        .add-btn { background: rgba(0, 109, 119, 0.08); color: var(--primary); border: 1px solid rgba(0, 109, 119, 0.2); padding: 6px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; z-index: 2; position: relative; }
+        .add-btn { background: rgba(217, 72, 15, 0.08); color: var(--primary); border: 1px solid rgba(217, 72, 15, 0.2); padding: 6px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; z-index: 2; position: relative; }
         .add-btn:hover { background: var(--primary); color: white; }
         .add-btn:active { transform: scale(0.92); }
 
@@ -108,11 +107,11 @@
         .modal-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
         
         .modal-action-row { display: flex; gap: 15px; align-items: center; }
-        .modal-add-btn { flex: 1; background: var(--primary); color: white; padding: 15px; border-radius: 14px; font-weight: 600; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 16px rgba(0, 109, 119, 0.2); transition: 0.2s; }
-        .modal-add-btn:active { transform: scale(0.96); box-shadow: 0 4px 8px rgba(0, 109, 119, 0.2); }
+        .modal-add-btn { flex: 1; background: var(--primary); color: white; padding: 15px; border-radius: 14px; font-weight: 600; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 16px rgba(217, 72, 15, 0.2); transition: 0.2s; }
+        .modal-add-btn:active { transform: scale(0.96); box-shadow: 0 4px 8px rgba(217, 72, 15, 0.2); }
 
-        /* --- FLOATING CART BUTTON & DRAWER (Unchanged conceptually, refined styling) --- */
-        .floating-cart { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: var(--primary); color: white; border-radius: 30px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 24px rgba(0, 109, 119, 0.35); z-index: 90; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --- FLOATING CART & DRAWER --- */
+        .floating-cart { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: var(--primary); color: white; border-radius: 30px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 24px rgba(217, 72, 15, 0.35); z-index: 90; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .floating-cart.hidden { transform: translate(-50%, 150%); }
         .cart-summary { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.05rem; }
         .cart-summary i { font-size: 1.5rem; }
@@ -134,29 +133,27 @@
         .qty-btn { width: 30px; height: 30px; background: white; border-radius: 8px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-weight: 600; }
         .qty-btn:active { transform: scale(0.9); }
         
-        /* Checkout Box */
         .checkout-box { background: white; padding: 25px; border-top: 1px solid var(--border); box-shadow: 0 -10px 20px rgba(0,0,0,0.03); }
         .input-group { margin-bottom: 18px; }
         .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .radio-label { display: block; text-align: center; padding: 12px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: 0.2s; color: var(--text-muted); }
         input[type="radio"] { display: none; }
-        input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: rgba(0, 109, 119, 0.05); color: var(--primary); }
+        input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: rgba(217, 72, 15, 0.05); color: var(--primary); }
         input[type="radio"]:disabled + .radio-label { opacity: 0.5; cursor: not-allowed; background: #f8fafc; }
         
         .instructions-input { width: 100%; border: 1px solid var(--border); padding: 12px; border-radius: 12px; font-size: 0.95rem; resize: none; outline: none; background: #f8fafc; transition: 0.3s; }
-        .instructions-input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(0, 109, 119, 0.1); }
+        .instructions-input:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(217, 72, 15, 0.1); }
 
         .total-row { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; color: var(--text-dark); align-items: center; }
-        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 16px; border-radius: 14px; font-size: 1.15rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 16px rgba(0, 109, 119, 0.2); transition: 0.2s; }
+        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 16px; border-radius: 14px; font-size: 1.15rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 16px rgba(217, 72, 15, 0.2); transition: 0.2s; }
         .place-order-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
         .place-order-btn:not(:disabled):active { transform: scale(0.98); }
 
-        /* --- TOAST NOTIFICATION --- */
+        /* --- TOAST & SUCCESS --- */
         .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: 500; z-index: 1100; opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg); }
         .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
-        /* --- SUCCESS SCREEN --- */
         .success-screen { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .check-circle { font-size: 5rem; color: var(--veg); margin-bottom: 20px; }
         .receipt-card { background: white; padding: 30px; border-radius: 20px; box-shadow: var(--shadow-md); width: 100%; max-width: 400px; margin-top: 20px; text-align: left; border: 1px solid var(--border); }
@@ -169,7 +166,7 @@
     <header>
         <div class="brand">
             <i class='bx bx-restaurant'></i>
-            <h1>Cabo Sphere</h1>
+            <h1 id="brand-name">Loading...</h1>
         </div>
         <div class="table-badge" id="table-display">Table 04</div>
     </header>
@@ -302,7 +299,7 @@
             <p style="color: var(--text-muted); margin-top: 10px; font-size: 1.1rem;">Your order has been sent to the kitchen directly.</p>
             
             <div class="receipt-card">
-                <h3 style="margin-bottom: 18px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; color: var(--primary);">Order Details (#CS-8891)</h3>
+                <h3 style="margin-bottom: 18px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; color: var(--primary);">Order Details (#SKD-8891)</h3>
                 <p><strong>Order Type:</strong> <span id="receipt-type"></span></p>
                 <p><strong>Payment:</strong> <span id="receipt-pay"></span></p>
                 <p><strong>Table No:</strong> <span id="receipt-table">04</span></p>
@@ -314,27 +311,38 @@
     </div>
 
     <script>
-        // --- 1. DATA WITH HIGH-RES IMAGES ---
+        // --- 1. DYNAMIC CONFIGURATION ---
+        // You can change these variables from your admin panel later.
+        const config = {
+            restaurantName: "Shivam Ka Dhaba",
+            currencySymbol: "₹"
+        };
+
+        // --- 2. DATA WITH DHABA/INDIAN THEME ---
         const menuData = [
-            { id: 1, name: 'Spicy Sriracha Tacos', category: 'Starters', price: 450, diet: 'nonveg', desc: 'Three soft corn tortillas filled with charred chicken, crisp slaw, and house-made sriracha aioli.', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=800&q=80' },
-            { id: 2, name: 'Paneer Tikka Bites', category: 'Starters', price: 320, diet: 'veg', desc: 'Charcoal smoked cottage cheese cubes marinated in spiced yogurt, served with fresh mint chutney.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=80' },
-            { id: 3, name: 'Truffle Burrata Pasta', category: 'Mains', price: 620, diet: 'veg', desc: 'Handmade linguine tossed in light garlic olive oil, topped with a whole fresh Italian burrata and shaved black truffle.', image: 'https://images.unsplash.com/photo-1621996316585-02e06aedc9e5?auto=format&fit=crop&w=800&q=80' },
-            { id: 4, name: 'Classic Margherita', category: 'Mains', price: 550, diet: 'veg', desc: 'Neapolitan style sourdough crust, crushed San Marzano tomatoes, fresh mozzarella di bufala, and sweet basil.', image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=800&q=80' },
-            { id: 5, name: 'Grilled Salmon Bowl', category: 'Mains', price: 780, diet: 'nonveg', desc: 'Fresh Norwegian salmon grilled to perfection over a bed of warm quinoa, edamame, avocado, and a light ponzu dressing.', image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800&q=80' },
-            { id: 6, name: 'Classic Tiramisu', category: 'Desserts', price: 350, diet: 'veg', desc: 'Authentic Italian recipe featuring espresso-soaked savoiardi ladyfingers layered with rich mascarpone cream and dusted with cocoa.', image: 'https://images.unsplash.com/photo-1571115177098-24deca90c1f4?auto=format&fit=crop&w=800&q=80' },
-            { id: 7, name: 'Virgin Mojito', category: 'Beverages', price: 250, diet: 'veg', desc: 'A refreshing blend of muddled fresh mint leaves, zesty lime juice, simple syrup, and sparkling club soda.', image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80' },
-            { id: 8, name: 'Iced Vanilla Latte', category: 'Beverages', price: 220, diet: 'veg', desc: 'A double shot of our house espresso poured over ice and cold milk, sweetened with Madagascar vanilla syrup.', image: 'https://images.unsplash.com/photo-1461023058943-07cb1ce919f4?auto=format&fit=crop&w=800&q=80' }
+            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', desc: 'Tender chicken simmered in a rich, creamy tomato and cashew gravy. A North Indian classic.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80' },
+            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy, finished with fresh cream.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=800&q=80' },
+            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', desc: 'Whole black lentils slow-cooked overnight with butter and cream for a rich, smoky flavor.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80' },
+            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', desc: 'Freshly baked flatbread from the tandoor, topped with minced garlic and melted butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=800&q=80' },
+            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', desc: 'Boneless chicken chunks marinated in spiced yogurt and roasted over charcoal.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=80' },
+            { id: 6, name: 'Hot Gulab Jamun (2 pcs)', category: 'Desserts', price: 90, diet: 'veg', desc: 'Soft milk-solid dumplings deep-fried and soaked in warm, rose-scented sugar syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=800&q=80' },
+            { id: 7, name: 'Kulhad Masala Chai', category: 'Beverages', price: 40, diet: 'veg', desc: 'Strong Indian tea brewed with crushed ginger, cardamom, and served in an earthen clay cup.', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?auto=format&fit=crop&w=800&q=80' },
+            { id: 8, name: 'Sweet Punjabi Lassi', category: 'Beverages', price: 80, diet: 'veg', desc: 'Thick, churned sweet yogurt topped with malai (cream) and chopped pistachios.', image: 'https://images.unsplash.com/photo-1628186259062-817ab3c4af48?auto=format&fit=crop&w=800&q=80' }
         ];
 
-        // --- 2. STATE ---
+        // --- 3. STATE ---
         let cart = {};
         let activeCategory = 'All';
-        const categories = ['All', 'Starters', 'Mains', 'Desserts', 'Beverages'];
+        const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts', 'Beverages'];
 
-        // --- 3. INIT & RENDER ---
+        // --- 4. INIT & RENDER ---
         window.onload = () => {
+            // Apply Dynamic Configuration globally
+            document.getElementById('page-title').innerText = `${config.restaurantName} - Menu`;
+            document.getElementById('brand-name').innerText = config.restaurantName;
+
             renderTabs();
-            renderMenu();
+            filterMenu(); // Fixed rendering bug
         };
 
         function renderTabs() {
@@ -385,7 +393,7 @@
                             <p class="item-desc">${item.desc}</p>
                         </div>
                         <div class="item-footer">
-                            <span class="price">₹${item.price}</span>
+                            <span class="price">${config.currencySymbol}${item.price}</span>
                             <button class="add-btn" onclick="event.stopPropagation(); addToCart(${item.id})">Add <i class='bx bx-plus'></i></button>
                         </div>
                     </div>
@@ -393,15 +401,14 @@
             `).join('');
         }
 
-        // --- 4. ITEM DETAILS MODAL LOGIC ---
+        // --- 5. ITEM DETAILS MODAL LOGIC ---
         function openModal(itemId) {
             const item = menuData.find(i => i.id === itemId);
             if (!item) return;
 
-            // Populate Modal Data
             document.getElementById('modal-img').src = item.image;
             document.getElementById('modal-title').innerText = item.name;
-            document.getElementById('modal-price').innerText = `₹${item.price}`;
+            document.getElementById('modal-price').innerText = `${config.currencySymbol}${item.price}`;
             document.getElementById('modal-desc').innerText = item.desc;
             
             const dietTag = document.getElementById('modal-diet-tag');
@@ -411,27 +418,24 @@
                 dietTag.innerHTML = `<i class='bx bx-stop-circle' style='color: var(--nonveg)'></i> Non-Veg`;
             }
 
-            // Update action button
             const actionBtn = document.getElementById('modal-add-action');
             actionBtn.onclick = () => {
                 addToCart(item.id);
                 closeModal(null, true);
             };
 
-            // Show Modal
             document.getElementById('item-modal-overlay').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeModal(event, forceClose = false) {
-            // Close if clicking the 'X' OR clicking the dark overlay outside the card
             if (forceClose || (event && event.target.id === 'item-modal-overlay')) {
                 document.getElementById('item-modal-overlay').classList.remove('active');
-                document.body.style.overflow = 'auto'; // Restore scrolling
+                document.body.style.overflow = 'auto'; 
             }
         }
 
-        // --- 5. CART LOGIC ---
+        // --- 6. CART LOGIC ---
         function addToCart(itemId) {
             if (cart[itemId]) {
                 cart[itemId].qty += 1;
@@ -462,7 +466,7 @@
                 container.innerHTML = '<div style="text-align:center; margin-top:60px; color:#94a3b8;"><i class="bx bx-shopping-bag" style="font-size:4rem; margin-bottom:15px; opacity: 0.5;"></i><p style="font-size: 1.1rem;">Your cart is feeling light!</p></div>';
                 document.getElementById('floating-cart').classList.add('hidden');
                 document.getElementById('checkout-btn').disabled = true;
-                document.getElementById('drawer-total').innerText = '₹0';
+                document.getElementById('drawer-total').innerText = `${config.currencySymbol}0`;
                 return;
             }
 
@@ -473,7 +477,7 @@
                     <div class="cart-item">
                         <div class="cart-item-info">
                             <h4><i class='bx bx-stop-circle ${item.diet === 'veg' ? 'veg-icon' : 'nonveg-icon'}' style="font-size:0.85rem"></i> ${item.name}</h4>
-                            <span style="color: var(--primary); font-weight: 700; font-size: 1.05rem;">₹${item.price * item.qty}</span>
+                            <span style="color: var(--primary); font-weight: 700; font-size: 1.05rem;">${config.currencySymbol}${item.price * item.qty}</span>
                         </div>
                         <div class="qty-controls">
                             <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
@@ -484,14 +488,13 @@
                 `;
             }).join('');
 
-            // Update UI Totals
-            document.getElementById('float-qty').innerText = `${totalQty} Item${totalQty > 1 ? 's' : ''} | ₹${totalPrice}`;
-            document.getElementById('drawer-total').innerText = `₹${totalPrice}`;
+            document.getElementById('float-qty').innerText = `${totalQty} Item${totalQty > 1 ? 's' : ''} | ${config.currencySymbol}${totalPrice}`;
+            document.getElementById('drawer-total').innerText = `${config.currencySymbol}${totalPrice}`;
             document.getElementById('floating-cart').classList.remove('hidden');
             document.getElementById('checkout-btn').disabled = false;
         }
 
-        // --- 6. UI INTERACTIONS ---
+        // --- 7. UI INTERACTIONS ---
         function toggleCart() {
             document.getElementById('cart-drawer').classList.toggle('active');
             document.getElementById('cart-overlay').classList.toggle('active');
@@ -523,20 +526,18 @@
             }
         }
 
-        // --- 7. PLACE ORDER ---
+        // --- 8. PLACE ORDER ---
         function placeOrder() {
             const orderType = document.querySelector('input[name="orderType"]:checked').value;
             const payMethod = document.querySelector('input[name="payMethod"]:checked').value;
             const total = document.getElementById('drawer-total').innerText;
 
-            // Hide UI, Show Success
             toggleCart();
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('floating-cart').classList.add('hidden');
             document.querySelector('header').classList.add('hidden');
             document.getElementById('success-screen').classList.remove('hidden');
 
-            // Populate Receipt
             document.getElementById('receipt-type').innerText = orderType;
             document.getElementById('receipt-pay').innerText = payMethod;
             document.getElementById('receipt-table').innerText = orderType === 'Takeaway' ? 'N/A' : '04';
