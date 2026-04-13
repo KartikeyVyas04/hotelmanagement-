@@ -2,358 +2,377 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title id="page-title">Restaurant Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="page-title">Shivam Ka Dhaba - Menu</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
-        /* --- iOS NATIVE THEME VARIABLES --- */
         :root {
-            --ios-bg: #f2f2f7; /* iOS System Grouped Background */
-            --ios-card: #ffffff;
-            --ios-blue: #007aff;
-            --ios-orange: #ff9500; /* Primary Brand Color */
-            --ios-green: #34c759;
-            --ios-red: #ff3b30;
-            --ios-text-main: #000000;
-            --ios-text-muted: #8e8e93;
-            --ios-separator: rgba(60, 60, 67, 0.15);
-            --ios-blur-bg: rgba(255, 255, 255, 0.85);
-            --safe-area-bottom: env(safe-area-inset-bottom, 20px);
+            --primary: #d9480f; 
+            --primary-hover: #b03808;
+            --primary-light: #fff0e6;
+            --secondary: #f59f00;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #f1f5f9;
+            --veg: #16a34a;
+            --nonveg: #dc2626;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+            --radius: 20px; 
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        /* Native iOS Font Stack */
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--ios-bg); 
-            color: var(--ios-text-main); 
-            padding-bottom: calc(85px + var(--safe-area-bottom)); /* Space for bottom bar */
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        button { cursor: pointer; border: none; background: none; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 120px; overflow-x: hidden; }
+        button { cursor: pointer; border: none; background: none; outline: none; transition: all 0.2s; }
         .hidden { display: none !important; }
 
         /* --- HEADER --- */
-        header { 
-            position: sticky; top: 0; z-index: 50; 
-            background: var(--ios-blur-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 15px 20px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 0.5px solid var(--ios-separator); 
-            padding-top: max(15px, env(safe-area-inset-top)); /* Notch support */
-        }
-        .brand h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px; }
-        .table-badge { background: rgba(255, 149, 0, 0.15); color: var(--ios-orange); padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; }
+        header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; padding: 15px 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .brand-info { display: flex; flex-direction: column; }
+        .brand h1 { font-size: 1.3rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .location { font-size: 0.75rem; color: var(--text-muted); margin-left: 28px; font-weight: 500; }
+        .table-badge { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(217, 72, 15, 0.2); }
 
-        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
+
+        /* --- HERO SECTION (Swipeable) --- */
+        .hero-section { margin-bottom: 25px; }
+        .hero-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); padding-left: 5px; }
+        .hero-carousel { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 10px; }
+        .hero-carousel::-webkit-scrollbar { display: none; }
+        
+        .hero-card { min-width: 280px; height: 160px; border-radius: 20px; overflow: hidden; position: relative; scroll-snap-align: start; box-shadow: var(--shadow-md); cursor: pointer; }
+        .hero-card img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; }
+        .hero-name { color: white; font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+        .hero-price-row { display: flex; justify-content: space-between; align-items: center; }
+        .hero-price { color: var(--secondary); font-weight: 700; font-size: 1.1rem; }
+        .hero-add { background: var(--primary); color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
 
         /* --- SEARCH & FILTERS --- */
-        .search-bar { 
-            display: flex; align-items: center; background: #e3e3e8; padding: 10px 15px; 
-            border-radius: 10px; margin-bottom: 15px; 
-        }
-        .search-bar i { color: var(--ios-text-muted); font-size: 1.2rem; margin-right: 8px; }
-        .search-bar input { border: none; background: transparent; width: 100%; font-size: 1rem; color: var(--ios-text-main); outline: none; }
-        .search-bar input::placeholder { color: var(--ios-text-muted); }
+        .search-bar { display: flex; align-items: center; background: var(--card-bg); padding: 14px 18px; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; margin-bottom: 15px; }
+        .search-bar i { color: var(--text-muted); font-size: 1.3rem; margin-right: 12px; }
+        .search-bar input { border: none; outline: none; width: 100%; font-size: 1rem; color: var(--text-dark); background: transparent; }
         
-        .sticky-nav { 
-            position: sticky; top: max(60px, env(safe-area-inset-top) + 45px); 
-            background: var(--ios-bg); z-index: 40; padding: 10px 0; margin: -10px 0 10px 0; 
-        }
-        .filters { display: flex; overflow-x: auto; scrollbar-width: none; gap: 10px; padding-right: 15px; align-items: center; }
+        .sticky-nav { position: sticky; top: 65px; background: var(--bg-color); z-index: 40; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; margin: -10px 0 10px 0; }
+        .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 10px; width: 100%; padding-right: 10px; }
         .filters::-webkit-scrollbar { display: none; }
+        .category-tabs { display: flex; gap: 8px; }
+        .tab-btn { background: white; border: 1px solid transparent; padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 500; white-space: nowrap; transition: 0.3s; color: var(--text-muted); box-shadow: var(--shadow-sm); }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(217, 72, 15, 0.25); font-weight: 600; }
         
-        .tab-btn { 
-            background: var(--ios-card); padding: 8px 16px; border-radius: 16px; 
-            font-size: 0.9rem; font-weight: 500; white-space: nowrap; color: var(--ios-text-main); 
-            border: 0.5px solid var(--ios-separator); box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-        }
-        .tab-btn.active { background: var(--ios-text-main); color: white; border-color: var(--ios-text-main); }
+        .diet-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; background: white; padding: 8px 14px; border-radius: 30px; border: 1px solid var(--border); flex-shrink: 0; box-shadow: var(--shadow-sm); }
+        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--veg); }
+        input:checked + .slider:before { transform: translateX(16px); }
 
         /* --- MENU GRID --- */
-        .section-title { font-size: 1.3rem; margin: 10px 0 15px 5px; font-weight: 700; letter-spacing: -0.5px; }
-        .menu-grid { display: flex; flex-direction: column; gap: 12px; }
+        .section-title { font-size: 1.2rem; margin-bottom: 15px; font-weight: 700; color: var(--text-dark); padding-left: 5px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 15px; margin-bottom: 40px; }
+        @media(min-width: 600px) { .menu-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); } }
         
-        .menu-card { 
-            background: var(--ios-card); border-radius: 16px; padding: 12px; 
-            display: flex; gap: 12px; cursor: pointer; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-        }
-        .menu-card:active { background: #f2f2f7; }
-        
-        .item-image { width: 90px; height: 90px; border-radius: 12px; overflow: hidden; background: #e5e5ea; flex-shrink: 0; }
+        .menu-card { background: var(--card-bg); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; gap: 15px; position: relative; }
+        .item-image { width: 105px; height: 105px; border-radius: 14px; flex-shrink: 0; overflow: hidden; background: #f1f5f9; }
         .item-image img { width: 100%; height: 100%; object-fit: cover; }
         
-        .item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .item-title { font-weight: 600; font-size: 1rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .diet-icon { font-size: 0.7rem; margin-bottom: 2px; }
-        .veg-icon { color: var(--ios-green); }
-        .nonveg-icon { color: var(--ios-red); }
-        .item-desc { font-size: 0.8rem; color: var(--ios-text-muted); line-height: 1.3; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-right: 2px; }
+        .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .item-title { font-weight: 600; font-size: 1rem; line-height: 1.3; color: var(--text-dark); margin-right: 8px; }
+        .diet-icon { font-size: 0.85rem; margin-top: 3px; }
+        .veg-icon { color: var(--veg); }
+        .nonveg-icon { color: var(--nonveg); }
+        .item-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
-        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-        .price { font-weight: 600; font-size: 1.05rem; }
-        .add-btn { 
-            background: rgba(255, 149, 0, 0.1); color: var(--ios-orange); 
-            padding: 6px 16px; border-radius: 16px; font-weight: 600; font-size: 0.9rem; 
-        }
-        .add-btn:active { background: rgba(255, 149, 0, 0.2); }
+        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .price { font-weight: 700; color: var(--text-dark); font-size: 1.1rem; }
+        .add-btn { background: var(--primary-light); color: var(--primary); border: 1px solid rgba(217, 72, 15, 0.2); padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; }
+        .add-btn:active { background: var(--primary); color: white; transform: scale(0.92); }
 
-        /* --- NATIVE BOTTOM TAB BAR --- */
-        .ios-tab-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: calc(65px + var(--safe-area-bottom));
-            background: var(--ios-blur-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 0.5px solid var(--ios-separator); z-index: 100;
-            display: flex; justify-content: space-around; align-items: flex-start;
-            padding-top: 10px; padding-bottom: var(--safe-area-bottom);
-        }
-        .tab-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            color: var(--ios-text-muted); width: 33%; position: relative;
-        }
-        .tab-item i { font-size: 1.6rem; }
-        .tab-item span { font-size: 0.65rem; font-weight: 500; }
-        .tab-item.active { color: var(--ios-orange); }
+        /* --- FLOATING CART --- */
+        .floating-cart { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 450px; background: var(--primary); color: white; border-radius: 20px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 30px rgba(217, 72, 15, 0.4); z-index: 90; transition: all 0.4s; }
+        .floating-cart.hidden { transform: translate(-50%, 150%); }
+        .cart-summary { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1rem; }
+        .cart-summary-text { display: flex; flex-direction: column; align-items: flex-start; }
+        .cart-summary i { font-size: 1.8rem; }
+        .float-total { font-size: 0.8rem; opacity: 0.9; font-weight: 500; }
+
+        /* --- CART DRAWER (Full height on mobile) --- */
+        .cart-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
         
-        .cart-badge {
-            position: absolute; top: -2px; right: calc(50% - 15px);
-            background: var(--ios-red); color: white;
-            font-size: 0.6rem; font-weight: 700;
-            padding: 2px 6px; border-radius: 10px;
-            border: 2px solid white; display: none;
-        }
-
-        /* --- iOS BOTTOM SHEET MODALS (Item Details & Cart) --- */
-        .sheet-overlay { 
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 200; 
-            opacity: 0; visibility: hidden; transition: 0.3s; 
-        }
-        .sheet-overlay.active { opacity: 1; visibility: visible; }
+        .cart-drawer { position: fixed; right: -100%; top: 0; bottom: 0; width: 100%; max-width: 450px; background: var(--bg-color); z-index: 100; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
+        .cart-drawer.active { right: 0; }
         
-        .ios-sheet { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: var(--ios-bg); border-radius: 20px 20px 0 0; 
-            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-            z-index: 210; max-height: 90vh; display: flex; flex-direction: column;
-            padding-bottom: var(--safe-area-bottom);
-        }
-        .sheet-overlay.active + .ios-sheet, .sheet-overlay.active ~ .ios-sheet.active { transform: translateY(0); }
+        .drawer-header { padding: 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); z-index: 2; }
+        .drawer-header h2 { font-size: 1.2rem; font-weight: 700; }
+        .close-drawer { font-size: 2rem; color: var(--text-dark); margin-right: -5px; }
         
-        .sheet-handle { width: 36px; height: 5px; background: #c7c7cc; border-radius: 3px; margin: 8px auto; }
-        .sheet-header { padding: 10px 20px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 0.5px solid var(--ios-separator); }
-        .sheet-header h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.5px; }
-        .close-sheet { background: #e5e5ea; border-radius: 15px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--ios-text-muted); }
-
-        /* ITEM DETAILS SHEET SPECIFIC */
-        .item-sheet-img { width: 100%; height: 250px; object-fit: cover; }
-        .item-sheet-content { padding: 20px; overflow-y: auto; }
-        .ios-primary-btn { 
-            background: var(--ios-orange); color: white; width: 100%; padding: 16px; 
-            border-radius: 14px; font-weight: 600; font-size: 1.05rem; 
-            display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 20px;
-        }
-        .ios-primary-btn:active { opacity: 0.8; }
-        .ios-primary-btn:disabled { background: #c7c7cc; color: white; opacity: 1; }
-
-        /* --- CART & CHECKOUT SHEET SPECIFIC --- */
-        .cart-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
-        .cart-item { 
-            background: var(--ios-card); padding: 12px; border-radius: 12px; 
-            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; 
-        }
-        .cart-item h4 { font-size: 0.9rem; margin-bottom: 4px; font-weight: 500; }
-        .qty-controls { display: flex; align-items: center; gap: 15px; background: #f2f2f7; padding: 4px 10px; border-radius: 8px; }
-        .qty-btn { font-size: 1.2rem; color: var(--ios-orange); font-weight: 600; padding: 0 5px; }
+        .drawer-content { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .cart-items-list { display: flex; flex-direction: column; gap: 10px; }
         
-        .checkout-section { background: var(--ios-card); padding: 20px; border-top: 0.5px solid var(--ios-separator); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px 16px; border-radius: 16px; border: 1px solid var(--border); }
+        .cart-item-info h4 { font-size: 0.9rem; margin-bottom: 2px; font-weight: 600; }
+        .qty-controls { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 4px; border-radius: 30px; border: 1px solid var(--border); }
+        .qty-btn { width: 28px; height: 28px; background: white; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: var(--primary); }
         
-        /* User Details Form */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 0.8rem; color: var(--ios-text-muted); margin-bottom: 5px; text-transform: uppercase; font-weight: 600; }
-        .ios-input { 
-            width: 100%; background: #f2f2f7; border: none; padding: 14px; 
-            border-radius: 10px; font-size: 1rem; color: var(--ios-text-main); outline: none;
-        }
-        .ios-input::placeholder { color: var(--ios-text-muted); }
+        /* User Details & Checkout Box */
+        .user-details-card { background: white; padding: 15px; border-radius: 16px; border: 1px solid var(--border); }
+        .section-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 0.5px; }
+        .custom-input { width: 100%; border: 1px solid var(--border); padding: 12px 15px; border-radius: 12px; font-size: 0.95rem; background: #f8fafc; margin-bottom: 10px; outline: none; transition: 0.2s; }
+        .custom-input:focus { border-color: var(--primary); background: white; }
         
-        .segmented-control { 
-            display: flex; background: #e5e5ea; padding: 3px; border-radius: 8px; margin-bottom: 15px; 
-        }
-        .seg-label { 
-            flex: 1; text-align: center; padding: 8px; font-size: 0.85rem; font-weight: 500; 
-            border-radius: 6px; cursor: pointer; transition: 0.2s; 
-        }
-        .seg-input { display: none; }
-        .seg-input:checked + .seg-label { background: var(--ios-card); box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-weight: 600; }
+        .checkout-box { background: white; padding: 20px; border-top: 1px solid var(--border); box-shadow: 0 -10px 20px rgba(0,0,0,0.04); z-index: 2; }
+        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .radio-label { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 2px solid var(--border); border-radius: 16px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.2s; color: var(--text-muted); background: white; }
+        input[type="radio"] { display: none; }
+        input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+        input[type="radio"]:disabled + .radio-label { opacity: 0.4; cursor: not-allowed; background: #f8fafc; }
 
-        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-top: 10px; margin-bottom: 15px; }
+        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; color: var(--text-dark); align-items: center; }
+        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(217, 72, 15, 0.3); transition: 0.2s; }
+        .place-order-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; color: #94a3b8; }
 
-        /* --- ORDERS VIEW --- */
-        .orders-list { padding: 15px; }
-        .order-card { 
-            background: var(--ios-card); border-radius: 16px; padding: 15px; 
-            margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-        }
-        .order-header { display: flex; justify-content: space-between; border-bottom: 0.5px solid var(--ios-separator); padding-bottom: 10px; margin-bottom: 10px; }
-        .status-badge { background: rgba(52, 199, 89, 0.15); color: var(--ios-green); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
-
+        /* --- SUCCESS --- */
+        .success-screen { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .check-circle { font-size: 6rem; color: var(--veg); margin-bottom: 10px; }
+        .receipt-card { background: white; padding: 25px; border-radius: 24px; box-shadow: var(--shadow-md); width: 100%; max-width: 400px; margin-top: 25px; text-align: left; border: 1px solid var(--border); }
+        .receipt-card p { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 10px; color: var(--text-dark); font-weight: 500; }
+        
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">
-            <h1 id="brand-name">Shivam Ka Dhaba</h1>
+        <div class="brand-info">
+            <div class="brand">
+                <i class='bx bx-restaurant'></i>
+                <h1 id="brand-name">Loading...</h1>
+            </div>
+            <span class="location">Pimpri-Chinchwad</span>
         </div>
-        <div class="table-badge" id="table-display">Table 04</div>
+        <div class="table-badge hidden" id="table-display">Table --</div>
     </header>
 
-    <div id="view-menu" class="container view">
+    <div class="container" id="main-app">
+        
         <div class="search-bar">
             <i class='bx bx-search'></i>
-            <input type="text" id="search-input" placeholder="Search dishes..." onkeyup="filterMenu()">
+            <input type="text" id="search-input" placeholder="Search for dishes..." onkeyup="filterMenu()">
+        </div>
+
+        <div class="hero-section" id="hero-section">
+            <h2 class="hero-title">Today's Specials 🔥</h2>
+            <div class="hero-carousel" id="hero-carousel">
+                </div>
         </div>
         
         <div class="sticky-nav">
-            <div class="filters" id="category-tabs">
+            <div class="filters">
+                <div class="category-tabs" id="category-tabs"></div>
+                <div class="diet-toggle">
+                    <span>Veg</span>
+                    <label class="switch">
+                        <input type="checkbox" id="veg-toggle" onchange="filterMenu()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
-        </div>
-
-        <h2 class="section-title" id="current-category-title">Menu</h2>
-        <div class="menu-grid" id="menu-container">
-            </div>
-    </div>
-
-    <div id="view-orders" class="container view hidden">
-        <h2 class="section-title" style="margin-top: 10px;">Your Orders</h2>
-        <div class="orders-list" id="orders-container">
-            <div style="text-align: center; color: var(--ios-text-muted); margin-top: 40px;">
-                <i class='bx bx-receipt' style="font-size: 3rem; margin-bottom: 10px;"></i>
-                <p>No orders placed yet.</p>
             </div>
         </div>
+
+        <h2 class="section-title" id="current-category-title">All Items</h2>
+        <div class="menu-grid" id="menu-container"></div>
+
     </div>
 
-    <div class="sheet-overlay" id="sheet-overlay" onclick="closeAllSheets()"></div>
-
-    <div class="ios-sheet" id="item-sheet">
-        <div class="sheet-handle"></div>
-        <img src="" alt="Dish" class="item-sheet-img" id="modal-img">
-        <button class="close-sheet" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.8);" onclick="closeAllSheets()"><i class='bx bx-x'></i></button>
-        
-        <div class="item-sheet-content">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 5px;" id="modal-title">Name</h2>
-                <span style="font-size: 1.3rem; font-weight: 700; color: var(--ios-orange);" id="modal-price">₹0</span>
+    <button class="floating-cart hidden" id="floating-cart" onclick="toggleCart()">
+        <div class="cart-summary">
+            <i class='bx bx-shopping-bag'></i>
+            <div class="cart-summary-text">
+                <span id="float-qty">0 Items</span>
+                <span class="float-total" id="float-subtotal">₹0</span>
             </div>
-            <p style="font-size: 0.8rem; color: var(--ios-text-muted); margin-bottom: 15px;" id="modal-diet-tag">Veg</p>
-            <p style="font-size: 0.95rem; line-height: 1.5; color: var(--ios-text-main);" id="modal-desc">Desc</p>
-            
-            <button class="ios-primary-btn" id="modal-add-action">
-                Add to Cart
-            </button>
         </div>
-    </div>
+        <div style="font-weight: 700; font-size: 1.1rem; display: flex; align-items: center;">
+            Checkout <i class='bx bx-chevron-right' style="font-size: 1.5rem; margin-top: 2px;"></i>
+        </div>
+    </button>
 
-    <div class="ios-sheet" id="cart-sheet">
-        <div class="sheet-handle"></div>
-        <div class="sheet-header">
-            <h2>Your Cart</h2>
-            <button class="close-sheet" onclick="closeAllSheets()"><i class='bx bx-x'></i></button>
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <aside class="cart-drawer" id="cart-drawer">
+        <div class="drawer-header">
+            <h2>Your Order</h2>
+            <button class="close-drawer" onclick="toggleCart()"><i class='bx bx-x'></i></button>
         </div>
         
-        <div class="cart-content" id="cart-items">
+        <div class="drawer-content">
+            <div class="cart-items-list" id="cart-items"></div>
+
+            <div class="user-details-card">
+                <span class="section-label">Contact Details</span>
+                <input type="text" id="customer-name" class="custom-input" placeholder="Your Name" autocomplete="name">
+                <input type="tel" id="customer-phone" class="custom-input" placeholder="Phone Number" autocomplete="tel">
+            </div>
+        </div>
+
+        <div class="checkout-box">
+            <span class="section-label">Order Type</span>
+            <div class="radio-grid" id="order-type-container">
+                <div>
+                    <input type="radio" name="orderType" id="dine-in" value="Dine-In" checked onchange="handleCheckoutRules()">
+                    <label for="dine-in" class="radio-label"><i class='bx bx-restaurant'></i> Dine-In</label>
+                </div>
+                <div>
+                    <input type="radio" name="orderType" id="takeaway" value="Takeaway" onchange="handleCheckoutRules()">
+                    <label for="takeaway" class="radio-label"><i class='bx bx-shopping-bag'></i> Takeaway</label>
+                </div>
             </div>
 
-        <div class="checkout-section">
-            
-            <div class="form-group">
-                <label>Contact Details (Required)</label>
-                <input type="text" id="cust-name" class="ios-input" placeholder="Your Name" style="margin-bottom: 8px;" onkeyup="validateCheckout()">
-                <input type="tel" id="cust-phone" class="ios-input" placeholder="Phone Number (10 digits)" maxlength="10" onkeyup="validateCheckout()">
-            </div>
-
-            <div class="segmented-control">
-                <input type="radio" name="orderType" id="dine-in" class="seg-input" value="Dine-In" checked onchange="handleCheckoutRules()">
-                <label for="dine-in" class="seg-label">Dine-In</label>
-                
-                <input type="radio" name="orderType" id="takeaway" class="seg-input" value="Takeaway" onchange="handleCheckoutRules()">
-                <label for="takeaway" class="seg-label">Takeaway</label>
+            <span class="section-label">Payment Method</span>
+            <div class="radio-grid">
+                <div>
+                    <input type="radio" name="payMethod" id="pay-upi" value="UPI" checked>
+                    <label for="pay-upi" class="radio-label"><i class='bx bx-qr-scan'></i> Pay Online</label>
+                </div>
+                <div>
+                    <input type="radio" name="payMethod" id="pay-cash" value="Cash">
+                    <label for="pay-cash" class="radio-label"><i class='bx bx-money'></i> Pay Cash</label>
+                </div>
             </div>
 
             <div class="total-row">
                 <span>Total</span>
-                <span id="drawer-total">₹0</span>
+                <span id="drawer-total" style="color: var(--primary); font-size: 1.4rem;">₹0</span>
             </div>
-
-            <button class="ios-primary-btn" id="checkout-btn" onclick="placeOrder()" disabled>
+            <div id="error-msg" style="color: var(--nonveg); font-size: 0.8rem; text-align: center; margin-bottom: 10px; display: none;">Please enter Name and Phone to continue.</div>
+            
+            <button class="place-order-btn" id="checkout-btn" onclick="validateAndPlaceOrder()">
                 Place Order
             </button>
         </div>
+    </aside>
+
+    <div class="container hidden" id="success-screen">
+        <div class="success-screen">
+            <i class='bx bxs-check-circle check-circle'></i>
+            <h1 style="color: var(--text-dark); font-size: 2rem;">Order Sent!</h1>
+            <p style="color: var(--text-muted); margin-top: 10px; font-size: 1rem;">The kitchen has received your order, <span id="success-name"></span>.</p>
+            
+            <div class="receipt-card">
+                <h3 style="margin-bottom: 18px; border-bottom: 2px solid var(--border); padding-bottom: 12px; color: var(--primary);">Order #SKD-8891</h3>
+                <p><strong>Type:</strong> <span id="receipt-type"></span></p>
+                <p><strong>Table No:</strong> <span id="receipt-table"></span></p>
+                <p><strong>Payment:</strong> <span id="receipt-pay"></span></p>
+                <p style="border:none; margin-top: 20px; font-size: 1.3rem;"><strong>Total:</strong> <strong style="color: var(--primary);" id="receipt-total"></strong></p>
+            </div>
+
+            <button onclick="location.reload()" style="margin-top: 35px; background: white; border: 2px solid var(--border); padding: 14px 30px; border-radius: 30px; font-weight: 600; width: 100%;">Start New Order</button>
+        </div>
     </div>
 
-    <nav class="ios-tab-bar">
-        <button class="tab-item active" id="tab-menu" onclick="switchTab('menu')">
-            <i class='bx bxs-food-menu'></i>
-            <span>Menu</span>
-        </button>
-        <button class="tab-item" id="tab-cart" onclick="openCartSheet()">
-            <div class="cart-badge" id="cart-badge">0</div>
-            <i class='bx bx-shopping-bag'></i>
-            <span>Cart</span>
-        </button>
-        <button class="tab-item" id="tab-orders" onclick="switchTab('orders')">
-            <i class='bx bx-receipt'></i>
-            <span>Orders</span>
-        </button>
-    </nav>
-
     <script>
-        const config = { restaurantName: "Shivam Ka Dhaba", currencySymbol: "₹" };
+        const config = {
+            restaurantName: "Shivam Ka Dhaba",
+            currencySymbol: "₹"
+        };
 
+        // Added 'isHero' to highlight top items
         const menuData = [
-            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', desc: 'Tender chicken simmered in a rich, creamy tomato and cashew gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80' },
-            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
-            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', desc: 'Whole black lentils slow-cooked overnight with butter and cream.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80' },
-            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', desc: 'Fresh flatbread topped with minced garlic and butter.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80' },
-            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', desc: 'Boneless chicken chunks roasted over charcoal.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80' },
-            { id: 6, name: 'Hot Gulab Jamun (2 pcs)', category: 'Desserts', price: 90, diet: 'veg', desc: 'Soft dumplings soaked in warm sugar syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=400&q=80' }
+            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', isHero: true, desc: 'Tender chicken simmered in a rich, creamy tomato and cashew gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', isHero: true, desc: 'Soft cottage cheese cubes cooked in a spiced tomato gravy.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', isHero: false, desc: 'Whole black lentils slow-cooked overnight with butter and cream.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80' },
+            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', isHero: false, desc: 'Freshly baked flatbread from the tandoor, topped with garlic.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80' },
+            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', isHero: true, desc: 'Boneless chicken chunks marinated in spiced yogurt and roasted.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80' },
+            { id: 6, name: 'Hot Gulab Jamun (2 pcs)', category: 'Desserts', price: 90, diet: 'veg', isHero: false, desc: 'Soft milk-solid dumplings deep-fried and soaked in sugar syrup.', image: 'https://images.unsplash.com/photo-1593006526971-1188d44e5916?auto=format&fit=crop&w=400&q=80' },
+            { id: 7, name: 'Kulhad Masala Chai', category: 'Beverages', price: 40, diet: 'veg', isHero: false, desc: 'Strong Indian tea brewed with crushed ginger, cardamom.', image: 'https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?auto=format&fit=crop&w=400&q=80' }
         ];
 
         let cart = {};
-        let pastOrders = [];
         let activeCategory = 'All';
-        const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts'];
+        const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts', 'Beverages'];
+        let activeTableNumber = null;
 
         window.onload = () => {
-            document.title = config.restaurantName;
+            document.getElementById('page-title').innerText = `${config.restaurantName} - Menu`;
             document.getElementById('brand-name').innerText = config.restaurantName;
+            
+            handleQRLogic();
+            loadUserData();
+            renderHero();
             renderTabs();
             filterMenu();
         };
 
-        // --- NAVIGATION TABS ---
-        function switchTab(viewName) {
-            // Update UI tabs
-            document.getElementById('tab-menu').classList.remove('active');
-            document.getElementById('tab-orders').classList.remove('active');
-            document.getElementById('tab-' + viewName).classList.add('active');
+        // --- NEW: QR CODE URL PARSING ---
+        function handleQRLogic() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tableParam = urlParams.get('table');
+            const tableBadge = document.getElementById('table-display');
+            const dineInRadio = document.getElementById('dine-in');
+            const takeawayRadio = document.getElementById('takeaway');
 
-            // Update Views
-            document.getElementById('view-menu').classList.add('hidden');
-            document.getElementById('view-orders').classList.add('hidden');
-            document.getElementById('view-' + viewName).classList.remove('hidden');
-            
-            // Scroll to top
-            window.scrollTo(0,0);
+            if (tableParam) {
+                // Customer scanned a table QR code
+                activeTableNumber = tableParam;
+                tableBadge.innerText = `Table ${tableParam}`;
+                tableBadge.classList.remove('hidden');
+                
+                // Force Dine-In, disable Takeaway
+                dineInRadio.checked = true;
+                takeawayRadio.disabled = true;
+            } else {
+                // Direct website visit (Takeaway default)
+                tableBadge.classList.add('hidden');
+                takeawayRadio.checked = true;
+                handleCheckoutRules(); // Will disable cash
+            }
         }
 
-        // --- MENU RENDERING ---
+        // --- NEW: USER DATA PERSISTENCE ---
+        function loadUserData() {
+            const savedUser = localStorage.getItem('skd_user_profile');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                document.getElementById('customer-name').value = user.name;
+                document.getElementById('customer-phone').value = user.phone;
+            }
+        }
+
+        function saveUserData() {
+            const name = document.getElementById('customer-name').value.trim();
+            const phone = document.getElementById('customer-phone').value.trim();
+            if(name && phone) {
+                localStorage.setItem('skd_user_profile', JSON.stringify({ name, phone }));
+            }
+        }
+
+        // --- RENDER LOGIC ---
+        function renderHero() {
+            const container = document.getElementById('hero-carousel');
+            const heroes = menuData.filter(item => item.isHero);
+            
+            container.innerHTML = heroes.map(item => `
+                <div class="hero-card" onclick="addToCart(${item.id})">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="hero-overlay">
+                        <span class="hero-name">${item.name}</span>
+                        <div class="hero-price-row">
+                            <span class="hero-price">${config.currencySymbol}${item.price}</span>
+                            <span class="hero-add">Add +</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         function renderTabs() {
             const container = document.getElementById('category-tabs');
             container.innerHTML = categories.map(cat => `
@@ -363,77 +382,51 @@
 
         function switchCategory(category) {
             activeCategory = category;
+            document.getElementById('current-category-title').innerText = category === 'All' ? 'All Items' : category;
             renderTabs();
             filterMenu();
         }
 
         function filterMenu() {
             const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const vegOnly = document.getElementById('veg-toggle').checked;
+            
             const filtered = menuData.filter(item => {
                 const matchCategory = activeCategory === 'All' || item.category === activeCategory;
-                const matchSearch = item.name.toLowerCase().includes(searchQuery);
-                return matchCategory && matchSearch;
+                const matchSearch = item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery);
+                const matchDiet = vegOnly ? item.diet === 'veg' : true;
+                return matchCategory && matchSearch && matchDiet;
             });
 
             const container = document.getElementById('menu-container');
             if (filtered.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--ios-text-muted);">No dishes found.</div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; color: var(--text-muted);"><i class='bx bx-search' style='font-size: 2rem; opacity: 0.3;'></i><p>No dishes found.</p></div>`;
                 return;
             }
 
             container.innerHTML = filtered.map(item => `
-                <div class="menu-card" onclick="openItemSheet(${item.id})">
+                <div class="menu-card">
+                    <div class="item-image"><img src="${item.image}" loading="lazy"></div>
                     <div class="item-details">
                         <div>
-                            <div style="display:flex; align-items:center; gap:4px; margin-bottom:4px;">
-                                <i class='bx bx-stop-circle ${item.diet === 'veg' ? 'veg-icon' : 'nonveg-icon'} diet-icon'></i>
+                            <div class="item-header">
                                 <h3 class="item-title">${item.name}</h3>
+                                <i class='bx bx-stop-circle diet-icon ${item.diet === 'veg' ? 'veg-icon' : 'nonveg-icon'}'></i>
                             </div>
-                            <span class="price">${config.currencySymbol}${item.price}</span>
                             <p class="item-desc">${item.desc}</p>
                         </div>
                         <div class="item-footer">
-                            <button class="add-btn" onclick="event.stopPropagation(); addToCart(${item.id})">Add</button>
+                            <span class="price">${config.currencySymbol}${item.price}</span>
+                            <button class="add-btn" onclick="addToCart(${item.id})">Add <i class='bx bx-plus'></i></button>
                         </div>
                     </div>
-                    <div class="item-image"><img src="${item.image}" loading="lazy"></div>
                 </div>
             `).join('');
         }
 
-        // --- SHEET LOGIC ---
-        function openItemSheet(itemId) {
-            const item = menuData.find(i => i.id === itemId);
-            document.getElementById('modal-img').src = item.image;
-            document.getElementById('modal-title').innerText = item.name;
-            document.getElementById('modal-price').innerText = `${config.currencySymbol}${item.price}`;
-            document.getElementById('modal-desc').innerText = item.desc;
-            document.getElementById('modal-diet-tag').innerHTML = item.diet === 'veg' ? `<span style="color:var(--ios-green)">● Pure Veg</span>` : `<span style="color:var(--ios-red)">● Non-Veg</span>`;
-            
-            document.getElementById('modal-add-action').onclick = () => { addToCart(item.id); closeAllSheets(); };
-            
-            document.getElementById('sheet-overlay').classList.add('active');
-            document.getElementById('item-sheet').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openCartSheet() {
-            document.getElementById('sheet-overlay').classList.add('active');
-            document.getElementById('cart-sheet').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            validateCheckout();
-        }
-
-        function closeAllSheets() {
-            document.getElementById('sheet-overlay').classList.remove('active');
-            document.getElementById('item-sheet').classList.remove('active');
-            document.getElementById('cart-sheet').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
         // --- CART LOGIC ---
         function addToCart(itemId) {
-            if (cart[itemId]) cart[itemId].qty += 1;
+            if (cart[itemId]) { cart[itemId].qty += 1; } 
             else {
                 const item = menuData.find(i => i.id === itemId);
                 cart[itemId] = { ...item, qty: 1 };
@@ -442,9 +435,11 @@
         }
 
         function updateQty(itemId, change) {
-            cart[itemId].qty += change;
-            if (cart[itemId].qty <= 0) delete cart[itemId];
-            updateCartData();
+            if (cart[itemId]) {
+                cart[itemId].qty += change;
+                if (cart[itemId].qty <= 0) delete cart[itemId];
+                updateCartData();
+            }
         }
 
         function updateCartData() {
@@ -453,10 +448,9 @@
             const container = document.getElementById('cart-items');
             
             if (cartArray.length === 0) {
-                container.innerHTML = '<div style="text-align:center; margin-top:40px; color:var(--ios-text-muted);">Cart is empty</div>';
+                container.innerHTML = '<div style="text-align:center; padding: 20px; color:#94a3b8;">Your cart is empty.</div>';
+                document.getElementById('floating-cart').classList.add('hidden');
                 document.getElementById('drawer-total').innerText = `${config.currencySymbol}0`;
-                document.getElementById('cart-badge').style.display = 'none';
-                validateCheckout();
                 return;
             }
 
@@ -464,94 +458,79 @@
                 totalQty += item.qty; totalPrice += (item.price * item.qty);
                 return `
                     <div class="cart-item">
-                        <div>
-                            <h4>${item.name}</h4>
-                            <span style="font-weight:600;">${config.currencySymbol}${item.price * item.qty}</span>
+                        <div class="cart-item-info">
+                            <h4><i class='bx bx-stop-circle ${item.diet === 'veg' ? 'veg-icon' : 'nonveg-icon'}' style="font-size:0.85rem"></i> ${item.name}</h4>
+                            <span style="color: var(--primary); font-weight: 700;">${config.currencySymbol}${item.price * item.qty}</span>
                         </div>
                         <div class="qty-controls">
                             <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
-                            <span style="font-weight: 600; width: 16px; text-align: center;">${item.qty}</span>
+                            <span style="font-weight: 700; width: 20px; text-align: center;">${item.qty}</span>
                             <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
                         </div>
                     </div>
                 `;
             }).join('');
 
+            document.getElementById('float-qty').innerText = `${totalQty} Item${totalQty > 1 ? 's' : ''}`;
+            document.getElementById('float-subtotal').innerText = `${config.currencySymbol}${totalPrice}`;
             document.getElementById('drawer-total').innerText = `${config.currencySymbol}${totalPrice}`;
-            
-            // Update Tab Badge
-            const badge = document.getElementById('cart-badge');
-            badge.innerText = totalQty;
-            badge.style.display = 'block';
-            
-            validateCheckout();
+            document.getElementById('floating-cart').classList.remove('hidden');
         }
 
-        // --- CHECKOUT & VALIDATION ---
+        function toggleCart() {
+            document.getElementById('cart-drawer').classList.toggle('active');
+            document.getElementById('cart-overlay').classList.toggle('active');
+            document.body.style.overflow = document.getElementById('cart-drawer').classList.contains('active') ? 'hidden' : 'auto';
+        }
+
         function handleCheckoutRules() {
             const isTakeaway = document.getElementById('takeaway').checked;
-            if(isTakeaway) {
-                document.getElementById('table-display').style.display = 'none';
+            const cashRadio = document.getElementById('pay-cash');
+            const upiRadio = document.getElementById('pay-upi');
+            
+            if (isTakeaway) {
+                cashRadio.disabled = true;
+                upiRadio.checked = true;
             } else {
-                document.getElementById('table-display').style.display = 'block';
+                cashRadio.disabled = false;
             }
         }
 
-        function validateCheckout() {
-            const name = document.getElementById('cust-name').value.trim();
-            const phone = document.getElementById('cust-phone').value.trim();
-            const cartHasItems = Object.keys(cart).length > 0;
-            const btn = document.getElementById('checkout-btn');
+        // --- NEW: VALIDATION & PLACE ORDER ---
+        function validateAndPlaceOrder() {
+            const name = document.getElementById('customer-name').value.trim();
+            const phone = document.getElementById('customer-phone').value.trim();
+            const errorMsg = document.getElementById('error-msg');
 
-            // Basic validation: Name not empty, Phone is 10 digits
-            const isValid = name.length > 2 && phone.length === 10 && !isNaN(phone) && cartHasItems;
-            
-            btn.disabled = !isValid;
-        }
+            // Form Validation
+            if (!name || !phone || phone.length < 10) {
+                errorMsg.style.display = 'block';
+                return;
+            }
+            errorMsg.style.display = 'none';
 
-        // --- PLACE ORDER ---
-        function placeOrder() {
-            const name = document.getElementById('cust-name').value;
-            const type = document.querySelector('input[name="orderType"]:checked').value;
+            // Save details for next time
+            saveUserData();
+
+            const orderType = document.querySelector('input[name="orderType"]:checked').value;
+            const payMethod = document.querySelector('input[name="payMethod"]:checked').value;
             const total = document.getElementById('drawer-total').innerText;
-            const orderId = "SKD-" + Math.floor(1000 + Math.random() * 9000);
 
-            // Save order to history
-            pastOrders.unshift({ id: orderId, name, type, total, date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-            
-            // Clear Cart
-            cart = {};
-            updateCartData();
-            document.getElementById('cust-name').value = '';
-            document.getElementById('cust-phone').value = '';
-            
-            closeAllSheets();
-            renderOrders();
-            switchTab('orders'); // Jump to orders view
-            
-            // Simple native-like alert
-            setTimeout(() => alert(`Order ${orderId} placed successfully! The kitchen is preparing your food.`), 300);
-        }
+            // Transition UI
+            toggleCart();
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('floating-cart').classList.add('hidden');
+            document.querySelector('header').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
 
-        // --- ORDERS VIEW ---
-        function renderOrders() {
-            const container = document.getElementById('orders-container');
-            if (pastOrders.length === 0) return;
-
-            container.innerHTML = pastOrders.map(order => `
-                <div class="order-card">
-                    <div class="order-header">
-                        <span style="font-weight: 700;">Order #${order.id}</span>
-                        <span class="status-badge">Preparing</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--ios-text-muted); margin-bottom: 5px;">
-                        <span>${order.type} • ${order.date}</span>
-                    </div>
-                    <div style="font-weight: 600; font-size: 1.1rem; color: var(--ios-text-main); margin-top: 10px;">
-                        Total Paid: ${order.total}
-                    </div>
-                </div>
-            `).join('');
+            // Populate Final Screen
+            document.getElementById('success-name').innerText = name.split(' ')[0]; // First name
+            document.getElementById('receipt-type').innerText = orderType;
+            document.getElementById('receipt-table').innerText = activeTableNumber ? activeTableNumber : 'N/A';
+            document.getElementById('receipt-pay').innerText = payMethod === 'UPI' ? 'Paid Online' : 'Pay at Counter';
+            document.getElementById('receipt-total').innerText = total;
+            
+            window.scrollTo(0,0);
         }
     </script>
 </body>
