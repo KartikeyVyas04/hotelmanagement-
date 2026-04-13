@@ -5,175 +5,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title id="page-title">Shivam Ka Dhaba</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
         :root {
             --primary: #d9480f; 
             --primary-hover: #b03808;
-            --primary-light: #fff0e6;
+            --primary-light: #fff5f0;
             --secondary: #f59f00;
-            --bg-color: #f4f6f8;
+            --bg-color: #fafbfc;
             --card-bg: #ffffff;
-            --text-dark: #1e293b;
+            --text-dark: #0f172a;
             --text-muted: #64748b;
             --border: #f1f5f9;
             --veg: #16a34a;
             --nonveg: #dc2626;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
-            --shadow-lg: 0 -4px 20px rgba(0,0,0,0.08);
-            --radius: 20px; 
+            /* Ultra-soft, premium shadows */
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+            --shadow-lg: 0 -2px 16px rgba(15, 23, 42, 0.08);
+            --radius: 12px; /* Classier, tighter corners */
         }
 
         /* --- STRICT ANTI-ZOOM FOR MOBILE --- */
-        html { touch-action: manipulation; }
+        html { touch-action: manipulation; font-size: 15px; } /* Slightly scaled down base size */
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 90px; overflow-x: hidden; }
-        button { cursor: pointer; border: none; background: none; outline: none; transition: all 0.2s; }
+        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 70px; overflow-x: hidden; }
+        button { cursor: pointer; border: none; background: none; outline: none; transition: all 0.2s ease; }
         .hidden { display: none !important; }
 
         /* --- HEADER --- */
-        header { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50; padding: 15px 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50; padding: 12px 16px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
         .brand-info { display: flex; flex-direction: column; }
-        .brand h1 { font-size: 1.3rem; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-        .location { font-size: 0.75rem; color: var(--text-muted); margin-left: 28px; font-weight: 500; }
-        .table-badge { background: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(217, 72, 15, 0.2); }
+        .brand h1 { font-size: 1.15rem; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px; letter-spacing: -0.3px; }
+        .location { font-size: 0.7rem; color: var(--text-muted); margin-left: 24px; font-weight: 400; }
+        .table-badge { background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(217, 72, 15, 0.15); }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 15px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 12px 16px; }
 
         /* --- HERO & CAROUSEL --- */
-        .hero-section { margin-bottom: 20px; }
-        .hero-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--text-dark); padding-left: 5px; }
-        .hero-carousel { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 5px; }
+        .hero-section { margin-bottom: 16px; }
+        .hero-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); padding-left: 4px; }
+        .hero-carousel { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
         .hero-carousel::-webkit-scrollbar { display: none; }
-        .hero-card { min-width: 280px; height: 150px; border-radius: 20px; overflow: hidden; position: relative; scroll-snap-align: start; box-shadow: var(--shadow-md); cursor: pointer; }
+        .hero-card { min-width: 240px; height: 130px; border-radius: var(--radius); overflow: hidden; position: relative; scroll-snap-align: start; box-shadow: var(--shadow-sm); cursor: pointer; }
         .hero-card img { width: 100%; height: 100%; object-fit: cover; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; }
-        .hero-name { color: white; font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; }
+        .hero-name { color: white; font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
         .hero-price-row { display: flex; justify-content: space-between; align-items: center; }
-        .hero-price { color: var(--secondary); font-weight: 700; font-size: 1.1rem; }
-        .hero-add { background: var(--primary); color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+        .hero-price { color: var(--secondary); font-weight: 600; font-size: 0.95rem; }
+        .hero-add { background: var(--primary); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; }
 
         /* --- SEARCH & FILTERS --- */
-        .search-bar { display: flex; align-items: center; background: var(--card-bg); padding: 12px 18px; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; margin-bottom: 15px; }
-        .search-bar i { color: var(--text-muted); font-size: 1.3rem; margin-right: 12px; }
-        .search-bar input { border: none; outline: none; width: 100%; font-size: 1rem; color: var(--text-dark); background: transparent; }
+        .search-bar { display: flex; align-items: center; background: var(--card-bg); padding: 10px 14px; border-radius: var(--radius); box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.3s; margin-bottom: 12px; }
+        .search-bar i { color: var(--text-muted); font-size: 1.1rem; margin-right: 8px; }
+        .search-bar input { border: none; outline: none; width: 100%; font-size: 0.9rem; color: var(--text-dark); background: transparent; }
         
-        .sticky-nav { position: sticky; top: 65px; background: var(--bg-color); z-index: 40; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; margin: -10px 0 10px 0; }
-        .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 10px; width: 100%; padding-right: 10px; }
+        .sticky-nav { position: sticky; top: 58px; background: var(--bg-color); z-index: 40; padding: 8px 0; display: flex; justify-content: space-between; align-items: center; margin: -8px 0 8px 0; }
+        .filters { display: flex; align-items: center; overflow-x: auto; scrollbar-width: none; gap: 8px; width: 100%; padding-right: 8px; }
         .filters::-webkit-scrollbar { display: none; }
-        .category-tabs { display: flex; gap: 8px; }
-        .tab-btn { background: white; border: 1px solid transparent; padding: 8px 18px; border-radius: 30px; font-size: 0.9rem; font-weight: 500; white-space: nowrap; color: var(--text-muted); box-shadow: var(--shadow-sm); }
-        .tab-btn.active { background: var(--primary); color: white; font-weight: 600; }
+        .category-tabs { display: flex; gap: 6px; }
+        .tab-btn { background: white; border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 400; white-space: nowrap; color: var(--text-muted); box-shadow: var(--shadow-sm); }
+        .tab-btn.active { background: var(--primary); color: white; font-weight: 500; border-color: var(--primary); }
         
-        .diet-toggle { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; background: white; padding: 8px 14px; border-radius: 30px; border: 1px solid var(--border); flex-shrink: 0; box-shadow: var(--shadow-sm); }
-        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+        .diet-toggle { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 500; background: white; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); flex-shrink: 0; box-shadow: var(--shadow-sm); }
+        .switch { position: relative; display: inline-block; width: 30px; height: 16px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--veg); }
-        input:checked + .slider:before { transform: translateX(16px); }
+        input:checked + .slider:before { transform: translateX(14px); }
 
         /* --- MENU GRID --- */
-        .section-title { font-size: 1.2rem; margin-bottom: 15px; font-weight: 700; color: var(--text-dark); padding-left: 5px; }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 15px; margin-bottom: 20px; }
-        @media(min-width: 600px) { .menu-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); } }
+        .section-title { font-size: 1.05rem; margin-bottom: 12px; font-weight: 600; color: var(--text-dark); padding-left: 4px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 12px; margin-bottom: 20px; }
+        @media(min-width: 600px) { .menu-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); } }
         
-        .menu-card { background: var(--card-bg); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; gap: 15px; position: relative; }
-        .item-image { width: 105px; height: 105px; border-radius: 14px; flex-shrink: 0; overflow: hidden; background: #f1f5f9; }
+        .menu-card { background: var(--card-bg); border-radius: var(--radius); padding: 10px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: flex; gap: 12px; position: relative; }
+        .item-image { width: 90px; height: 90px; border-radius: 10px; flex-shrink: 0; overflow: hidden; background: #f1f5f9; }
         .item-image img { width: 100%; height: 100%; object-fit: cover; }
         
         .item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-right: 2px; }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .item-title { font-weight: 600; font-size: 1rem; line-height: 1.3; color: var(--text-dark); margin-right: 8px; }
-        .diet-icon { font-size: 0.85rem; margin-top: 3px; }
+        .item-title { font-weight: 500; font-size: 0.95rem; line-height: 1.25; color: var(--text-dark); margin-right: 6px; }
+        .diet-icon { font-size: 0.75rem; margin-top: 3px; }
         .veg-icon { color: var(--veg); }
         .nonveg-icon { color: var(--nonveg); }
-        .item-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .item-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
-        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .price { font-weight: 700; color: var(--text-dark); font-size: 1.1rem; }
-        .add-btn { background: var(--primary-light); color: var(--primary); border: 1px solid rgba(217, 72, 15, 0.2); padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; }
-        .add-btn:active { background: var(--primary); color: white; transform: scale(0.92); }
+        .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .price { font-weight: 600; color: var(--text-dark); font-size: 0.95rem; }
+        .add-btn { background: var(--primary-light); color: var(--primary); border: 1px solid rgba(217, 72, 15, 0.15); padding: 6px 16px; border-radius: 20px; font-weight: 500; font-size: 0.8rem; }
+        .add-btn:active { background: var(--primary); color: white; transform: scale(0.95); }
 
-        /* --- BOTTOM APP NAVIGATION BAR --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: white; display: flex; justify-content: space-around; align-items: center; box-shadow: var(--shadow-lg); z-index: 80; padding-bottom: env(safe-area-inset-bottom, 10px); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600; gap: 4px; width: 80px; height: 100%; transition: 0.2s; cursor: pointer; }
-        .nav-item i { font-size: 1.5rem; }
-        .nav-item.active { color: var(--primary); }
+        /* --- PREMIUM BOTTOM NAVIGATION BAR --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; box-shadow: var(--shadow-lg); z-index: 80; padding-bottom: env(safe-area-inset-bottom, 0px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.7rem; font-weight: 500; gap: 3px; width: 33%; height: 100%; transition: 0.2s; cursor: pointer; position: relative; }
+        .nav-item i { font-size: 1.3rem; transition: transform 0.2s; }
+        .nav-item.active { color: var(--text-dark); font-weight: 600; }
+        .nav-item.active i { color: var(--primary); }
         
-        /* --- FLOATING CART (Moved up to clear Bottom Nav) --- */
-        .floating-cart { position: fixed; bottom: 95px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 450px; background: var(--primary); color: white; border-radius: 20px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 20px rgba(217, 72, 15, 0.4); z-index: 70; transition: all 0.3s; }
-        .floating-cart.hidden { transform: translate(-50%, 150%); opacity: 0; pointer-events: none; }
-        .cart-summary { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1rem; }
-        .cart-summary-text { display: flex; flex-direction: column; align-items: flex-start; }
-        .cart-summary i { font-size: 1.8rem; }
-        .float-total { font-size: 0.8rem; opacity: 0.9; font-weight: 500; }
+        /* Integrated Cart Tab */
+        .cart-nav-item.has-items { color: var(--primary); font-weight: 600; }
+        .cart-nav-item.has-items i { color: var(--primary); }
+        .cart-badge { position: absolute; top: 10px; right: 50%; transform: translateX(18px); background: var(--primary); color: white; font-size: 0.6rem; font-weight: 600; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid white; box-sizing: content-box; }
+        @keyframes bump { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .bump i { animation: bump 0.3s ease; }
 
-        /* --- CART DRAWER (Overlap Fixed) --- */
-        .cart-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
+        /* --- CART DRAWER --- */
+        .cart-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         
-        /* Drawer is a flex column */
-        .cart-drawer { position: fixed; right: -100%; top: 0; bottom: 0; width: 100%; max-width: 450px; background: var(--bg-color); z-index: 100; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
+        .cart-drawer { position: fixed; right: -100%; top: 0; bottom: 0; width: 100%; max-width: 400px; background: var(--bg-color); z-index: 100; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,0.08); }
         .cart-drawer.active { right: 0; }
         
-        /* Header is fixed at top of drawer */
-        .drawer-header { padding: 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 2; box-shadow: var(--shadow-sm); }
-        .drawer-header h2 { font-size: 1.2rem; font-weight: 700; }
-        .close-drawer { font-size: 2rem; color: var(--text-dark); margin-right: -5px; }
+        .drawer-header { padding: 16px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-shrink: 0; z-index: 2; box-shadow: var(--shadow-sm); }
+        .drawer-header h2 { font-size: 1.05rem; font-weight: 600; }
+        .close-drawer { font-size: 1.6rem; color: var(--text-dark); margin-right: -4px; opacity: 0.6; }
         
-        /* Content scrolls! All forms go in here */
-        .drawer-content { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .drawer-content { flex-grow: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
         
-        .cart-items-list { display: flex; flex-direction: column; gap: 10px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px 16px; border-radius: 16px; border: 1px solid var(--border); }
-        .cart-item-info h4 { font-size: 0.9rem; margin-bottom: 2px; font-weight: 600; }
-        .qty-controls { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 4px; border-radius: 30px; border: 1px solid var(--border); }
-        .qty-btn { width: 28px; height: 28px; background: white; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: var(--primary); }
+        .cart-items-list { display: flex; flex-direction: column; gap: 8px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px 14px; border-radius: var(--radius); border: 1px solid var(--border); }
+        .cart-item-info h4 { font-size: 0.85rem; margin-bottom: 2px; font-weight: 500; }
+        .qty-controls { display: flex; align-items: center; gap: 8px; background: #f8fafc; padding: 4px; border-radius: 20px; border: 1px solid var(--border); }
+        .qty-btn { width: 24px; height: 24px; background: white; border-radius: 50%; font-size: 1rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); font-weight: 500; color: var(--text-dark); }
         
-        /* Form Cards inside scrollable area */
-        .form-card { background: white; padding: 15px; border-radius: 16px; border: 1px solid var(--border); }
-        .section-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 0.5px; }
+        .form-card { background: white; padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); }
+        .section-label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 0.5px; }
         
-        .custom-input { width: 100%; border: 1px solid var(--border); padding: 12px 15px; border-radius: 12px; font-size: 0.95rem; background: #f8fafc; margin-bottom: 10px; outline: none; transition: 0.2s; }
+        .custom-input { width: 100%; border: 1px solid var(--border); padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; background: #f8fafc; margin-bottom: 8px; outline: none; transition: 0.2s; }
         .custom-input:focus { border-color: var(--primary); background: white; }
         
-        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .radio-label { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 8px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.2s; color: var(--text-muted); background: white; }
+        .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .radio-label { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: 0.2s; color: var(--text-muted); background: white; }
         input[type="radio"] { display: none; }
         input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
         input[type="radio"]:disabled + .radio-label { opacity: 0.4; cursor: not-allowed; background: #f8fafc; }
 
-        /* Footer is fixed at bottom of drawer */
-        .checkout-footer { background: white; padding: 20px; border-top: 1px solid var(--border); box-shadow: 0 -4px 15px rgba(0,0,0,0.03); flex-shrink: 0; z-index: 2; }
-        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; color: var(--text-dark); align-items: center; }
-        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(217, 72, 15, 0.3); transition: 0.2s; }
+        .checkout-footer { background: white; padding: 16px; border-top: 1px solid var(--border); box-shadow: 0 -4px 12px rgba(0,0,0,0.02); flex-shrink: 0; z-index: 2; }
+        .total-row { display: flex; justify-content: space-between; font-size: 1.05rem; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); align-items: center; }
+        .place-order-btn { width: 100%; background: var(--primary); color: white; padding: 12px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
+        .place-order-btn:active { transform: scale(0.98); }
 
         /* --- ACTIVE ORDER TRACKING SCREEN --- */
-        .tracking-container { padding: 20px 10px; }
-        .empty-orders { text-align: center; color: var(--text-muted); padding: 50px 20px; font-weight: 500; }
+        .tracking-container { padding: 16px 8px; }
+        .empty-orders { text-align: center; color: var(--text-muted); padding: 50px 20px; font-weight: 400; font-size: 0.9rem; }
+        .active-order-card { background: white; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 16px; }
+        .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 12px; margin-bottom: 12px; }
+        .order-id { font-weight: 600; font-size: 1.05rem; color: var(--text-dark); }
+        .order-total { font-weight: 600; color: var(--primary); font-size: 1rem; }
         
-        .active-order-card { background: white; border-radius: 20px; padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 20px; }
-        .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 15px; margin-bottom: 15px; }
-        .order-id { font-weight: 700; font-size: 1.2rem; color: var(--text-dark); }
-        .order-total { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+        .tracking-stepper { display: flex; justify-content: space-between; position: relative; margin: 20px 0 10px 0; }
+        .tracking-stepper::before { content: ''; position: absolute; top: 12px; left: 10%; right: 10%; height: 2px; background: var(--border); z-index: 1; }
+        .progress-bar { position: absolute; top: 12px; left: 10%; width: 0%; height: 2px; background: var(--primary); z-index: 2; transition: width 0.5s ease; }
         
-        .tracking-stepper { display: flex; justify-content: space-between; position: relative; margin: 25px 0; }
-        .tracking-stepper::before { content: ''; position: absolute; top: 15px; left: 10%; right: 10%; height: 3px; background: var(--border); z-index: 1; }
-        .progress-bar { position: absolute; top: 15px; left: 10%; width: 0%; height: 3px; background: var(--primary); z-index: 2; transition: width 0.5s ease; }
-        
-        .step { display: flex; flex-direction: column; align-items: center; z-index: 3; gap: 8px; width: 33%; }
-        .step-icon { width: 34px; height: 34px; border-radius: 50%; background: white; border: 3px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-muted); transition: 0.3s; }
-        .step.active .step-icon { border-color: var(--primary); background: var(--primary); color: white; box-shadow: 0 0 10px rgba(217, 72, 15, 0.4); }
-        .step.completed .step-icon { border-color: var(--primary); background: var(--primary); color: white; }
-        .step-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+        .step { display: flex; flex-direction: column; align-items: center; z-index: 3; gap: 6px; width: 33%; }
+        .step-icon { width: 26px; height: 26px; border-radius: 50%; background: white; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--text-muted); transition: 0.3s; }
+        .step.active .step-icon { border-color: var(--primary); background: var(--primary); color: white; }
+        .step-label { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); }
         .step.active .step-label { color: var(--primary); }
-
-        .order-details-list { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.6; }
+        .order-details-list { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -198,7 +192,7 @@
             </div>
 
             <div class="hero-section" id="hero-section">
-                <h2 class="hero-title">Today's Specials 🔥</h2>
+                <h2 class="hero-title">Today's Specials</h2>
                 <div class="hero-carousel" id="hero-carousel"></div>
             </div>
             
@@ -222,7 +216,7 @@
         <div id="view-orders" class="hidden">
             <div class="tracking-container" id="tracking-container">
                 <div class="empty-orders">
-                    <i class='bx bx-receipt' style="font-size: 4rem; opacity: 0.5; margin-bottom: 10px;"></i>
+                    <i class='bx bx-receipt' style="font-size: 3rem; opacity: 0.3; margin-bottom: 8px;"></i>
                     <p>You have no active orders.</p>
                 </div>
             </div>
@@ -230,24 +224,18 @@
 
     </main>
 
-    <button class="floating-cart hidden" id="floating-cart" onclick="toggleCart()">
-        <div class="cart-summary">
-            <i class='bx bx-shopping-bag'></i>
-            <div class="cart-summary-text">
-                <span id="float-qty">0 Items</span>
-                <span class="float-total" id="float-subtotal">₹0</span>
-            </div>
-        </div>
-        <div style="font-weight: 700; font-size: 1.1rem; display: flex; align-items: center;">
-            Checkout <i class='bx bx-chevron-right' style="font-size: 1.5rem; margin-top: 2px;"></i>
-        </div>
-    </button>
-
     <nav class="bottom-nav">
         <div class="nav-item active" id="tab-menu" onclick="switchView('menu')">
             <i class='bx bx-food-menu'></i>
             <span>Menu</span>
         </div>
+        
+        <div class="nav-item cart-nav-item" id="tab-cart" onclick="toggleCart()">
+            <i class='bx bx-shopping-bag'></i>
+            <span class="cart-badge hidden" id="nav-cart-badge">0</span>
+            <span id="nav-cart-text">Cart</span>
+        </div>
+
         <div class="nav-item" id="tab-orders" onclick="switchView('orders')">
             <i class='bx bx-time-five'></i>
             <span>Orders</span>
@@ -283,7 +271,7 @@
                     </div>
                 </div>
 
-                <span class="section-label" style="margin-top: 15px;">Payment Method</span>
+                <span class="section-label" style="margin-top: 12px;">Payment Method</span>
                 <div class="radio-grid">
                     <div>
                         <input type="radio" name="payMethod" id="pay-upi" value="UPI" checked>
@@ -296,17 +284,17 @@
                 </div>
             </div>
 
-            <div class="form-card" style="margin-bottom: 10px;">
-                <textarea id="special-instructions" class="custom-input" rows="2" placeholder="Any cooking instructions? (e.g., Less spicy)" style="margin-bottom: 0;"></textarea>
+            <div class="form-card" style="margin-bottom: 8px;">
+                <textarea id="special-instructions" class="custom-input" rows="2" placeholder="Cooking instructions? (e.g., Less spicy)" style="margin-bottom: 0;"></textarea>
             </div>
         </div>
 
         <div class="checkout-footer">
             <div class="total-row">
-                <span>Total Amount</span>
-                <span id="drawer-total" style="color: var(--primary); font-size: 1.4rem;">₹0</span>
+                <span>Total</span>
+                <span id="drawer-total" style="color: var(--primary);">₹0</span>
             </div>
-            <div id="error-msg" style="color: var(--nonveg); font-size: 0.8rem; text-align: center; margin-bottom: 10px; display: none;">Please enter Name and Phone.</div>
+            <div id="error-msg" style="color: var(--nonveg); font-size: 0.75rem; text-align: center; margin-bottom: 8px; display: none;">Please enter Name and Phone.</div>
             <button class="place-order-btn" id="checkout-btn" onclick="validateAndPlaceOrder()">
                 Place Order <i class='bx bx-check-shield'></i>
             </button>
@@ -326,7 +314,7 @@
         ];
 
         let cart = {};
-        let activeOrders = []; // Stores placed orders for tracking
+        let activeOrders = []; 
         let activeCategory = 'All';
         const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts'];
         let activeTableNumber = null;
@@ -342,7 +330,6 @@
             filterMenu();
         };
 
-        // --- NAVIGATION TABS ---
         function switchView(viewName) {
             document.getElementById('view-menu').classList.add('hidden');
             document.getElementById('view-orders').classList.add('hidden');
@@ -353,11 +340,9 @@
             if(viewName === 'menu') {
                 document.getElementById('view-menu').classList.remove('hidden');
                 document.getElementById('tab-menu').classList.add('active');
-                if(Object.keys(cart).length > 0) document.getElementById('floating-cart').classList.remove('hidden');
             } else if (viewName === 'orders') {
                 document.getElementById('view-orders').classList.remove('hidden');
                 document.getElementById('tab-orders').classList.add('active');
-                document.getElementById('floating-cart').classList.add('hidden'); // Hide cart on orders tab
             }
             window.scrollTo(0,0);
         }
@@ -446,6 +431,13 @@
         function addToCart(itemId) {
             if (cart[itemId]) cart[itemId].qty += 1;
             else cart[itemId] = { ...menuData.find(i => i.id === itemId), qty: 1 };
+            
+            // Animation for Bottom Nav Cart Icon
+            const tabCart = document.getElementById('tab-cart');
+            tabCart.classList.remove('bump');
+            void tabCart.offsetWidth; 
+            tabCart.classList.add('bump');
+            
             updateCartData();
         }
 
@@ -460,41 +452,54 @@
             let totalQty = 0; let totalPrice = 0;
             const container = document.getElementById('cart-items');
             
+            // Update Drawer
             if (cartArray.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding: 20px; color:#94a3b8;">Your cart is empty.</div>';
-                document.getElementById('floating-cart').classList.add('hidden');
+                container.innerHTML = '<div style="text-align:center; padding: 20px; color:#94a3b8; font-size: 0.85rem;">Your cart is empty.</div>';
                 document.getElementById('drawer-total').innerText = `${config.currencySymbol}0`;
-                return;
+            } else {
+                container.innerHTML = cartArray.map(item => {
+                    totalQty += item.qty; totalPrice += (item.price * item.qty);
+                    return `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <h4>${item.name}</h4>
+                                <span style="color: var(--primary); font-weight: 600;">${config.currencySymbol}${item.price * item.qty}</span>
+                            </div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                                <span style="font-weight: 600; width: 20px; text-align: center; font-size: 0.9rem;">${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                document.getElementById('drawer-total').innerText = `${config.currencySymbol}${totalPrice}`;
             }
 
-            container.innerHTML = cartArray.map(item => {
-                totalQty += item.qty; totalPrice += (item.price * item.qty);
-                return `
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <span style="color: var(--primary); font-weight: 700;">${config.currencySymbol}${item.price * item.qty}</span>
-                        </div>
-                        <div class="qty-controls">
-                            <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
-                            <span style="font-weight: 700; width: 20px; text-align: center;">${item.qty}</span>
-                            <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('float-qty').innerText = `${totalQty} Items`;
-            document.getElementById('float-subtotal').innerText = `${config.currencySymbol}${totalPrice}`;
-            document.getElementById('drawer-total').innerText = `${config.currencySymbol}${totalPrice}`;
+            // Update Premium Bottom Bar state
+            const navBadge = document.getElementById('nav-cart-badge');
+            const navText = document.getElementById('nav-cart-text');
+            const tabCart = document.getElementById('tab-cart');
             
-            // Only show floating cart if we are on the menu view
-            if(!document.getElementById('view-menu').classList.contains('hidden')){
-                document.getElementById('floating-cart').classList.remove('hidden');
+            if(totalQty > 0) {
+                navBadge.innerText = totalQty;
+                navBadge.classList.remove('hidden');
+                navText.innerText = `${config.currencySymbol}${totalPrice}`;
+                tabCart.classList.add('has-items');
+                document.getElementById('checkout-btn').disabled = false;
+            } else {
+                navBadge.classList.add('hidden');
+                navText.innerText = `Cart`;
+                tabCart.classList.remove('has-items');
+                document.getElementById('checkout-btn').disabled = true;
             }
         }
 
         function toggleCart() {
+            // Switch back to menu view if trying to open cart from orders tab
+            if(!document.getElementById('view-orders').classList.contains('hidden')) {
+                switchView('menu');
+            }
             document.getElementById('cart-drawer').classList.toggle('active');
             document.getElementById('cart-overlay').classList.toggle('active');
             document.body.style.overflow = document.getElementById('cart-drawer').classList.contains('active') ? 'hidden' : 'auto';
@@ -523,9 +528,9 @@
                 id: 'SKD-' + Math.floor(Math.random() * 9000 + 1000),
                 total: document.getElementById('drawer-total').innerText,
                 items: Object.values(cart).map(i => `${i.qty}x ${i.name}`).join(', '),
-                status: 'placed' // Can be placed, preparing, ready
+                status: 'placed' 
             };
-            activeOrders.unshift(newOrder); // Add to top
+            activeOrders.unshift(newOrder);
 
             // Clear Cart & Close Drawer
             cart = {};
@@ -536,7 +541,6 @@
             switchView('orders');
             renderTracking();
             
-            // SIMULATE KITCHEN PROGRESS
             simulateKitchenProgress(newOrder.id);
         }
 
@@ -571,7 +575,6 @@
             `).join('');
         }
 
-        // SIMULATES ORDER MOVING TO PREPARING AFTER 5 SECONDS
         function simulateKitchenProgress(orderId) {
             setTimeout(() => {
                 const order = activeOrders.find(o => o.id === orderId);
@@ -579,7 +582,7 @@
                     order.status = 'preparing';
                     renderTracking();
                 }
-            }, 4000); // 4 seconds later it moves to preparing!
+            }, 4000); 
         }
     </script>
 </body>
