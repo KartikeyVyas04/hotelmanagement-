@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDS | Item-Wise Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
+            --primary: #fc8019; --success: #10b981; --border: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        header { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; flex: 1; overflow: hidden; }
+        
+        .column { background: rgba(30, 41, 59, 0.5); border-radius: 15px; display: flex; flex-direction: column; border: 1px solid var(--border); }
+        .col-header { padding: 15px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; }
+        
+        .ticket-list { padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .ticket { background: var(--card); border-radius: 12px; padding: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .ticket.all-ready { border-left-color: var(--success); }
+
+        .ticket-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; }
+        .table-no { color: var(--primary); }
+
+        /* ITEM-WISE LIST */
+        .items-container { margin: 10px 0; border-top: 1px solid var(--border); }
+        .item-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .item-info { display: flex; gap: 10px; align-items: center; }
+        .item-qty { font-weight: 700; color: var(--success); background: #064e3b; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+        .item-name.ready { text-decoration: line-through; opacity: 0.5; }
+
+        /* TOGGLE BUTTON */
+        .status-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .status-btn.is-ready { background: var(--success); border-color: var(--success); color: white; }
+        
+        .instruction-box { background: #422006; color: #fbbf24; padding: 8px; border-radius: 6px; font-size: 0.8rem; margin-top: 10px; }
+        
+        .complete-btn { width: 100%; margin-top: 15px; padding: 10px; background: var(--success); color: white; border-radius: 8px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2>SHIVAM KA DHABA | KITCHEN</h2>
+    <div id="stat-bar">Active Orders: <span id="active-count" style="color:var(--primary)">0</span></div>
+</header>
+
+<div class="board">
+    <div class="column">
+        <div class="col-header">Preparing 🍳 <span id="prep-count">0</span></div>
+        <div class="ticket-list" id="list-preparing"></div>
+    </div>
+    <div class="column">
+        <div class="col-header">Ready for Pickup ✅ <span id="ready-count">0</span></div>
+        <div class="ticket-list" id="list-ready"></div>
+    </div>
+</div>
+
+<script>
+    let orders = [];
+
+    function initSync() {
+        const raw = localStorage.getItem('skd_active_orders');
+        if (raw) {
+            orders = JSON.parse(raw);
+            renderKitchen();
+        }
+    }
+
+    function renderKitchen() {
+        const prepList = document.getElementById('list-preparing');
+        const readyList = document.getElementById('list-ready');
+        prepList.innerHTML = ""; readyList.innerHTML = "";
+
+        let pCount = 0, rCount = 0;
+
+        orders.forEach(order => {
+            if (order.status === 'archived') return;
+
+            // Check if all items in this order are ready
+            const allItemsReady = order.items.every(item => item.status === 'ready');
+            
+            // Auto-move overall order status
+            if (allItemsReady && order.status !== 'ready') {
+                order.status = 'ready';
+                saveData();
+            } else if (!allItemsReady && order.status === 'ready') {
+                order.status = 'preparing';
+                saveData();
+            }
+
+            const ticket = document.createElement('div');
+            ticket.className = `ticket ${allItemsReady ? 'all-ready' : ''}`;
+            ticket.innerHTML = `
+                <div class="ticket-header">
+                    <span class="table-no">TABLE ${order.tableNo}</span>
+                    <span>#${order.id}</span>
+                </div>
+                <div class="items-container">
+                    ${order.items.map((item, idx) => `
+                        <div class="item-row">
+                            <div class="item-info">
+                                <span class="item-qty">${item.qty}</span>
+                                <span class="item-name ${item.status === 'ready' ? 'ready' : ''}">${item.name}</span>
+                            </div>
+                            <div class="status-btn ${item.status === 'ready' ? 'is-ready' : ''}" 
+                                 onclick="toggleItemStatus(${order.id}, ${idx})">
+                                <i class='bx bx-check'></i>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${order.instructions ? `<div class="instruction-box">💡 ${order.instructions}</div>` : ''}
+                ${order.status === 'ready' ? `<button class="complete-btn" onclick="archiveOrder(${order.id})">Clear Ticket</button>` : ''}
+            `;
+
+            if (order.status === 'ready') {
+                readyList.appendChild(ticket);
+                rCount++;
+            } else {
+                prepList.appendChild(ticket);
+                pCount++;
+            }
+        });
+
+        document.getElementById('prep-count').innerText = pCount;
+        document.getElementById('ready-count').innerText = rCount;
+        document.getElementById('active-count').innerText = pCount + rCount;
+    }
+
+    function toggleItemStatus(orderId, itemIdx) {
+        const order = orders.find(o => o.id === orderId);
+        if (order) {
+            const currentStatus = order.items[itemIdx].status;
+            order.items[itemIdx].status = (currentStatus === 'ready') ? 'cooking' : 'ready';
+            
+            // If at least one item starts cooking, order moves to 'preparing'
+            if (order.status === 'placed') order.status = 'preparing';
+            
+            saveData();
+            renderKitchen();
+        }
+    }
+
+    function archiveOrder(id) {
+        const idx = orders.findIndex(o => o.id === id);
+        if (idx !== -1) {
+            orders[idx].status = 'archived';
+            saveData();
+            renderKitchen();
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem('skd_active_orders', JSON.stringify(orders));
+        // Sync with customer tab
+        window.dispatchEvent(new Event('storage'));
+    }
+
+    window.addEventListener('storage', initSync);
+    window.onload = initSync;
+    setInterval(initSync, 3000); // Poll for new orders every 3s
+</script>
+</body>
+</html>
