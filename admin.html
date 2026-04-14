@@ -36,6 +36,7 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
             --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.05);
+            --shadow-modal: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
         }
 
         /* --- BASE & TYPOGRAPHY --- */
@@ -71,8 +72,6 @@
         
         .nav-links { padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
         .nav-item { padding: 12px 16px; border-radius: var(--radius-sm); color: var(--sidebar-text); display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
-        
-        /* Fixed Sidebar Hover */
         .nav-item:hover { background: var(--sidebar-hover); color: #ffffff; }
         .nav-item.active { background: var(--brand); color: #ffffff; box-shadow: 0 4px 12px rgba(252, 128, 25, 0.3); }
         .nav-item i { font-size: 1.4rem; }
@@ -94,9 +93,9 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- CARDS & GRIDS --- */
-        .card { background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); border: 1px solid var(--border); padding: 20px; margin-bottom: 24px; transition: box-shadow 0.3s; }
+        .card { background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05); padding: 20px; margin-bottom: 24px; transition: box-shadow 0.3s; }
         .card:hover { box-shadow: var(--shadow-hover); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
         .card-title { font-size: 1.05rem; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
         
         /* Dashboard KPI Grid */
@@ -121,7 +120,6 @@
         tr:last-child td { border-bottom: none; }
         
         /* --- UI COMPONENTS --- */
-        /* Fixed Button Hovers */
         .btn { padding: 10px 16px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; justify-content: center; transition: all 0.2s ease; border: 1px solid transparent; }
         .btn-primary { background: var(--brand); color: #ffffff; }
         .btn-primary:hover { background: var(--brand-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252, 128, 25, 0.25); color: #ffffff; }
@@ -157,6 +155,24 @@
         .qr-card:hover { border-color: var(--brand); transform: translateY(-3px); box-shadow: var(--shadow-md); }
         .qr-card i { font-size: 4rem; color: var(--text-muted); transition: 0.2s; }
         .qr-card:hover i { color: var(--brand); }
+
+        /* --- MODALS --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal { background: var(--surface); width: 100%; max-width: 600px; border-radius: var(--radius-md); box-shadow: var(--shadow-modal); transform: translateY(20px); transition: 0.3s; display: flex; flex-direction: column; max-height: 90vh; margin: 20px; }
+        .modal-overlay.active .modal { transform: translateY(0); }
+        
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-title { font-size: 1.15rem; font-weight: 600; color: var(--text-dark); }
+        .modal-close { font-size: 1.8rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .modal-close:hover { color: var(--danger); }
+        
+        .modal-body { padding: 24px; overflow-y: auto; }
+        .modal-footer { padding: 20px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: #f8fafc; border-radius: 0 0 var(--radius-md) var(--radius-md); }
+
+        .category-list { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .category-item { display: flex; justify-content: space-between; align-items: center; background: var(--bg-main); padding: 10px 15px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -274,7 +290,10 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"><i class='bx bx-food-menu'></i> Menu Items & Inventory</h3>
-                        <button class="btn btn-primary"><i class='bx bx-plus'></i> Add New Dish</button>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-outline" onclick="openCategoryModal()"><i class='bx bx-category'></i> Manage Categories</button>
+                            <button class="btn btn-primary" onclick="openDishModal()"><i class='bx bx-plus'></i> Add New Dish</button>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table id="menu-table">
@@ -420,14 +439,89 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="dish-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="dish-modal-title">Add New Dish</h3>
+                <i class='bx bx-x modal-close' onclick="closeDishModal()"></i>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="dish-id">
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Image URL</label>
+                    <input type="url" id="dish-image" placeholder="https://example.com/image.jpg">
+                </div>
+
+                <div class="form-row" style="margin-bottom: 15px;">
+                    <div class="form-group"><label>Dish Name</label><input type="text" id="dish-name" placeholder="e.g. Garlic Naan"></div>
+                    <div class="form-group"><label>Category</label><select id="dish-category"></select></div>
+                </div>
+
+                <div class="form-row" style="margin-bottom: 15px;">
+                    <div class="form-group"><label>Price (₹)</label><input type="number" id="dish-price" placeholder="0.00"></div>
+                    <div class="form-group"><label>Discount (%)</label><input type="number" id="dish-discount" placeholder="0" value="0"></div>
+                </div>
+
+                <div class="form-row" style="margin-bottom: 15px;">
+                    <div class="form-group"><label>Dietary</label><select id="dish-diet"><option value="veg">Pure Veg</option><option value="nonveg">Non-Veg</option></select></div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Description</label>
+                    <textarea id="dish-desc" rows="2" placeholder="Brief description of the dish..."></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; padding: 15px; background: #f8fafc; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                    <div style="display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.9rem;">
+                        <input type="checkbox" id="dish-stock" style="width: 18px; height: 18px;" checked> In Stock
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.9rem;">
+                        <input type="checkbox" id="dish-hero" style="width: 18px; height: 18px;"> Hero (Top Pick)
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.9rem; color: var(--gold);">
+                        <input type="checkbox" id="dish-bestseller" style="width: 18px; height: 18px;"> Bestseller
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeDishModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveDish()">Save Dish</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="category-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Manage Categories</h3>
+                <i class='bx bx-x modal-close' onclick="closeCategoryModal()"></i>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <input type="text" id="new-category-name" placeholder="New category name...">
+                    <button class="btn btn-primary" onclick="addCategory()">Add</button>
+                </div>
+                <div class="category-list" id="category-list">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeCategoryModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         // --- 1. MOCK DATA SOURCES ---
-        const menuData = [
-            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, diet: 'nonveg', isHero: true, stock: true },
-            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, diet: 'veg', isHero: true, stock: true },
-            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, diet: 'veg', isHero: false, stock: true },
-            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, diet: 'veg', isHero: false, stock: true },
-            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, diet: 'nonveg', isHero: true, stock: false }
+        let categoriesData = ['Starters', 'Mains', 'Breads', 'Desserts', 'Beverages'];
+        
+        let menuData = [
+            { id: 1, name: 'Punjabi Butter Chicken', category: 'Mains', price: 350, discount: 0, diet: 'nonveg', desc: 'Tender chicken in rich, creamy tomato gravy.', image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=400&q=80', isHero: true, stock: true, tag: 'Bestseller' },
+            { id: 2, name: 'Paneer Butter Masala', category: 'Mains', price: 280, discount: 0, diet: 'veg', desc: 'Soft cottage cheese in spiced tomato gravy.', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc0?auto=format&fit=crop&w=400&q=80', isHero: true, stock: true, tag: null },
+            { id: 3, name: 'Dal Makhani', category: 'Mains', price: 220, discount: 10, diet: 'veg', desc: 'Whole black lentils slow-cooked overnight.', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80', isHero: false, stock: true, tag: null },
+            { id: 4, name: 'Garlic Naan', category: 'Breads', price: 60, discount: 0, diet: 'veg', desc: 'Fresh tandoori bread with butter and garlic.', image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80', isHero: false, stock: true, tag: null },
+            { id: 5, name: 'Chicken Tikka Dry', category: 'Starters', price: 320, discount: 0, diet: 'nonveg', desc: 'Charcoal grilled spicy chicken chunks.', image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=400&q=80', isHero: true, stock: false, tag: 'Must Try' }
         ];
 
         const ledgerData = [
@@ -478,33 +572,155 @@
             }
         }
 
-        // --- 4. RENDER MENU (CRUD) ---
+        // --- 4. MENU MANAGER CRUD & MODALS ---
+        
+        // Render Table
         function renderMenuTable() {
             const tbody = document.getElementById('menu-tbody');
-            tbody.innerHTML = menuData.map(item => `
+            tbody.innerHTML = menuData.map(item => {
+                let badgeHTML = item.tag === 'Bestseller' ? `<span class="badge badge-warning" style="margin-left:8px;"><i class='bx bxs-star'></i> Bestseller</span>` : '';
+                
+                return `
                 <tr>
-                    <td style="font-weight: 600; color: var(--text-dark);">${item.name}</td>
+                    <td style="font-weight: 600; color: var(--text-dark);">${item.name} ${badgeHTML}</td>
                     <td>${item.category}</td>
-                    <td style="font-weight: 500;">₹${item.price}</td>
+                    <td style="font-weight: 500;">₹${item.price} ${item.discount > 0 ? `<span style="color:var(--success); font-size:0.75rem;">(-${item.discount}%)</span>` : ''}</td>
                     <td><span class="badge ${item.diet === 'veg' ? 'badge-veg' : 'badge-nonveg'}">${item.diet.toUpperCase()}</span></td>
                     <td style="text-align: center;">
                         <label class="switch" style="transform: scale(0.8);">
-                            <input type="checkbox" ${item.stock ? 'checked' : ''}>
+                            <input type="checkbox" ${item.stock ? 'checked' : ''} onchange="toggleDishAttr(${item.id}, 'stock')">
                             <span class="slider"></span>
                         </label>
                     </td>
                     <td style="text-align: center;">
                         <label class="switch" style="transform: scale(0.8);">
-                            <input type="checkbox" ${item.isHero ? 'checked' : ''}>
+                            <input type="checkbox" ${item.isHero ? 'checked' : ''} onchange="toggleDishAttr(${item.id}, 'isHero')">
                             <span class="slider"></span>
                         </label>
                     </td>
                     <td style="text-align: right;">
-                        <button class="btn btn-outline" style="padding: 6px 10px;"><i class='bx bx-edit'></i></button>
-                        <button class="btn btn-danger" style="padding: 6px 10px;"><i class='bx bx-trash'></i></button>
+                        <button class="btn btn-outline" style="padding: 6px 10px;" onclick="openDishModal(${item.id})"><i class='bx bx-edit'></i></button>
+                        <button class="btn btn-danger" style="padding: 6px 10px;" onclick="deleteDish(${item.id})"><i class='bx bx-trash'></i></button>
                     </td>
                 </tr>
+            `}).join('');
+        }
+
+        function toggleDishAttr(id, attr) {
+            const dish = menuData.find(d => d.id === id);
+            if(dish) dish[attr] = !dish[attr];
+            // No need to re-render, switch handles visuals natively
+        }
+
+        function deleteDish(id) {
+            if(confirm("Are you sure you want to delete this dish?")) {
+                menuData = menuData.filter(d => d.id !== id);
+                renderMenuTable();
+            }
+        }
+
+        // Dish Modal
+        function openDishModal(id = null) {
+            const select = document.getElementById('dish-category');
+            select.innerHTML = categoriesData.map(c => `<option value="${c}">${c}</option>`).join('');
+
+            if(id) {
+                document.getElementById('dish-modal-title').innerText = "Edit Dish";
+                const dish = menuData.find(d => d.id === id);
+                document.getElementById('dish-id').value = dish.id;
+                document.getElementById('dish-name').value = dish.name;
+                document.getElementById('dish-price').value = dish.price;
+                document.getElementById('dish-discount').value = dish.discount || 0;
+                document.getElementById('dish-diet').value = dish.diet;
+                document.getElementById('dish-category').value = dish.category;
+                document.getElementById('dish-desc').value = dish.desc || '';
+                document.getElementById('dish-image').value = dish.image || '';
+                
+                document.getElementById('dish-stock').checked = dish.stock;
+                document.getElementById('dish-hero').checked = dish.isHero;
+                document.getElementById('dish-bestseller').checked = dish.tag === 'Bestseller';
+            } else {
+                document.getElementById('dish-modal-title').innerText = "Add New Dish";
+                document.getElementById('dish-id').value = '';
+                document.getElementById('dish-name').value = '';
+                document.getElementById('dish-price').value = '';
+                document.getElementById('dish-discount').value = 0;
+                document.getElementById('dish-desc').value = '';
+                document.getElementById('dish-image').value = '';
+                document.getElementById('dish-stock').checked = true;
+                document.getElementById('dish-hero').checked = false;
+                document.getElementById('dish-bestseller').checked = false;
+            }
+            document.getElementById('dish-modal').classList.add('active');
+        }
+
+        function closeDishModal() {
+            document.getElementById('dish-modal').classList.remove('active');
+        }
+
+        function saveDish() {
+            const id = document.getElementById('dish-id').value;
+            const newDish = {
+                id: id ? parseInt(id) : Math.floor(Math.random() * 10000),
+                name: document.getElementById('dish-name').value,
+                category: document.getElementById('dish-category').value,
+                price: parseInt(document.getElementById('dish-price').value) || 0,
+                discount: parseInt(document.getElementById('dish-discount').value) || 0,
+                diet: document.getElementById('dish-diet').value,
+                desc: document.getElementById('dish-desc').value,
+                image: document.getElementById('dish-image').value,
+                stock: document.getElementById('dish-stock').checked,
+                isHero: document.getElementById('dish-hero').checked,
+                tag: document.getElementById('dish-bestseller').checked ? 'Bestseller' : null
+            };
+
+            if(!newDish.name || newDish.price <= 0) return alert("Please enter valid Name and Price.");
+
+            if(id) {
+                const index = menuData.findIndex(d => d.id == id);
+                if(index !== -1) menuData[index] = newDish;
+            } else {
+                menuData.unshift(newDish);
+            }
+
+            renderMenuTable();
+            closeDishModal();
+        }
+
+        // Category Modal
+        function openCategoryModal() {
+            renderCategoryList();
+            document.getElementById('category-modal').classList.add('active');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('category-modal').classList.remove('active');
+        }
+
+        function renderCategoryList() {
+            const list = document.getElementById('category-list');
+            list.innerHTML = categoriesData.map(c => `
+                <div class="category-item">
+                    <span style="font-weight: 500;">${c}</span>
+                    <button class="btn btn-outline" style="padding: 4px 8px; color: var(--danger); border-color: transparent;" onclick="deleteCategory('${c}')"><i class='bx bx-trash'></i></button>
+                </div>
             `).join('');
+        }
+
+        function addCategory() {
+            const val = document.getElementById('new-category-name').value.trim();
+            if(val && !categoriesData.includes(val)) {
+                categoriesData.push(val);
+                document.getElementById('new-category-name').value = '';
+                renderCategoryList();
+            }
+        }
+
+        function deleteCategory(cat) {
+            if(confirm(`Delete category "${cat}"? Dishes inside it will remain but won't be filtered correctly.`)) {
+                categoriesData = categoriesData.filter(c => c !== cat);
+                renderCategoryList();
+            }
         }
 
         // --- 5. RENDER QR TABLES ---
@@ -573,11 +789,10 @@
 
         // --- 7. CHARTS INITIALIZATION (Enterprise Analytics) ---
         function initCharts() {
-            // General config
             Chart.defaults.font.family = "'Inter', sans-serif";
             Chart.defaults.color = '#64748b';
 
-            // 1. Dashboard Sales Line Chart
+            // Sales Line Chart
             new Chart(document.getElementById('salesChart').getContext('2d'), {
                 type: 'line',
                 data: {
@@ -585,15 +800,14 @@
                     datasets: [{
                         label: 'Sales (₹)',
                         data: [12000, 15000, 11000, 28000, 22000, 35000, 29000],
-                        borderColor: '#fc8019',
-                        backgroundColor: 'rgba(252, 128, 25, 0.1)',
+                        borderColor: '#fc8019', backgroundColor: 'rgba(252, 128, 25, 0.1)',
                         borderWidth: 3, fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#fff'
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { border: { display: false }, grid: { color: '#f1f5f9' } } } }
             });
 
-            // 2. Dashboard Payment Pie
+            // Payment Breakdown Pie
             new Chart(document.getElementById('paymentChart').getContext('2d'), {
                 type: 'doughnut',
                 data: {
@@ -607,7 +821,7 @@
                 options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
             });
 
-            // 3. Analytics Combo Chart (Revenue vs Profit)
+            // Analytics Combo Chart (Revenue vs Profit)
             new Chart(document.getElementById('comboChart').getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -620,7 +834,7 @@
                 options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false } }, y: { border: { display: false }, grid: { color: '#f1f5f9' } } } }
             });
 
-            // 4. Top Selling Items (Horizontal Bar)
+            // Top Selling Items (Horizontal Bar)
             new Chart(document.getElementById('topItemsChart').getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -628,14 +842,13 @@
                     datasets: [{
                         label: 'Units Sold',
                         data: [145, 112, 98, 85, 60],
-                        backgroundColor: '#fc8019',
-                        borderRadius: 4
+                        backgroundColor: '#fc8019', borderRadius: 4
                     }]
                 },
                 options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { border: { display: false }, grid: { display: false } } } }
             });
 
-            // 5. Peak Hours Heatmap/Line
+            // Peak Hours Heatmap/Line
             new Chart(document.getElementById('peakHoursChart').getContext('2d'), {
                 type: 'line',
                 data: {
