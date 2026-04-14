@@ -179,15 +179,19 @@
         let activeOrders = [];
         let soundEnabled = true;
         let lastIncomingCount = 0;
+        
+        // FIXED BUG: This variable tracks what is currently drawn on the screen
+        let lastRenderedDataString = ""; 
 
         // --- INITIALIZATION & SAMPLE DATA ---
         window.onload = () => {
             startClock();
             initSync();
             
-            // Poll storage & update timers
+            // Poll storage frequently
             setInterval(initSync, 2000); 
-            setInterval(renderBoard, 30000); // Re-render every 30s to update "min ago" timers
+            // Force a re-render every 30s to update the "min ago" timers
+            setInterval(() => { renderBoard(true); }, 30000); 
 
             window.addEventListener('storage', initSync);
         };
@@ -276,7 +280,13 @@
                 lastIncomingCount = currentIncoming;
                 
                 processOrderLogic();
-                renderBoard();
+                
+                // FIXED BUG: SMART SYNC
+                // Only render the board if the data has actually changed
+                const currentDataString = JSON.stringify(activeOrders);
+                if (currentDataString !== lastRenderedDataString) {
+                    renderBoard();
+                }
                 
             } catch(e) {
                 console.error("KDS Sync Error", e);
@@ -288,6 +298,9 @@
         function saveData() {
             localStorage.setItem('skd_active_orders', JSON.stringify(activeOrders));
             window.dispatchEvent(new Event('storage')); // Notify other tabs
+            
+            // Immediately update the smart sync string so it doesn't double-render
+            lastRenderedDataString = JSON.stringify(activeOrders);
         }
 
         // --- CORE KITCHEN LOGIC ---
@@ -345,7 +358,11 @@
         }
 
         // --- RENDERING ENGINE ---
-        function renderBoard() {
+        function renderBoard(forceRender = false) {
+            // Check if we actually need to render (unless forced by the 30s timer)
+            const currentDataString = JSON.stringify(activeOrders);
+            if (currentDataString === lastRenderedDataString && !forceRender) return;
+
             const lists = {
                 'placed': document.getElementById('list-incoming'),
                 'preparing': document.getElementById('list-cooking'),
@@ -438,6 +455,9 @@
             document.getElementById('count-incoming').innerText = counts.placed;
             document.getElementById('count-cooking').innerText = counts.preparing;
             document.getElementById('count-ready').innerText = counts.ready;
+            
+            // Save state to prevent unnecessary re-renders
+            lastRenderedDataString = currentDataString;
         }
     </script>
 </body>
