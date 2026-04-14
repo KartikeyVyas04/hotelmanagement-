@@ -2,169 +2,359 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KDS | Item-Wise Tracking</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KDS | Shivam Ka Dhaba</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <style>
         :root {
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
-            --primary: #fc8019; --success: #10b981; --border: #334155;
+            /* Premium Dark KDS Theme */
+            --bg-dark: #0f111a; 
+            --surface: #1e2235;
+            --surface-hover: #2a2f45;
+            --border: #2d334a;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --accent: #fc8019; /* Swiggy Orange for brand consistency */
+            --success: #10b981; 
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+
+            --radius: 12px;
+            --shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        
-        header { padding: 15px 20px; background: var(--card); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; flex: 1; overflow: hidden; }
-        
-        .column { background: rgba(30, 41, 59, 0.5); border-radius: 15px; display: flex; flex-direction: column; border: 1px solid var(--border); }
-        .col-header { padding: 15px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; }
-        
-        .ticket-list { padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .ticket { background: var(--card); border-radius: 12px; padding: 15px; border-left: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .ticket.all-ready { border-left-color: var(--success); }
 
-        .ticket-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; }
-        .table-no { color: var(--primary); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; user-select: none; }
+        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        button { cursor: pointer; border: none; background: none; outline: none; }
 
-        /* ITEM-WISE LIST */
-        .items-container { margin: 10px 0; border-top: 1px solid var(--border); }
-        .item-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .item-info { display: flex; gap: 10px; align-items: center; }
-        .item-qty { font-weight: 700; color: var(--success); background: #064e3b; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
-        .item-name.ready { text-decoration: line-through; opacity: 0.5; }
+        /* --- TOP NAVIGATION BAR --- */
+        header { background: var(--surface); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 10; }
+        
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand i { color: var(--accent); font-size: 2rem; }
+        .brand h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
+        .brand span { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; letter-spacing: 0; }
 
-        /* TOGGLE BUTTON */
-        .status-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-        .status-btn.is-ready { background: var(--success); border-color: var(--success); color: white; }
+        .header-controls { display: flex; align-items: center; gap: 24px; }
+        .live-clock { font-family: 'Roboto Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--text-main); background: #000; padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border); }
         
-        .instruction-box { background: #422006; color: #fbbf24; padding: 8px; border-radius: 6px; font-size: 0.8rem; margin-top: 10px; }
+        .sound-toggle { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-hover); color: var(--text-muted); font-size: 1.4rem; transition: 0.2s; border: 1px solid var(--border); }
+        .sound-toggle.active { color: var(--success); border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+
+        /* --- 3-COLUMN KANBAN BOARD --- */
+        .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px; flex-grow: 1; overflow: hidden; }
         
-        .complete-btn { width: 100%; margin-top: 15px; padding: 10px; background: var(--success); color: white; border-radius: 8px; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+        .column { display: flex; flex-direction: column; background: rgba(30, 34, 53, 0.4); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+        .col-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: var(--surface); border-bottom: 2px solid var(--border); }
+        .col-header h2 { font-size: 1.05rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        
+        .col-header.incoming h2 i { color: var(--info); }
+        .col-header.cooking h2 i { color: var(--warning); }
+        .col-header.ready h2 i { color: var(--success); }
+
+        .col-count { background: var(--bg-dark); color: var(--text-main); font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 0.9rem; border: 1px solid var(--border); }
+
+        .ticket-list { flex-grow: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; scrollbar-width: none; }
+        .ticket-list::-webkit-scrollbar { display: none; }
+
+        /* --- PREMIUM TICKETS (KOT) --- */
+        .ticket { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); border-top: 4px solid var(--info); display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform 0.2s; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .ticket.cooking { border-top-color: var(--warning); }
+        .ticket.ready { border-top-color: var(--success); opacity: 0.85; }
+        
+        /* Delayed Ticket Styling */
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        .ticket.delayed { border-top-color: var(--danger); border-left: 1px solid var(--danger); border-right: 1px solid var(--danger); animation: pulseRed 2s infinite; }
+
+        .ticket-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+        .table-badge { font-size: 1.2rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+        .table-badge i { color: var(--accent); }
+        
+        .timer-badge { font-family: 'Roboto Mono', monospace; font-size: 1rem; font-weight: 700; background: var(--bg-dark); padding: 4px 10px; border-radius: 6px; color: var(--success); border: 1px solid var(--border); }
+        .ticket.delayed .timer-badge { color: var(--danger); border-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+
+        .ticket-meta { padding: 10px 16px; display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+        .ticket-meta strong { color: var(--text-main); }
+
+        /* --- ITEM LIST (Touch Optimized) --- */
+        .item-list { padding: 8px 16px; display: flex; flex-direction: column; }
+        .item-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.2s; }
+        .item-row:last-child { border-bottom: none; }
+        .item-row:active { background: var(--surface-hover); }
+
+        .item-info { display: flex; align-items: center; gap: 12px; flex: 1; }
+        .item-qty { background: var(--border); color: var(--text-main); font-family: 'Roboto Mono', monospace; font-size: 1rem; font-weight: 700; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; flex-shrink: 0; }
+        .item-name { font-size: 1rem; font-weight: 500; color: var(--text-main); transition: 0.3s; }
+        
+        .check-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--text-muted); display: flex; align-items: center; justify-content: center; color: transparent; transition: 0.3s; flex-shrink: 0; }
+        
+        /* Checked State */
+        .item-row.is-ready .item-name { text-decoration: line-through; color: var(--text-muted); }
+        .item-row.is-ready .item-qty { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .item-row.is-ready .check-circle { background: var(--success); border-color: var(--success); color: white; }
+
+        /* --- INSTRUCTIONS & ACTIONS --- */
+        .instructions { margin: 0 16px 12px 16px; background: rgba(245, 158, 11, 0.1); border: 1px dashed var(--warning); color: var(--warning); padding: 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; display: flex; gap: 8px; align-items: flex-start; }
+        .instructions i { font-size: 1.2rem; }
+
+        .ticket-footer { padding: 12px 16px; border-top: 1px solid var(--border); }
+        .btn-clear { width: 100%; background: var(--success); color: white; padding: 14px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+        .btn-clear:active { transform: scale(0.98); }
+
     </style>
 </head>
 <body>
 
-<header>
-    <h2>SHIVAM KA DHABA | KITCHEN</h2>
-    <div id="stat-bar">Active Orders: <span id="active-count" style="color:var(--primary)">0</span></div>
-</header>
+    <header>
+        <div class="brand">
+            <i class='bx bxs-flame'></i>
+            <div>
+                <h1>KITCHEN DISPLAY</h1>
+                <span>Shivam Ka Dhaba</span>
+            </div>
+        </div>
+        
+        <div class="header-controls">
+            <div class="live-clock" id="live-clock">00:00:00</div>
+            <button class="sound-toggle active" id="sound-btn" onclick="toggleSound()" title="Toggle Alerts">
+                <i class='bx bxs-bell-ring'></i>
+            </button>
+        </div>
+    </header>
 
-<div class="board">
-    <div class="column">
-        <div class="col-header">Preparing 🍳 <span id="prep-count">0</span></div>
-        <div class="ticket-list" id="list-preparing"></div>
+    <div class="board">
+        <div class="column">
+            <div class="col-header incoming">
+                <h2><i class='bx bx-list-plus'></i> Incoming</h2>
+                <span class="col-count" id="count-incoming">0</span>
+            </div>
+            <div class="ticket-list" id="list-incoming"></div>
+        </div>
+
+        <div class="column">
+            <div class="col-header cooking">
+                <h2><i class='bx bx-loader-circle bx-spin'></i> Cooking</h2>
+                <span class="col-count" id="count-cooking">0</span>
+            </div>
+            <div class="ticket-list" id="list-cooking"></div>
+        </div>
+
+        <div class="column">
+            <div class="col-header ready">
+                <h2><i class='bx bx-check-double'></i> Ready</h2>
+                <span class="col-count" id="count-ready">0</span>
+            </div>
+            <div class="ticket-list" id="list-ready"></div>
+        </div>
     </div>
-    <div class="column">
-        <div class="col-header">Ready for Pickup ✅ <span id="ready-count">0</span></div>
-        <div class="ticket-list" id="list-ready"></div>
-    </div>
-</div>
 
-<script>
-    let orders = [];
+    <audio id="notif-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
-    function initSync() {
-        const raw = localStorage.getItem('skd_active_orders');
-        if (raw) {
-            orders = JSON.parse(raw);
-            renderKitchen();
-        }
-    }
+    <script>
+        let activeOrders = [];
+        let soundEnabled = true;
+        let lastIncomingCount = 0;
 
-    function renderKitchen() {
-        const prepList = document.getElementById('list-preparing');
-        const readyList = document.getElementById('list-ready');
-        prepList.innerHTML = ""; readyList.innerHTML = "";
-
-        let pCount = 0, rCount = 0;
-
-        orders.forEach(order => {
-            if (order.status === 'archived') return;
-
-            // Check if all items in this order are ready
-            const allItemsReady = order.items.every(item => item.status === 'ready');
+        // --- INITIALIZATION ---
+        window.onload = () => {
+            startClock();
+            initSync();
             
-            // Auto-move overall order status
-            if (allItemsReady && order.status !== 'ready') {
-                order.status = 'ready';
-                saveData();
-            } else if (!allItemsReady && order.status === 'ready') {
-                order.status = 'preparing';
-                saveData();
-            }
+            // Poll storage & update timers frequently
+            setInterval(initSync, 2000); 
+            setInterval(renderBoard, 60000); // Re-render every minute to update the "min ago" timers
 
-            const ticket = document.createElement('div');
-            ticket.className = `ticket ${allItemsReady ? 'all-ready' : ''}`;
-            ticket.innerHTML = `
-                <div class="ticket-header">
-                    <span class="table-no">TABLE ${order.tableNo}</span>
-                    <span>#${order.id}</span>
-                </div>
-                <div class="items-container">
-                    ${order.items.map((item, idx) => `
-                        <div class="item-row">
+            window.addEventListener('storage', initSync);
+        };
+
+        function startClock() {
+            const clockEl = document.getElementById('live-clock');
+            setInterval(() => {
+                const now = new Date();
+                clockEl.innerText = now.toLocaleTimeString('en-US', { hour12: false });
+            }, 1000);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('sound-btn');
+            btn.classList.toggle('active');
+            btn.innerHTML = soundEnabled ? "<i class='bx bxs-bell-ring'></i>" : "<i class='bx bxs-bell-off'></i>";
+        }
+
+        // --- DATA SYNC ---
+        function initSync() {
+            try {
+                const raw = localStorage.getItem('skd_active_orders');
+                if (raw) {
+                    activeOrders = JSON.parse(raw);
+                    if (!Array.isArray(activeOrders)) activeOrders = [];
+                    
+                    // Trigger sound if new order arrived in 'placed' status
+                    const currentIncoming = activeOrders.filter(o => o.status === 'placed').length;
+                    if (currentIncoming > lastIncomingCount && soundEnabled) {
+                        document.getElementById('notif-sound').play().catch(e => console.log("Audio blocked by browser."));
+                    }
+                    lastIncomingCount = currentIncoming;
+                    
+                    processOrderLogic();
+                    renderBoard();
+                }
+            } catch(e) {
+                console.error("KDS Sync Error", e);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('skd_active_orders', JSON.stringify(activeOrders));
+            window.dispatchEvent(new Event('storage')); // Notify customer tab
+        }
+
+        // --- CORE KITCHEN LOGIC ---
+        function processOrderLogic() {
+            let dataChanged = false;
+
+            activeOrders.forEach(order => {
+                if (order.status === 'archived') return;
+
+                // Ensure items array exists
+                if(!Array.isArray(order.items)) return;
+
+                const totalItems = order.items.length;
+                const readyItems = order.items.filter(i => i.status === 'ready').length;
+
+                // Auto-Status Engine
+                let newStatus = order.status;
+                
+                if (readyItems === totalItems && totalItems > 0) {
+                    newStatus = 'ready'; // All checked off
+                } else if (readyItems > 0 && readyItems < totalItems) {
+                    newStatus = 'preparing'; // Partially checked off
+                } else if (readyItems === 0 && order.status !== 'placed') {
+                    newStatus = 'placed'; // Unchecked everything
+                }
+
+                if (newStatus !== order.status) {
+                    order.status = newStatus;
+                    dataChanged = true;
+                }
+            });
+
+            if (dataChanged) saveData();
+        }
+
+        function toggleItem(orderId, itemIdx) {
+            const order = activeOrders.find(o => o.id === orderId);
+            if (order && order.items && order.items[itemIdx]) {
+                const isReady = order.items[itemIdx].status === 'ready';
+                order.items[itemIdx].status = isReady ? 'cooking' : 'ready';
+                
+                processOrderLogic();
+                saveData();
+                renderBoard();
+            }
+        }
+
+        function archiveOrder(orderId) {
+            const order = activeOrders.find(o => o.id === orderId);
+            if (order) {
+                order.status = 'archived'; // Hides from KDS and Customer UI
+                saveData();
+                renderBoard();
+            }
+        }
+
+        // --- RENDERING ENGINE ---
+        function renderBoard() {
+            const lists = {
+                'placed': document.getElementById('list-incoming'),
+                'preparing': document.getElementById('list-cooking'),
+                'ready': document.getElementById('list-ready')
+            };
+
+            // Clear columns
+            Object.values(lists).forEach(l => l.innerHTML = "");
+            let counts = { placed: 0, preparing: 0, ready: 0 };
+
+            activeOrders.forEach(order => {
+                if (order.status === 'archived' || !lists[order.status]) return;
+                
+                counts[order.status]++;
+
+                // Calculate Time
+                const elapsedMs = Date.now() - (order.timestamp || Date.now());
+                const elapsedMins = Math.floor(elapsedMs / 60000);
+                const isDelayed = elapsedMins >= 15;
+                const timeString = elapsedMins < 1 ? "Just now" : `${elapsedMins}m`;
+
+                // Format Table/Takeaway
+                const isTakeaway = !order.tableNo || order.tableNo === 'N/A';
+                const tableHTML = isTakeaway 
+                    ? `<div class="table-badge"><i class='bx bx-shopping-bag'></i> TAKEAWAY</div>` 
+                    : `<div class="table-badge"><i class='bx bx-restaurant'></i> TBL ${order.tableNo}</div>`;
+
+                // Build Items List
+                let itemsHTML = '';
+                if (Array.isArray(order.items)) {
+                    itemsHTML = order.items.map((item, idx) => `
+                        <div class="item-row ${item.status === 'ready' ? 'is-ready' : ''}" onclick="toggleItem(${order.id}, ${idx})">
                             <div class="item-info">
-                                <span class="item-qty">${item.qty}</span>
-                                <span class="item-name ${item.status === 'ready' ? 'ready' : ''}">${item.name}</span>
+                                <div class="item-qty">${item.qty}</div>
+                                <div class="item-name">${item.name}</div>
                             </div>
-                            <div class="status-btn ${item.status === 'ready' ? 'is-ready' : ''}" 
-                                 onclick="toggleItemStatus(${order.id}, ${idx})">
-                                <i class='bx bx-check'></i>
-                            </div>
+                            <div class="check-circle"><i class='bx bx-check'></i></div>
                         </div>
-                    `).join('')}
-                </div>
-                ${order.instructions ? `<div class="instruction-box">💡 ${order.instructions}</div>` : ''}
-                ${order.status === 'ready' ? `<button class="complete-btn" onclick="archiveOrder(${order.id})">Clear Ticket</button>` : ''}
-            `;
+                    `).join('');
+                }
 
-            if (order.status === 'ready') {
-                readyList.appendChild(ticket);
-                rCount++;
-            } else {
-                prepList.appendChild(ticket);
-                pCount++;
-            }
-        });
+                // Build Ticket
+                const ticket = document.createElement('div');
+                ticket.className = `ticket ${order.status === 'preparing' ? 'cooking' : order.status} ${isDelayed && order.status !== 'ready' ? 'delayed' : ''}`;
+                
+                let footerHTML = '';
+                if (order.status === 'ready') {
+                    footerHTML = `
+                        <div class="ticket-footer">
+                            <button class="btn-clear" onclick="archiveOrder(${order.id})"><i class='bx bx-check-double'></i> Clear Ticket</button>
+                        </div>`;
+                }
 
-        document.getElementById('prep-count').innerText = pCount;
-        document.getElementById('ready-count').innerText = rCount;
-        document.getElementById('active-count').innerText = pCount + rCount;
-    }
+                let instructionsHTML = order.instructions 
+                    ? `<div class="instructions"><i class='bx bx-error-circle'></i> <span>${order.instructions}</span></div>` 
+                    : '';
 
-    function toggleItemStatus(orderId, itemIdx) {
-        const order = orders.find(o => o.id === orderId);
-        if (order) {
-            const currentStatus = order.items[itemIdx].status;
-            order.items[itemIdx].status = (currentStatus === 'ready') ? 'cooking' : 'ready';
-            
-            // If at least one item starts cooking, order moves to 'preparing'
-            if (order.status === 'placed') order.status = 'preparing';
-            
-            saveData();
-            renderKitchen();
+                ticket.innerHTML = `
+                    <div class="ticket-header">
+                        ${tableHTML}
+                        <div class="timer-badge"><i class='bx bx-time-five'></i> ${timeString}</div>
+                    </div>
+                    <div class="ticket-meta">
+                        <span>ID: <strong>#${order.id}</strong></span>
+                        <span>${order.customerName || 'Guest'}</span>
+                    </div>
+                    <div class="item-list">
+                        ${itemsHTML}
+                    </div>
+                    ${instructionsHTML}
+                    ${footerHTML}
+                `;
+
+                lists[order.status].appendChild(ticket);
+            });
+
+            // Update Header Counts
+            document.getElementById('count-incoming').innerText = counts.placed;
+            document.getElementById('count-cooking').innerText = counts.preparing;
+            document.getElementById('count-ready').innerText = counts.ready;
         }
-    }
-
-    function archiveOrder(id) {
-        const idx = orders.findIndex(o => o.id === id);
-        if (idx !== -1) {
-            orders[idx].status = 'archived';
-            saveData();
-            renderKitchen();
-        }
-    }
-
-    function saveData() {
-        localStorage.setItem('skd_active_orders', JSON.stringify(orders));
-        // Sync with customer tab
-        window.dispatchEvent(new Event('storage'));
-    }
-
-    window.addEventListener('storage', initSync);
-    window.onload = initSync;
-    setInterval(initSync, 3000); // Poll for new orders every 3s
-</script>
+    </script>
 </body>
 </html>
