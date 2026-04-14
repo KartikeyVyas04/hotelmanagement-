@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Staff Login | Shivam Ka Dhaba</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        :root {
+            --brand: #fc8019; 
+            --brand-hover: #e06c10;
+            --brand-light: #fff5ed;
+            --success: #10b981; 
+            --danger: #ef4444;
+            
+            --bg-main: #f3f4f6;
+            --surface: #ffffff;
+            
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            
+            --radius-md: 16px;
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--bg-main); 
+            color: var(--text-dark); 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* --- LOGIN CARD --- */
+        .login-wrapper {
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 40px 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* --- BRANDING --- */
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .brand i { color: var(--brand); font-size: 2.5rem; }
+        .brand h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); letter-spacing: -0.5px; }
+
+        .welcome-text { text-align: center; margin-bottom: 30px; }
+        .welcome-text h2 { font-size: 1.2rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+        .welcome-text p { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- FORM ELEMENTS --- */
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; }
+        
+        .input-with-icon { position: relative; }
+        .input-with-icon i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem; }
+        
+        input { 
+            width: 100%; 
+            padding: 12px 16px 12px 42px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            color: var(--text-dark); 
+            background: #f8fafc; 
+            transition: all 0.2s; 
+        }
+        
+        input:focus { 
+            border-color: var(--brand); 
+            background: #ffffff; 
+            box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.1); 
+        }
+
+        .btn-login { 
+            width: 100%; 
+            background: var(--brand); 
+            color: white; 
+            padding: 14px; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-size: 1rem; 
+            border: none; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            box-shadow: 0 4px 12px rgba(252, 128, 25, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .btn-login:hover { background: var(--brand-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(252, 128, 25, 0.3); }
+        .btn-login:active { transform: translateY(0); }
+
+        /* --- ERROR STATE --- */
+        .error-msg {
+            background: #fef2f2;
+            color: var(--danger);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #fecaca;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+
+        /* --- DEMO CREDENTIALS BOX (For testing) --- */
+        .demo-box {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .demo-box h4 { font-size: 0.75rem; text-transform: uppercase; margin-bottom: 8px; color: var(--text-dark); }
+        .demo-box ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .demo-box li { display: flex; justify-content: space-between; }
+        .demo-badge { background: var(--border); color: var(--text-dark); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: 600; }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-card" id="login-card">
+            
+            <div class="brand">
+                <i class='bx bxs-pie-chart-alt-2'></i>
+                <h1>SKD ERP System</h1>
+            </div>
+
+            <div class="welcome-text">
+                <h2>Welcome Back</h2>
+                <p>Please sign in to your assigned role.</p>
+            </div>
+
+            <div class="error-msg" id="error-msg">
+                <i class='bx bx-error-circle'></i> Invalid username or password.
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-with-icon">
+                        <i class='bx bx-user'></i>
+                        <input type="text" id="username" placeholder="Enter your username" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">PIN / Password</label>
+                    <div class="input-with-icon">
+                        <i class='bx bx-lock-alt'></i>
+                        <input type="password" id="password" placeholder="Enter your PIN" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    Sign In <i class='bx bx-right-arrow-alt'></i>
+                </button>
+            </form>
+
+            <div class="demo-box">
+                <h4>System Demo Credentials</h4>
+                <ul>
+                    <li><span>Admin Access:</span> <span class="demo-badge">admin / 1234</span></li>
+                    <li><span>Cashier POS:</span> <span class="demo-badge">cashier / 1234</span></li>
+                    <li><span>Kitchen KDS:</span> <span class="demo-badge">chef / 1234</span></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Mock Employee Database
+        const staffDatabase = {
+            'admin': { pin: '1234', role: 'admin', redirect: 'admin.html' },
+            'cashier': { pin: '1234', role: 'cashier', redirect: 'cashier.html' },
+            'chef': { pin: '1234', role: 'kitchen', redirect: 'kitchen.html' }
+        };
+
+        function handleLogin(event) {
+            event.preventDefault(); // Prevent page reload
+
+            const user = document.getElementById('username').value.trim().toLowerCase();
+            const pass = document.getElementById('password').value.trim();
+            const errorBox = document.getElementById('error-msg');
+            const card = document.getElementById('login-card');
+
+            // Reset error state
+            errorBox.style.display = 'none';
+            card.classList.remove('shake');
+
+            // Validate Credentials
+            if (staffDatabase[user] && staffDatabase[user].pin === pass) {
+                const employeeData = staffDatabase[user];
+                
+                // Save session token in local storage
+                localStorage.setItem('skd_logged_in_user', user);
+                localStorage.setItem('skd_user_role', employeeData.role);
+
+                // Add a small delay for a smooth UI transition
+                const btn = document.querySelector('.btn-login');
+                btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Authenticating...`;
+                
+                setTimeout(() => {
+                    // Redirect to the assigned dashboard
+                    window.location.href = employeeData.redirect;
+                }, 800);
+
+            } else {
+                // Show Error
+                errorBox.style.display = 'flex';
+                
+                // Trigger CSS shake animation
+                // We remove and add it back to restart the animation if they fail twice
+                void card.offsetWidth; 
+                card.classList.add('shake');
+                
+                document.getElementById('password').value = ''; // Clear password field
+            }
+        }
+
+        // Auto-check if already logged in (Optional feature)
+        window.onload = () => {
+            const activeSession = localStorage.getItem('skd_user_role');
+            /* If you want them to auto-login if they haven't logged out, uncomment this:
+               
+               if(activeSession === 'admin') window.location.href = 'admin.html';
+               if(activeSession === 'cashier') window.location.href = 'cashier.html';
+               if(activeSession === 'kitchen') window.location.href = 'kitchen.html';
+            */
+        };
+    </script>
+</body>
+</html>
