@@ -13,9 +13,11 @@
         :root {
             /* Professional SaaS Palette */
             --brand: #fc8019; 
+            --brand-hover: #e06c10;
             --brand-light: #fff5ed;
             --success: #10b981; 
             --danger: #ef4444;
+            --danger-hover: #dc2626;
             --info: #3b82f6;
             --warning: #f59e0b;
             
@@ -33,17 +35,17 @@
             --radius-md: 16px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.05);
         }
 
         /* --- BASE & TYPOGRAPHY --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
-        /* Fixed zoom issue: 14px base font creates a denser, professional layout */
         html { font-size: 14px; text-size-adjust: 100%; } 
         body { background: var(--bg-main); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
-        button { cursor: pointer; border: none; outline: none; background: none; transition: 0.2s; font-family: 'Inter', sans-serif; }
-        input, select, textarea { font-family: 'Inter', sans-serif; border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm); width: 100%; font-size: 0.95rem; color: var(--text-dark); transition: border 0.2s; }
-        input:focus, select:focus { border-color: var(--brand); outline: none; box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.1); }
+        button { cursor: pointer; border: none; outline: none; background: none; transition: all 0.2s ease; font-family: 'Inter', sans-serif; }
+        input, select, textarea { font-family: 'Inter', sans-serif; border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm); width: 100%; font-size: 0.95rem; color: var(--text-dark); transition: border 0.2s; background: #f8fafc; }
+        input:focus, select:focus, textarea:focus { border-color: var(--brand); outline: none; background: #fff; box-shadow: 0 0 0 3px rgba(252, 128, 25, 0.1); }
         
         .hidden { display: none !important; }
 
@@ -68,9 +70,11 @@
         .brand-logo i { color: var(--brand); font-size: 1.8rem; }
         
         .nav-links { padding: 20px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
-        .nav-item { padding: 12px 16px; border-radius: var(--radius-sm); color: var(--sidebar-text); display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: 0.2s; }
-        .nav-item:hover { background: var(--sidebar-hover); color: white; }
-        .nav-item.active { background: var(--brand); color: white; }
+        .nav-item { padding: 12px 16px; border-radius: var(--radius-sm); color: var(--sidebar-text); display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+        
+        /* Fixed Sidebar Hover */
+        .nav-item:hover { background: var(--sidebar-hover); color: #ffffff; }
+        .nav-item.active { background: var(--brand); color: #ffffff; box-shadow: 0 4px 12px rgba(252, 128, 25, 0.3); }
         .nav-item i { font-size: 1.4rem; }
 
         /* --- MAIN CONTENT AREA --- */
@@ -90,35 +94,43 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- CARDS & GRIDS --- */
-        .card { background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05); padding: 20px; margin-bottom: 24px; }
+        .card { background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); border: 1px solid var(--border); padding: 20px; margin-bottom: 24px; transition: box-shadow 0.3s; }
+        .card:hover { box-shadow: var(--shadow-hover); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-        .card-title { font-size: 1.05rem; font-weight: 600; color: var(--text-dark); }
+        .card-title { font-size: 1.05rem; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
         
         /* Dashboard KPI Grid */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 24px; }
-        .kpi-card { background: var(--surface); padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; }
-        .kpi-info h4 { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .kpi-card { background: var(--surface); padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .kpi-info h4 { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
         .kpi-info h2 { font-size: 1.6rem; color: var(--text-dark); font-weight: 700; }
         .kpi-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
         
         /* Chart Grids */
         .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
-        @media (max-width: 1024px) { .chart-grid { grid-template-columns: 1fr; } }
+        .chart-grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        @media (max-width: 1024px) { .chart-grid, .chart-grid-equal { grid-template-columns: 1fr; } }
 
         /* --- TABLES --- */
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-        th { text-align: left; padding: 12px 16px; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; background: #f8fafc; border-bottom: 1px solid var(--border); }
-        td { padding: 16px; font-size: 0.9rem; color: var(--text-dark); border-bottom: 1px solid var(--border); vertical-align: middle; }
+        th { text-align: left; padding: 14px 16px; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; background: #f8fafc; border-bottom: 1px solid var(--border); }
+        td { padding: 16px; font-size: 0.9rem; color: var(--text-dark); border-bottom: 1px solid var(--border); vertical-align: middle; transition: background 0.2s; }
+        tbody tr:hover td { background: #f8fafc; }
         tr:last-child td { border-bottom: none; }
         
         /* --- UI COMPONENTS --- */
-        .btn { padding: 10px 16px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
-        .btn-primary { background: var(--brand); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
-        .btn-outline { border: 1px solid var(--border); color: var(--text-dark); background: white; }
-        .btn-outline:hover { background: var(--bg-main); }
-        .btn-danger { background: #fee2e2; color: var(--danger); }
+        /* Fixed Button Hovers */
+        .btn { padding: 10px 16px; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; justify-content: center; transition: all 0.2s ease; border: 1px solid transparent; }
+        .btn-primary { background: var(--brand); color: #ffffff; }
+        .btn-primary:hover { background: var(--brand-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252, 128, 25, 0.25); color: #ffffff; }
+        
+        .btn-outline { border-color: var(--border); color: var(--text-dark); background: #ffffff; }
+        .btn-outline:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); transform: translateY(-1px); }
+        
+        .btn-danger { background: #fee2e2; color: var(--danger); border-color: transparent; }
+        .btn-danger:hover { background: var(--danger); color: #ffffff; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); transform: translateY(-1px); }
         
         /* Toggles (Switch) */
         .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
@@ -129,9 +141,10 @@
         input:checked + .slider:before { transform: translateX(16px); }
 
         /* Badge/Tags */
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
         .badge-veg { background: #dcfce7; color: #166534; }
         .badge-nonveg { background: #fee2e2; color: #991b1b; }
+        .badge-warning { background: #fef3c7; color: #b45309; }
 
         /* Forms */
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
@@ -140,8 +153,10 @@
 
         /* QR Grid */
         .qr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-        .qr-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .qr-card i { font-size: 4rem; color: var(--text-muted); }
+        .qr-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; background: #fff; transition: 0.2s; }
+        .qr-card:hover { border-color: var(--brand); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .qr-card i { font-size: 4rem; color: var(--text-muted); transition: 0.2s; }
+        .qr-card:hover i { color: var(--brand); }
     </style>
 </head>
 <body>
@@ -160,6 +175,7 @@
         </div>
         <div class="nav-links">
             <div class="nav-item active" onclick="switchTab('dashboard', this, 'Dashboard Overview')"><i class='bx bx-grid-alt'></i> Dashboard</div>
+            <div class="nav-item" onclick="switchTab('analytics', this, 'Analytics & Deep Insights')"><i class='bx bx-bar-chart-square'></i> Analytics</div>
             <div class="nav-item" onclick="switchTab('menu', this, 'Menu & Inventory')"><i class='bx bx-food-menu'></i> Menu Manager</div>
             <div class="nav-item" onclick="switchTab('financials', this, 'Financials & Ledger')"><i class='bx bx-wallet'></i> Financials</div>
             <div class="nav-item" onclick="switchTab('qr', this, 'Table & QR Management')"><i class='bx bx-qr-scan'></i> Tables & QR</div>
@@ -198,32 +214,58 @@
                         <div class="kpi-icon" style="background: #ffedd5; color: #f59e0b;"><i class='bx bx-shopping-bag'></i></div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-info"><h4>Top Dish</h4><h2 style="font-size: 1.1rem; line-height: 1.4; margin-top: 5px;">Butter Chicken</h2></div>
-                        <div class="kpi-icon" style="background: #fee2e2; color: #ef4444;"><i class='bx bxs-hot'></i></div>
+                        <div class="kpi-info"><h4>Current Active</h4><h2 style="color: var(--brand);">12</h2></div>
+                        <div class="kpi-icon" style="background: var(--brand-light); color: var(--brand);"><i class='bx bxs-hot'></i></div>
                     </div>
                 </div>
 
                 <div class="chart-grid">
                     <div class="card">
-                        <div class="card-header"><h3 class="card-title">Revenue Trend (Last 7 Days)</h3></div>
+                        <div class="card-header">
+                            <h3 class="card-title"><i class='bx bx-trending-up'></i> Revenue Trend (Last 7 Days)</h3>
+                        </div>
                         <div style="height: 250px;"><canvas id="salesChart"></canvas></div>
                     </div>
                     <div class="card">
-                        <div class="card-header"><h3 class="card-title">Payment Breakdown</h3></div>
+                        <div class="card-header">
+                            <h3 class="card-title"><i class='bx bx-pie-chart'></i> Payment Split</h3>
+                        </div>
                         <div style="height: 250px; display: flex; justify-content: center;"><canvas id="paymentChart"></canvas></div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Void & Discount Audit Log</h3></div>
+                    <div class="card-header"><h3 class="card-title"><i class='bx bx-list-ul'></i> Recent Transactions</h3></div>
                     <div class="table-responsive">
                         <table>
-                            <thead><tr><th>Time</th><th>Order ID</th><th>Action</th><th>Amount</th><th>Authorized By</th></tr></thead>
+                            <thead><tr><th>Time</th><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
                             <tbody>
-                                <tr><td>Today, 2:30 PM</td><td>#43012</td><td><span class="badge" style="background:#fef3c7; color:#b45309;">10% Discount</span></td><td>-₹45.00</td><td>Cashier 1</td></tr>
-                                <tr><td>Today, 1:15 PM</td><td>#43008</td><td><span class="badge badge-nonveg">Order Voided</span></td><td>-₹350.00</td><td>Admin</td></tr>
+                                <tr><td>Today, 2:30 PM</td><td>#43012</td><td>Rahul G.</td><td>₹350.00</td><td><span class="badge badge-veg">Completed</span></td></tr>
+                                <tr><td>Today, 2:15 PM</td><td>#43011</td><td>Guest (T-4)</td><td>₹1,240.00</td><td><span class="badge badge-veg">Completed</span></td></tr>
+                                <tr><td>Today, 1:15 PM</td><td>#43008</td><td>Amit P.</td><td>₹0.00</td><td><span class="badge badge-nonveg">Voided</span></td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analytics" class="tab-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class='bx bx-bar-chart-alt-2'></i> Revenue vs. Profit Analysis</h3>
+                        <select style="width: auto; padding: 6px 12px; font-size: 0.85rem;"><option>This Month</option><option>Last Month</option></select>
+                    </div>
+                    <div style="height: 300px;"><canvas id="comboChart"></canvas></div>
+                </div>
+
+                <div class="chart-grid-equal">
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title"><i class='bx bx-trophy'></i> Top Selling Items (Velocity)</h3></div>
+                        <div style="height: 250px;"><canvas id="topItemsChart"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title"><i class='bx bx-time-five'></i> Peak Order Hours</h3></div>
+                        <div style="height: 250px;"><canvas id="peakHoursChart"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -231,7 +273,7 @@
             <div id="menu" class="tab-section">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Menu Items & Inventory</h3>
+                        <h3 class="card-title"><i class='bx bx-food-menu'></i> Menu Items & Inventory</h3>
                         <button class="btn btn-primary"><i class='bx bx-plus'></i> Add New Dish</button>
                     </div>
                     <div class="table-responsive">
@@ -244,7 +286,7 @@
                                     <th>Diet</th>
                                     <th style="text-align: center;">In Stock</th>
                                     <th style="text-align: center;">Top Pick (Hero)</th>
-                                    <th>Actions</th>
+                                    <th style="text-align: right;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="menu-tbody">
@@ -257,7 +299,7 @@
             <div id="financials" class="tab-section">
                 <div class="chart-grid">
                     <div class="card">
-                        <div class="card-header"><h3 class="card-title">Log Expense / Purchase</h3></div>
+                        <div class="card-header"><h3 class="card-title"><i class='bx bx-receipt'></i> Log Expense / Purchase</h3></div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Category</label>
@@ -278,15 +320,15 @@
                     </div>
 
                     <div class="card">
-                        <div class="card-header"><h3 class="card-title">Stock AI Recommends</h3></div>
+                        <div class="card-header"><h3 class="card-title"><i class='bx bx-brain'></i> Stock AI Recommends</h3></div>
                         <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px;">
                             <li style="display: flex; gap: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
-                                <i class='bx bx-error' style="color: var(--danger); font-size: 1.5rem;"></i>
-                                <div><h4 style="font-size: 0.95rem;">Cooking Oil</h4><p style="font-size: 0.8rem; color: var(--text-muted);">Stock likely low based on fry volume.</p></div>
+                                <div style="background: #fee2e2; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class='bx bx-error' style="color: var(--danger); font-size: 1.5rem;"></i></div>
+                                <div><h4 style="font-size: 0.95rem; color: var(--text-dark);">Cooking Oil</h4><p style="font-size: 0.8rem; color: var(--text-muted);">Stock likely low based on fry volume.</p></div>
                             </li>
                             <li style="display: flex; gap: 15px;">
-                                <i class='bx bx-trending-up' style="color: var(--success); font-size: 1.5rem;"></i>
-                                <div><h4 style="font-size: 0.95rem;">Chicken (Raw)</h4><p style="font-size: 0.8rem; color: var(--text-muted);">High sales velocity. Restock required.</p></div>
+                                <div style="background: #dcfce7; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class='bx bx-trending-up' style="color: var(--success); font-size: 1.5rem;"></i></div>
+                                <div><h4 style="font-size: 0.95rem; color: var(--text-dark);">Chicken (Raw)</h4><p style="font-size: 0.8rem; color: var(--text-muted);">High sales velocity. Restock required.</p></div>
                             </li>
                         </ul>
                     </div>
@@ -294,7 +336,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Month-End Statement</h3>
+                        <h3 class="card-title"><i class='bx bx-list-check'></i> Month-End Ledger Statement</h3>
                         <button class="btn btn-outline" onclick="exportExcel()"><i class='bx bx-download'></i> Export CSV</button>
                     </div>
                     <div class="table-responsive">
@@ -317,7 +359,7 @@
             <div id="qr" class="tab-section">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Dine-In Table Management</h3>
+                        <h3 class="card-title"><i class='bx bx-restaurant'></i> Dine-In Table Management</h3>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <span style="font-size: 0.9rem; font-weight: 600;">Total Tables:</span>
                             <input type="number" value="12" style="width: 80px; padding: 6px 10px;">
@@ -325,7 +367,7 @@
                         </div>
                     </div>
                     
-                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">Click a table to generate its unique ordering QR code.</p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">Click a table to generate and print its unique ordering QR code.</p>
                     
                     <div class="qr-grid" id="qr-grid">
                         </div>
@@ -335,11 +377,11 @@
             <div id="settings" class="tab-section">
                 <div class="chart-grid">
                     <div class="card">
-                        <div class="card-header"><h3 class="card-title">Store Configuration</h3></div>
+                        <div class="card-header"><h3 class="card-title"><i class='bx bx-store-alt'></i> Store Configuration</h3></div>
                         
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8fafc; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 20px;">
                             <div>
-                                <h4 style="font-size: 1rem;">Accepting Orders</h4>
+                                <h4 style="font-size: 1rem; color: var(--text-dark);">Accepting Orders</h4>
                                 <p style="font-size: 0.8rem; color: var(--text-muted);">Pause all QR/Online orders instantly.</p>
                             </div>
                             <label class="switch">
@@ -353,22 +395,22 @@
                             <div class="form-group"><label>Global Tax Rate (%)</label><input type="number" value="5"></div>
                         </div>
                         <div class="form-group" style="margin-bottom: 20px;"><label>Address (For Receipt)</label><textarea rows="2">Pimpri-Chinchwad, Maharashtra</textarea></div>
-                        <button class="btn btn-primary">Save Settings</button>
+                        <button class="btn btn-primary" style="width: 100%;">Save Settings</button>
                     </div>
 
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Staff Accounts</h3>
+                            <h3 class="card-title"><i class='bx bx-user-circle'></i> Staff Accounts</h3>
                             <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;"><i class='bx bx-plus'></i> Add User</button>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 15px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
-                                <div><h4 style="font-size: 0.95rem;">Rahul (Owner)</h4><span class="badge" style="background:#e0e7ff; color:#3730a3;">Admin</span></div>
-                                <button class="btn btn-outline" style="padding: 4px 8px;"><i class='bx bx-edit'></i></button>
+                                <div><h4 style="font-size: 0.95rem; color: var(--text-dark);">Rahul (Owner)</h4><span class="badge" style="background:#e0e7ff; color:#3730a3; margin-top: 4px;">Admin</span></div>
+                                <button class="btn btn-outline" style="padding: 6px 10px;"><i class='bx bx-edit'></i></button>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div><h4 style="font-size: 0.95rem;">Counter 1</h4><span class="badge" style="background:#fef3c7; color:#b45309;">Cashier</span></div>
-                                <button class="btn btn-outline" style="padding: 4px 8px;"><i class='bx bx-edit'></i></button>
+                                <div><h4 style="font-size: 0.95rem; color: var(--text-dark);">Counter 1</h4><span class="badge badge-warning" style="margin-top: 4px;">Cashier</span></div>
+                                <button class="btn btn-outline" style="padding: 6px 10px;"><i class='bx bx-edit'></i></button>
                             </div>
                         </div>
                     </div>
@@ -411,12 +453,10 @@
         }
 
         function switchTab(tabId, element, title) {
-            // Update Sidebar
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
-            if(window.innerWidth <= 1024) toggleSidebar(); // close mobile sidebar
+            if(window.innerWidth <= 1024) toggleSidebar(); 
 
-            // Update Content
             document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.getElementById('header-title').innerText = title;
@@ -443,9 +483,9 @@
             const tbody = document.getElementById('menu-tbody');
             tbody.innerHTML = menuData.map(item => `
                 <tr>
-                    <td style="font-weight: 500;">${item.name}</td>
+                    <td style="font-weight: 600; color: var(--text-dark);">${item.name}</td>
                     <td>${item.category}</td>
-                    <td>₹${item.price}</td>
+                    <td style="font-weight: 500;">₹${item.price}</td>
                     <td><span class="badge ${item.diet === 'veg' ? 'badge-veg' : 'badge-nonveg'}">${item.diet.toUpperCase()}</span></td>
                     <td style="text-align: center;">
                         <label class="switch" style="transform: scale(0.8);">
@@ -459,7 +499,7 @@
                             <span class="slider"></span>
                         </label>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <button class="btn btn-outline" style="padding: 6px 10px;"><i class='bx bx-edit'></i></button>
                         <button class="btn btn-danger" style="padding: 6px 10px;"><i class='bx bx-trash'></i></button>
                     </td>
@@ -475,8 +515,8 @@
                 html += `
                     <div class="qr-card">
                         <i class='bx bx-qr'></i>
-                        <h4 style="font-size:1rem;">Table ${i}</h4>
-                        <button class="btn btn-outline" style="width:100%; padding:6px; font-size:0.8rem;" onclick="alert('Generating PDF for Table ${i}')"><i class='bx bx-printer'></i> Print</button>
+                        <h4 style="font-size:1rem; color: var(--text-dark);">Table ${i}</h4>
+                        <button class="btn btn-outline" style="width:100%; padding:8px; font-size:0.8rem;" onclick="alert('Generating PDF for Table ${i}')"><i class='bx bx-printer'></i> Print QR</button>
                     </div>`;
             }
             grid.innerHTML = html;
@@ -492,7 +532,7 @@
                 return `
                     <tr>
                         <td>${e.date}</td>
-                        <td style="font-weight:500;">${e.desc}</td>
+                        <td style="font-weight:500; color: var(--text-dark);">${e.desc}</td>
                         <td><span class="badge" style="background:#f1f5f9; color:var(--text-muted); border:1px solid var(--border);">${e.type}</span></td>
                         <td style="text-align:right; color: ${e.debit>0?'var(--danger)':'inherit'}; font-weight: ${e.debit>0?'600':'normal'}">${e.debit>0?'₹'+e.debit.toLocaleString():'-'}</td>
                         <td style="text-align:right; color: ${e.credit>0?'var(--success)':'inherit'}; font-weight: ${e.credit>0?'600':'normal'}">${e.credit>0?'₹'+e.credit.toLocaleString():'-'}</td>
@@ -531,9 +571,13 @@
             document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
-        // --- 7. CHARTS INITIALIZATION ---
+        // --- 7. CHARTS INITIALIZATION (Enterprise Analytics) ---
         function initCharts() {
-            // Sales Line Chart
+            // General config
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // 1. Dashboard Sales Line Chart
             new Chart(document.getElementById('salesChart').getContext('2d'), {
                 type: 'line',
                 data: {
@@ -543,24 +587,67 @@
                         data: [12000, 15000, 11000, 28000, 22000, 35000, 29000],
                         borderColor: '#fc8019',
                         backgroundColor: 'rgba(252, 128, 25, 0.1)',
-                        borderWidth: 3, fill: true, tension: 0.4
+                        borderWidth: 3, fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#fff'
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { border: { display: false } } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { border: { display: false }, grid: { color: '#f1f5f9' } } } }
             });
 
-            // Payment Breakdown Pie
+            // 2. Dashboard Payment Pie
             new Chart(document.getElementById('paymentChart').getContext('2d'), {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: ['UPI / Online', 'Cash'],
                     datasets: [{
                         data: [75, 25],
                         backgroundColor: ['#3b82f6', '#10b981'],
-                        borderWidth: 0
+                        borderWidth: 0, hoverOffset: 5
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+            });
+
+            // 3. Analytics Combo Chart (Revenue vs Profit)
+            new Chart(document.getElementById('comboChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [
+                        { type: 'line', label: 'Net Profit', data: [15000, 18000, 14000, 22000], borderColor: '#10b981', borderWidth: 3, tension: 0.3 },
+                        { type: 'bar', label: 'Gross Revenue', data: [45000, 52000, 48000, 60000], backgroundColor: '#e2e8f0', borderRadius: 4 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false } }, y: { border: { display: false }, grid: { color: '#f1f5f9' } } } }
+            });
+
+            // 4. Top Selling Items (Horizontal Bar)
+            new Chart(document.getElementById('topItemsChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Butter Chicken', 'Paneer Tikka', 'Garlic Naan', 'Dal Makhani', 'Jeera Rice'],
+                    datasets: [{
+                        label: 'Units Sold',
+                        data: [145, 112, 98, 85, 60],
+                        backgroundColor: '#fc8019',
+                        borderRadius: 4
+                    }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { border: { display: false }, grid: { display: false } } } }
+            });
+
+            // 5. Peak Hours Heatmap/Line
+            new Chart(document.getElementById('peakHoursChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['12 PM', '1 PM', '2 PM', '7 PM', '8 PM', '9 PM', '10 PM'],
+                    datasets: [{
+                        label: 'Order Volume',
+                        data: [15, 35, 20, 45, 80, 95, 40],
+                        borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 2, fill: true, tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { display: false } } }
             });
         }
     </script>
