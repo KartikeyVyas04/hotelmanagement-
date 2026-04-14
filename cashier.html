@@ -22,6 +22,10 @@
             --radius: 12px;
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
             --shadow-md: 0 8px 20px rgba(0,0,0,0.1);
+            
+            /* External Aggregator Colors */
+            --zomato: #cb202d;
+            --swiggy: #fc8019;
         }
 
         /* Anti-zoom for mobile */
@@ -83,9 +87,16 @@
         .takeaway-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary); }
         .takeaway-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .tk-info { display: flex; flex-direction: column; gap: 2px; }
-        .tk-id { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); }
+        .tk-id { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); display: flex; align-items: center; }
         .tk-name { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
         .tk-amount { font-weight: 700; font-size: 1.1rem; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 6px; }
+
+        /* Platform Styling */
+        .takeaway-card.zomato { border-left-color: var(--zomato); }
+        .takeaway-card.swiggy { border-left-color: var(--swiggy); }
+        .platform-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; color: white; margin-left: 6px; text-transform: uppercase; }
+        .platform-badge.swiggy { background: var(--swiggy); }
+        .platform-badge.zomato { background: var(--zomato); }
 
         /* --- RIGHT/BOTTOM PANEL: BILLING DETAILS --- */
         .bill-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 90; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px); }
@@ -112,6 +123,8 @@
         .bill-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: space-between; align-items: flex-start; border-radius: 20px 20px 0 0; }
         .bill-header-info { flex: 1; }
         .bill-type-badge { display: inline-block; background: var(--text-dark); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+        .bill-type-badge.swiggy { background: var(--swiggy); }
+        .bill-type-badge.zomato { background: var(--zomato); }
         .bill-id { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
         .bill-customer { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
         
@@ -149,6 +162,9 @@
         .btn-settle { flex: 2; padding: 12px; background: var(--success); color: white; border-radius: 8px; font-weight: 700; font-size: 1rem; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: 0.2s; }
         .btn-settle:active { transform: scale(0.98); }
 
+        .scan-btn { background: white; color: var(--primary); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--primary); display: flex; align-items: center; gap: 4px; box-shadow: var(--shadow-sm); }
+        .scan-btn:active { background: #fff5eb; }
+
         /* --- THERMAL RECEIPT PRINT STYLES --- */
         #print-section { display: none; }
         @media print {
@@ -178,8 +194,21 @@
                 <span>Shivam Ka Dhaba</span>
             </div>
         </div>
-        <div class="header-controls">
-            <div class="live-clock" id="live-clock">00:00</div>
+        
+        <div id="table-status-container" style="display:flex; gap:10px; align-items: center;">
+            <button class="scan-btn" onclick="simulateExternalOrder('swiggy')" style="border-color: var(--swiggy); color: var(--swiggy);" title="Simulate Swiggy Email Extraction">
+                <i class='bx bx-mobile'></i> Swiggy
+            </button>
+            <button class="scan-btn" onclick="simulateExternalOrder('zomato')" style="border-color: var(--zomato); color: var(--zomato);" title="Simulate Zomato Email Extraction">
+                <i class='bx bx-mobile'></i> Zomato
+            </button>
+            <button class="scan-btn" id="btn-scan" onclick="simulateScan()">
+                <i class='bx bx-qr-scan'></i> Scan Table
+            </button>
+            
+            <div class="header-controls" style="margin-left: 10px;">
+                <div class="live-clock" id="live-clock">00:00</div>
+            </div>
         </div>
     </header>
 
@@ -204,7 +233,7 @@
             <div class="table-grid" id="table-grid"></div>
 
             <div class="section-header" style="margin-top: 10px;">
-                <h2 id="queue-title"><i class='bx bx-shopping-bag'></i> Takeaway Queue</h2>
+                <h2 id="queue-title"><i class='bx bx-shopping-bag'></i> Takeaway / Delivery Queue</h2>
             </div>
             
             <div class="takeaway-list" id="takeaway-list"></div>
@@ -234,7 +263,7 @@
         let currentDiscountPct = 0;
         let cashTendered = 0;
 
-        // FIXED BUG: Safe initialization on DOMContentLoaded to guarantee instant loading
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             startClock();
             initSync();
@@ -247,7 +276,6 @@
             setInterval(() => { clockEl.innerText = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }); }, 1000);
         }
 
-        // FIXED BUG: Ensured renderDashboard is ALWAYS called, even if local storage is empty
         function initSync() {
             try {
                 const raw = localStorage.getItem('skd_active_orders');
@@ -255,13 +283,11 @@
                     allOrders = JSON.parse(raw);
                     if (!Array.isArray(allOrders)) allOrders = [];
                 } else {
-                    allOrders = []; // Initialize empty array if first time
+                    allOrders = [];
                 }
 
-                // ALWAYS render the UI immediately
                 renderDashboard();
                 
-                // Re-render open bill if necessary
                 if (selectedOrderId) {
                     const exists = allOrders.find(o => o.id === selectedOrderId);
                     if (exists && (currentTab === 'active' && exists.status !== 'archived' || currentTab === 'settled' && exists.status === 'archived')) {
@@ -274,10 +300,40 @@
             } catch(e) { 
                 console.error("Cashier Sync Error", e); 
                 allOrders = [];
-                renderDashboard(); // Fallback render
+                renderDashboard(); 
             }
         }
 
+        // --- SIMULATE EXTERNAL DATA INTEGRATION (Swiggy / Zomato) ---
+        function simulateExternalOrder(platform) {
+            const newOrder = {
+                id: Math.floor(Math.random() * 90000 + 10000),
+                customerName: platform === 'swiggy' ? "Swiggy Customer" : "Zomato Customer",
+                tableNo: 'N/A', // Delivery has no table
+                total: `${config.currencySymbol}${Math.floor(Math.random() * 500 + 300)}`,
+                items: [
+                    { name: 'Punjabi Butter Chicken', qty: 1, status: 'cooking' },
+                    { name: 'Garlic Naan', qty: 2, status: 'cooking' }
+                ],
+                status: 'placed',
+                timestamp: Date.now(),
+                platform: platform // 'swiggy', 'zomato', or 'direct'
+            };
+            
+            allOrders.unshift(newOrder);
+            localStorage.setItem('skd_active_orders', JSON.stringify(allOrders));
+            window.dispatchEvent(new Event('storage'));
+            renderDashboard();
+            
+            alert(`Simulated incoming order from ${platform.toUpperCase()}`);
+        }
+
+        function simulateScan() {
+            // Mock dine-in scan
+            alert("In production, this opens a camera scanner.");
+        }
+
+        // --- DASHBOARD UI ---
         function switchTab(tab) {
             currentTab = tab;
             document.getElementById('tab-active').classList.toggle('active', tab === 'active');
@@ -285,7 +341,7 @@
             
             document.getElementById('table-grid').style.display = tab === 'active' ? 'grid' : 'none';
             document.getElementById('table-header').style.display = tab === 'active' ? 'flex' : 'none';
-            document.getElementById('queue-title').innerHTML = tab === 'active' ? "<i class='bx bx-shopping-bag'></i> Takeaway Queue" : "<i class='bx bx-history'></i> Order History";
+            document.getElementById('queue-title').innerHTML = tab === 'active' ? "<i class='bx bx-shopping-bag'></i> Takeaway / Delivery Queue" : "<i class='bx bx-history'></i> Order History";
             
             closeBill();
         }
@@ -302,12 +358,13 @@
                 const matchesTab = currentTab === 'active' ? o.status !== 'archived' : o.status === 'archived';
                 const matchesSearch = o.id.toString().includes(searchQuery) || 
                                       (o.tableNo && o.tableNo.toLowerCase().includes(searchQuery)) || 
-                                      (o.customerName && o.customerName.toLowerCase().includes(searchQuery));
+                                      (o.customerName && o.customerName.toLowerCase().includes(searchQuery)) ||
+                                      (o.platform && o.platform.toLowerCase().includes(searchQuery));
                 return matchesTab && matchesSearch;
             });
 
             if (currentTab === 'active' && searchQuery === '') {
-                // Regular Table Grid View
+                // Table Grid View
                 const dineInOrders = filteredOrders.filter(o => o.tableNo && o.tableNo !== 'N/A');
                 const takeawayOrders = filteredOrders.filter(o => !o.tableNo || o.tableNo === 'N/A');
 
@@ -327,7 +384,7 @@
                 }
 
                 if (takeawayOrders.length === 0) {
-                    tkHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px; border: 1px dashed var(--border); border-radius: 12px;">No active takeaways.</div>`;
+                    tkHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px; border: 1px dashed var(--border); border-radius: 12px;">No active takeaways or deliveries.</div>`;
                 } else {
                     takeawayOrders.forEach(order => tkHTML += buildListCard(order));
                 }
@@ -347,10 +404,24 @@
         function buildListCard(order) {
             const isSelected = selectedOrderId === order.id ? 'selected' : '';
             const typeLabel = order.tableNo && order.tableNo !== 'N/A' ? `Table ${order.tableNo}` : 'Takeaway';
+            
+            // Integrates the platform logic (Swiggy/Zomato)
+            const platform = order.platform || 'direct';
+            let platformBadge = '';
+            let cardClass = '';
+            
+            if (platform === 'swiggy') { 
+                platformBadge = `<span class="platform-badge swiggy">Swiggy</span>`; 
+                cardClass = 'swiggy'; 
+            } else if (platform === 'zomato') { 
+                platformBadge = `<span class="platform-badge zomato">Zomato</span>`; 
+                cardClass = 'zomato'; 
+            }
+            
             return `
-                <div class="takeaway-card ${isSelected}" onclick="selectOrder(${order.id})">
+                <div class="takeaway-card ${isSelected} ${cardClass}" onclick="selectOrder(${order.id})">
                     <div class="tk-info">
-                        <span class="tk-id">Order #${order.id} • ${typeLabel}</span>
+                        <span class="tk-id">Order #${order.id} <span style="font-weight: normal; color: var(--text-muted);">• ${typeLabel}</span> ${platformBadge}</span>
                         <span class="tk-name"><i class='bx bx-user'></i> ${order.customerName || 'Guest'}</span>
                     </div>
                     <div class="tk-amount">${order.total}</div>
@@ -378,6 +449,7 @@
             renderDashboard();
         }
 
+        // --- BILL RENDERER & LOGIC ---
         function renderBill(orderId) {
             const order = allOrders.find(o => o.id === orderId);
             if (!order) return;
@@ -387,8 +459,15 @@
             billPanel.classList.remove('hidden');
 
             const isDineIn = order.tableNo && order.tableNo !== 'N/A';
-            const typeBadge = isDineIn ? `Dine-In • TBL ${order.tableNo}` : `Takeaway`;
             const isArchived = order.status === 'archived';
+            const platform = order.platform || 'direct';
+            
+            // Header Badge Logic
+            let typeBadgeStr = isDineIn ? `Dine-In • TBL ${order.tableNo}` : `Takeaway`;
+            let typeBadgeClass = '';
+            
+            if (platform === 'swiggy') { typeBadgeStr = `Swiggy Delivery`; typeBadgeClass = 'swiggy'; }
+            if (platform === 'zomato') { typeBadgeStr = `Zomato Delivery`; typeBadgeClass = 'zomato'; }
 
             let rawSubtotal = 0;
             let itemsHTML = '';
@@ -416,6 +495,7 @@
             let toolsHTML = '';
             let actionBtnHTML = '';
 
+            // Tools and Buttons logic
             if (!isArchived) {
                 toolsHTML = `
                     <div class="tools-section">
@@ -452,7 +532,7 @@
             billPanel.innerHTML = `
                 <div class="bill-header">
                     <div class="bill-header-info">
-                        <span class="bill-type-badge ${isArchived ? 'bg-muted' : ''}">${isArchived ? 'Settled' : typeBadge}</span>
+                        <span class="bill-type-badge ${isArchived ? 'bg-muted' : typeBadgeClass}">${isArchived ? 'Settled' : typeBadgeStr}</span>
                         <div class="bill-id">Order #${order.id}</div>
                         <div class="bill-customer"><i class='bx bx-user'></i> ${order.customerName || 'Guest'}</div>
                     </div>
@@ -523,6 +603,8 @@
                 itemsPrintHTML = `<div class="print-item"><span>${order.items}</span></div>`;
             }
 
+            const platformStr = order.platform && order.platform !== 'direct' ? order.platform.toUpperCase() : (order.tableNo !== 'N/A' ? 'Table '+order.tableNo : 'Takeaway');
+
             printSection.innerHTML = `
                 <div class="print-center">
                     <div class="print-brand">${config.restaurantName}</div>
@@ -532,7 +614,7 @@
                 <div class="print-divider"></div>
                 <div class="print-row"><span>Order: #${order.id}</span></div>
                 <div class="print-row"><span>Date: ${dateStr}</span></div>
-                <div class="print-row"><span>Type: ${order.tableNo !== 'N/A' ? 'Table '+order.tableNo : 'Takeaway'}</span></div>
+                <div class="print-row"><span>Type: ${platformStr}</span></div>
                 <div class="print-row"><span>Name: ${order.customerName || 'Guest'}</span></div>
                 <div class="print-divider"></div>
                 <div class="print-items">${itemsPrintHTML}</div>
