@@ -187,12 +187,10 @@
         .step-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
         .step.active .step-label { color: var(--text-dark); }
         
-        /* NEW: Item-wise list styling inside tracking card */
         .order-details-list { margin-bottom: 15px; }
         .track-item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
         .track-item-row.ready { text-decoration: line-through; opacity: 0.6; }
         
-        /* NEW: Call Waiter Button */
         .call-waiter-btn { width: 100%; padding: 10px; border: 1px solid var(--primary); color: var(--primary); background: transparent; border-radius: 8px; font-weight: 600; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
         .call-waiter-btn:active { background: #fff5eb; }
 
@@ -366,33 +364,47 @@
         const categories = ['All', 'Starters', 'Mains', 'Breads', 'Desserts'];
         let activeTableNumber = null;
 
-        window.onload = () => {
+        // FIXED BUG: Safe Initialization via DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup Brand
             document.getElementById('page-title').innerText = config.restaurantName;
             document.getElementById('brand-name').innerText = config.restaurantName;
             
+            // Initialize Systems
             handleQRLogic();
             loadUserData();
             loadPersistentOrders(); 
+            
+            // Render UI
             renderHero(); 
             renderTabs();
-            filterMenu();
+            updateCartData(); // Safely triggers filterMenu & syncs cart state
             
-            // Listen for cross-tab storage changes (e.g. Kitchen marking items ready)
+            // Event Listeners
             window.addEventListener('storage', loadPersistentOrders);
-        };
+        });
 
+        // FIXED BUG: Bulletproof data parsing to prevent older data from crashing the app
         function loadPersistentOrders() {
-            const savedOrders = localStorage.getItem('skd_active_orders');
-            if (savedOrders) {
-                activeOrders = JSON.parse(savedOrders);
+            try {
+                const savedOrders = localStorage.getItem('skd_active_orders');
+                if (savedOrders) {
+                    activeOrders = JSON.parse(savedOrders);
+                    if (!Array.isArray(activeOrders)) activeOrders = [];
+                    
+                    renderTracking();
+                    
+                    activeOrders.forEach(o => {
+                        if (o.status === 'placed') simulateKitchenProgress(o.id);
+                    });
+                } else {
+                    renderTracking(); 
+                }
+            } catch(e) {
+                console.error("Corrupted local storage data found. Resetting orders.");
+                localStorage.removeItem('skd_active_orders');
+                activeOrders = [];
                 renderTracking();
-                
-                // Only mock simulate if it's placed and not touched by kitchen
-                activeOrders.forEach(o => {
-                    if (o.status === 'placed') simulateKitchenProgress(o.id);
-                });
-            } else {
-                renderTracking(); 
             }
         }
 
@@ -409,7 +421,6 @@
 
         function callWaiter(orderId) {
             showToast("Calling waiter to Table " + activeTableNumber + "...");
-            // In production, this would hit an API to alert the cashier/waiter portal
         }
 
         function switchView(viewName) {
@@ -427,7 +438,7 @@
                 document.getElementById('view-orders').classList.remove('hidden');
                 document.getElementById('tab-orders').classList.add('active');
                 document.getElementById('cart-banner').classList.add('hidden');
-                renderTracking(); // Refresh to catch any storage updates
+                renderTracking(); 
             }
             window.scrollTo(0,0);
         }
@@ -451,12 +462,17 @@
             document.getElementById('takeaway').disabled = true;
         }
 
+        // FIXED BUG: Bulletproof user data parsing
         function loadUserData() {
-            const savedUser = localStorage.getItem('skd_user_profile');
-            if (savedUser) {
-                const user = JSON.parse(savedUser);
-                document.getElementById('customer-name').value = user.name;
-                document.getElementById('customer-phone').value = user.phone;
+            try {
+                const savedUser = localStorage.getItem('skd_user_profile');
+                if (savedUser) {
+                    const user = JSON.parse(savedUser);
+                    document.getElementById('customer-name').value = user.name || '';
+                    document.getElementById('customer-phone').value = user.phone || '';
+                }
+            } catch(e) {
+                localStorage.removeItem('skd_user_profile');
             }
         }
 
@@ -496,8 +512,10 @@
         }
 
         function filterMenu() {
-            const searchQuery = document.getElementById('search-input').value.toLowerCase();
-            const vegOnly = document.getElementById('veg-toggle').checked;
+            const searchElement = document.getElementById('search-input');
+            const searchQuery = searchElement ? searchElement.value.toLowerCase() : '';
+            const vegElement = document.getElementById('veg-toggle');
+            const vegOnly = vegElement ? vegElement.checked : false;
             
             const filtered = menuData.filter(item => {
                 return (activeCategory === 'All' || item.category === activeCategory) &&
@@ -637,12 +655,11 @@
             const taxAmount = Math.round(itemTotal * config.taxRate);
             const grandTotal = itemTotal + taxAmount;
 
-            // FEATURE: Item-Wise Object Array
             const orderItems = Object.values(cart).map(item => ({
                 id: item.id,
                 name: item.name,
                 qty: item.qty,
-                status: 'cooking' // Starts as cooking for Kitchen View
+                status: 'cooking' 
             }));
 
             const newOrder = {
@@ -669,10 +686,9 @@
             showToast("Order Placed Successfully!"); 
         }
 
+        // FIXED BUG: Extremely robust rendering to prevent malformed data from breaking the UI
         function renderTracking() {
             const container = document.getElementById('tracking-container');
-            
-            // Only show orders that are not archived by the cashier/kitchen
             const visibleOrders = activeOrders.filter(o => o.status !== 'archived');
             
             if(visibleOrders.length === 0) {
@@ -684,67 +700,78 @@
                 return;
             }
 
-            container.innerHTML = visibleOrders.map(order => {
-                // FEATURE: Render Live Item Status Checklist
-                const itemsListHTML = order.items.map(i => {
-                    const isReady = i.status === 'ready';
-                    const icon = isReady ? "<i class='bx bxs-check-circle' style='color:var(--success)'></i>" : "<i class='bx bx-time-five' style='color:var(--primary)'></i>";
+            try {
+                container.innerHTML = visibleOrders.map(order => {
+                    
+                    // Fallback protection for legacy data format (if items was saved as a string)
+                    let itemsListHTML = '';
+                    if (Array.isArray(order.items)) {
+                        itemsListHTML = order.items.map(i => {
+                            const isReady = i.status === 'ready';
+                            const icon = isReady ? "<i class='bx bxs-check-circle' style='color:var(--success)'></i>" : "<i class='bx bx-time-five' style='color:var(--primary)'></i>";
+                            return `
+                                <div class="track-item-row ${isReady ? 'ready' : ''}">
+                                    <span>${i.qty} x ${i.name}</span>
+                                    ${icon}
+                                </div>`;
+                        }).join('');
+                    } else {
+                        itemsListHTML = `<div class="track-item-row"><span>${order.items || 'Items missing'}</span></div>`;
+                    }
+
+                    let progressWidth = '0%';
+                    if(order.status === 'preparing') progressWidth = '50%';
+                    if(order.status === 'ready') progressWidth = '100%';
+
+                    const callWaiterBtn = (order.tableNo && order.tableNo !== 'N/A' && order.status !== 'ready') 
+                        ? `<button class="call-waiter-btn" onclick="callWaiter(${order.id})"><i class='bx bx-bell'></i> Call Waiter</button>` 
+                        : '';
+
                     return `
-                        <div class="track-item-row ${isReady ? 'ready' : ''}">
-                            <span>${i.qty} x ${i.name}</span>
-                            ${icon}
-                        </div>`;
-                }).join('');
-
-                // Calculate overall order progress bar
-                let progressWidth = '0%';
-                if(order.status === 'preparing') progressWidth = '50%';
-                if(order.status === 'ready') progressWidth = '100%';
-
-                // Display Call Waiter button only for Dine-in orders
-                const callWaiterBtn = (activeTableNumber && order.status !== 'ready') 
-                    ? `<button class="call-waiter-btn" onclick="callWaiter(${order.id})"><i class='bx bx-bell'></i> Call Waiter</button>` 
-                    : '';
-
-                return `
-                <div class="active-order-card" id="card-${order.id}">
-                    <div class="order-header">
-                        <div>
-                            <div class="order-id">Order #${order.id}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
-                                ${order.tableNo !== 'N/A' ? 'Dine-in | Table ' + order.tableNo : 'Takeaway'}
+                    <div class="active-order-card" id="card-${order.id}">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">Order #${order.id}</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+                                    ${order.tableNo && order.tableNo !== 'N/A' ? 'Dine-in | Table ' + order.tableNo : 'Takeaway'}
+                                </div>
+                            </div>
+                            <span class="order-total">${order.total || '₹0'}</span>
+                        </div>
+                        
+                        <div class="order-details-list">
+                            ${itemsListHTML}
+                        </div>
+                        
+                        <div class="tracking-stepper">
+                            <div class="step-track">
+                                <div class="progress-bar" id="progress-${order.id}" style="width: ${progressWidth}"></div>
+                            </div>
+                            <div class="step ${order.status === 'placed' || order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}">
+                                <div class="step-icon"><i class='bx bx-check'></i></div>
+                                <span class="step-label">Received</span>
+                            </div>
+                            <div class="step ${order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}" id="step2-${order.id}">
+                                <div class="step-icon"><i class='bx bx-flame'></i></div>
+                                <span class="step-label">Preparing</span>
+                            </div>
+                            <div class="step ${order.status === 'ready' ? 'active' : ''}" id="step3-${order.id}">
+                                <div class="step-icon"><i class='bx bx-shopping-bag'></i></div>
+                                <span class="step-label">Ready</span>
                             </div>
                         </div>
-                        <span class="order-total">${order.total}</span>
+                        ${callWaiterBtn}
                     </div>
-                    
-                    <div class="order-details-list">
-                        ${itemsListHTML}
-                    </div>
-                    
-                    <div class="tracking-stepper">
-                        <div class="step-track">
-                            <div class="progress-bar" id="progress-${order.id}" style="width: ${progressWidth}"></div>
-                        </div>
-                        <div class="step ${order.status === 'placed' || order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}">
-                            <div class="step-icon"><i class='bx bx-check'></i></div>
-                            <span class="step-label">Received</span>
-                        </div>
-                        <div class="step ${order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}">
-                            <div class="step-icon"><i class='bx bx-flame'></i></div>
-                            <span class="step-label">Preparing</span>
-                        </div>
-                        <div class="step ${order.status === 'ready' ? 'active' : ''}">
-                            <div class="step-icon"><i class='bx bx-shopping-bag'></i></div>
-                            <span class="step-label">Ready</span>
-                        </div>
-                    </div>
-                    ${callWaiterBtn}
-                </div>
-            `}).join('');
+                `}).join('');
+            } catch(error) {
+                console.error("Error rendering tracking data: ", error);
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: red;">Error displaying orders. Restoring system...</div>';
+                localStorage.removeItem('skd_active_orders');
+                activeOrders = [];
+                setTimeout(renderTracking, 1000);
+            }
         }
 
-        // Mock simulation to automatically move orders if kitchen view isn't open
         function simulateKitchenProgress(orderId) {
             setTimeout(() => {
                 const order = activeOrders.find(o => o.id === orderId);
@@ -752,6 +779,23 @@
                     order.status = 'preparing';
                     savePersistentOrders();
                     renderTracking();
+                    showToast(`Order #${orderId} is being prepared!`);
+                    
+                    setTimeout(() => {
+                        const orderReady = activeOrders.find(o => o.id === orderId);
+                        if(orderReady && orderReady.status === 'preparing') {
+                            orderReady.status = 'ready';
+                            
+                            // Mock simulation: auto-mark all items as ready
+                            if (Array.isArray(orderReady.items)) {
+                                orderReady.items.forEach(i => i.status = 'ready');
+                            }
+                            
+                            savePersistentOrders();
+                            renderTracking();
+                            showToast(`Order #${orderId} is ready!`);
+                        }
+                    }, 10000);
                 }
             }, 5000); 
         }
