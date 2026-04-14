@@ -627,8 +627,9 @@
 
 
 
- -->
-<!DOCTYPE html>
+
+
+ --><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -679,7 +680,7 @@
         .scan-btn:active { background: #fff5eb; }
 
         .container { max-width: 800px; margin: 0 auto; padding: 0; }
-        .content-padding { padding: 16px; padding-bottom: 100px; } /* Prevent orders hiding behind bottom nav */
+        .content-padding { padding: 16px; padding-bottom: 100px; } 
 
         /* --- SEARCH --- */
         .search-container { padding: 16px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
@@ -750,7 +751,6 @@
         .nav-item.active i { color: var(--primary); }
 
         /* --- GREEN CART BANNER --- */
-        /* Increased z-index to stay above bottom nav if needed, positioned explicitly above nav */
         .cart-banner { position: fixed; bottom: calc(75px + env(safe-area-inset-bottom, 0px)); left: 16px; right: 16px; max-width: 768px; margin: 0 auto; background: var(--success); color: white; border-radius: 8px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(96, 178, 70, 0.3); z-index: 85; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s; }
         .cart-banner.hidden { transform: translateY(150px); opacity: 0; pointer-events: none; }
         .cart-banner-info { display: flex; flex-direction: column; }
@@ -758,11 +758,10 @@
         .cart-banner-price { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 4px; }
         .cart-banner-action { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 4px; letter-spacing: 0.5px; }
 
-        /* --- CHECKOUT DRAWER (BUG FIXES APPLIED) --- */
+        /* --- CHECKOUT DRAWER --- */
         .cart-overlay { position: fixed; inset: 0; background: rgba(40, 44, 63, 0.7); z-index: 90; opacity: 0; visibility: hidden; transition: 0.3s; }
         .cart-overlay.active { opacity: 1; visibility: visible; }
         
-        /* dvh units ensure the drawer stays perfectly sized even with browser address bars */
         .cart-drawer { position: fixed; bottom: -100%; left: 0; right: 0; height: 88dvh; background: var(--bg-color); z-index: 100; transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-radius: 20px 20px 0 0; }
         @media(min-width: 800px) { .cart-drawer { max-width: 500px; right: 0; left: auto; height: 100vh; border-radius: 0; bottom: 0; transform: translateX(100%); transition: transform 0.4s; } .cart-drawer.active { transform: translateX(0); bottom: 0; } }
         .cart-drawer.active { bottom: 0; }
@@ -799,18 +798,16 @@
         input[type="radio"]:checked + .radio-label { border-color: var(--primary); background: #fff5eb; color: var(--primary); }
         input[type="radio"]:disabled + .radio-label { opacity: 0.4; cursor: not-allowed; background: #f9f9f9; }
 
-        /* FIXED: Added robust padding-bottom so the button never overlaps bottom device navigation */
         .checkout-footer { background: white; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 16px)); border-top: 1px solid var(--border); flex-shrink: 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); }
         .place-order-btn { width: 100%; background: var(--success); color: white; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- ACTIVE ORDER TRACKING (BUG FIXES APPLIED) --- */
+        /* --- ACTIVE ORDER TRACKING --- */
         .empty-orders { text-align: center; color: var(--text-muted); padding: 60px 20px; font-weight: 500; }
         .active-order-card { background: white; border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px; border: 1px solid var(--border); }
         .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 12px; margin-bottom: 16px; }
         .order-id { font-weight: 700; font-size: 1rem; color: var(--text-dark); }
         .order-total { font-weight: 700; color: var(--text-dark); font-size: 1rem; }
         
-        /* FIXED: Tracking Stepper Width Bounds */
         .tracking-stepper { display: flex; justify-content: space-between; position: relative; margin: 20px 0 10px 0; }
         .step-track { position: absolute; top: 12px; left: 16%; width: 68%; height: 2px; background: var(--border); z-index: 1; }
         .progress-bar { height: 100%; background: var(--success); transition: width 0.5s ease; border-radius: 2px; }
@@ -820,7 +817,15 @@
         .step.active .step-icon { border-color: var(--success); background: var(--success); color: white; }
         .step-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
         .step.active .step-label { color: var(--text-dark); }
-        .order-details-list { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+        
+        /* NEW: Item-wise list styling inside tracking card */
+        .order-details-list { margin-bottom: 15px; }
+        .track-item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
+        .track-item-row.ready { text-decoration: line-through; opacity: 0.6; }
+        
+        /* NEW: Call Waiter Button */
+        .call-waiter-btn { width: 100%; padding: 10px; border: 1px solid var(--primary); color: var(--primary); background: transparent; border-radius: 8px; font-weight: 600; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
+        .call-waiter-btn:active { background: #fff5eb; }
 
         /* Toast Notification */
         .toast { position: fixed; bottom: calc(85px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: #282c3f; color: white; padding: 10px 24px; border-radius: 30px; font-size: 0.85rem; font-weight: 500; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
@@ -1002,6 +1007,9 @@
             renderHero(); 
             renderTabs();
             filterMenu();
+            
+            // Listen for cross-tab storage changes (e.g. Kitchen marking items ready)
+            window.addEventListener('storage', loadPersistentOrders);
         };
 
         function loadPersistentOrders() {
@@ -1009,11 +1017,13 @@
             if (savedOrders) {
                 activeOrders = JSON.parse(savedOrders);
                 renderTracking();
+                
+                // Only mock simulate if it's placed and not touched by kitchen
                 activeOrders.forEach(o => {
-                    if (o.status === 'placed' || o.status === 'preparing') simulateKitchenProgress(o.id);
+                    if (o.status === 'placed') simulateKitchenProgress(o.id);
                 });
             } else {
-                renderTracking(); // Render empty state
+                renderTracking(); 
             }
         }
 
@@ -1026,6 +1036,11 @@
             document.getElementById('toast-msg').innerText = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function callWaiter(orderId) {
+            showToast("Calling waiter to Table " + activeTableNumber + "...");
+            // In production, this would hit an API to alert the cashier/waiter portal
         }
 
         function switchView(viewName) {
@@ -1043,6 +1058,7 @@
                 document.getElementById('view-orders').classList.remove('hidden');
                 document.getElementById('tab-orders').classList.add('active');
                 document.getElementById('cart-banner').classList.add('hidden');
+                renderTracking(); // Refresh to catch any storage updates
             }
             window.scrollTo(0,0);
         }
@@ -1252,11 +1268,23 @@
             const taxAmount = Math.round(itemTotal * config.taxRate);
             const grandTotal = itemTotal + taxAmount;
 
+            // FEATURE: Item-Wise Object Array
+            const orderItems = Object.values(cart).map(item => ({
+                id: item.id,
+                name: item.name,
+                qty: item.qty,
+                status: 'cooking' // Starts as cooking for Kitchen View
+            }));
+
             const newOrder = {
                 id: Math.floor(Math.random() * 90000 + 10000),
+                customerName: name,
+                tableNo: activeTableNumber || 'N/A',
                 total: `${config.currencySymbol}${grandTotal}`,
-                items: Object.values(cart).map(i => `${i.qty} x ${i.name}`).join(', '),
-                status: 'placed' 
+                items: orderItems,
+                instructions: document.getElementById('special-instructions').value.trim(),
+                status: 'placed',
+                timestamp: Date.now()
             };
             
             activeOrders.unshift(newOrder);
@@ -1274,7 +1302,11 @@
 
         function renderTracking() {
             const container = document.getElementById('tracking-container');
-            if(activeOrders.length === 0) {
+            
+            // Only show orders that are not archived by the cashier/kitchen
+            const visibleOrders = activeOrders.filter(o => o.status !== 'archived');
+            
+            if(visibleOrders.length === 0) {
                 container.innerHTML = `
                 <div class="empty-orders">
                     <i class='bx bx-receipt' style="font-size: 4rem; opacity: 0.2; margin-bottom: 16px;"></i>
@@ -1283,38 +1315,67 @@
                 return;
             }
 
-            container.innerHTML = activeOrders.map(order => `
+            container.innerHTML = visibleOrders.map(order => {
+                // FEATURE: Render Live Item Status Checklist
+                const itemsListHTML = order.items.map(i => {
+                    const isReady = i.status === 'ready';
+                    const icon = isReady ? "<i class='bx bxs-check-circle' style='color:var(--success)'></i>" : "<i class='bx bx-time-five' style='color:var(--primary)'></i>";
+                    return `
+                        <div class="track-item-row ${isReady ? 'ready' : ''}">
+                            <span>${i.qty} x ${i.name}</span>
+                            ${icon}
+                        </div>`;
+                }).join('');
+
+                // Calculate overall order progress bar
+                let progressWidth = '0%';
+                if(order.status === 'preparing') progressWidth = '50%';
+                if(order.status === 'ready') progressWidth = '100%';
+
+                // Display Call Waiter button only for Dine-in orders
+                const callWaiterBtn = (activeTableNumber && order.status !== 'ready') 
+                    ? `<button class="call-waiter-btn" onclick="callWaiter(${order.id})"><i class='bx bx-bell'></i> Call Waiter</button>` 
+                    : '';
+
+                return `
                 <div class="active-order-card" id="card-${order.id}">
                     <div class="order-header">
                         <div>
                             <div class="order-id">Order #${order.id}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">${activeTableNumber ? 'Dine-in | Table ' + activeTableNumber : 'Takeaway'}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+                                ${order.tableNo !== 'N/A' ? 'Dine-in | Table ' + order.tableNo : 'Takeaway'}
+                            </div>
                         </div>
                         <span class="order-total">${order.total}</span>
                     </div>
-                    <div class="order-details-list">${order.items}</div>
+                    
+                    <div class="order-details-list">
+                        ${itemsListHTML}
+                    </div>
                     
                     <div class="tracking-stepper">
                         <div class="step-track">
-                            <div class="progress-bar" id="progress-${order.id}" style="width: ${order.status === 'placed' ? '0%' : (order.status === 'preparing' ? '50%' : '100%')}"></div>
+                            <div class="progress-bar" id="progress-${order.id}" style="width: ${progressWidth}"></div>
                         </div>
                         <div class="step ${order.status === 'placed' || order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}">
                             <div class="step-icon"><i class='bx bx-check'></i></div>
                             <span class="step-label">Received</span>
                         </div>
-                        <div class="step ${order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}" id="step2-${order.id}">
+                        <div class="step ${order.status === 'preparing' || order.status === 'ready' ? 'active' : ''}">
                             <div class="step-icon"><i class='bx bx-flame'></i></div>
                             <span class="step-label">Preparing</span>
                         </div>
-                        <div class="step ${order.status === 'ready' ? 'active' : ''}" id="step3-${order.id}">
+                        <div class="step ${order.status === 'ready' ? 'active' : ''}">
                             <div class="step-icon"><i class='bx bx-shopping-bag'></i></div>
                             <span class="step-label">Ready</span>
                         </div>
                     </div>
+                    ${callWaiterBtn}
                 </div>
-            `).join('');
+            `}).join('');
         }
 
+        // Mock simulation to automatically move orders if kitchen view isn't open
         function simulateKitchenProgress(orderId) {
             setTimeout(() => {
                 const order = activeOrders.find(o => o.id === orderId);
@@ -1322,20 +1383,13 @@
                     order.status = 'preparing';
                     savePersistentOrders();
                     renderTracking();
-                    showToast(`Order #${orderId} is being prepared!`);
-                    
-                    setTimeout(() => {
-                        const orderReady = activeOrders.find(o => o.id === orderId);
-                        if(orderReady && orderReady.status === 'preparing') {
-                            orderReady.status = 'ready';
-                            savePersistentOrders();
-                            renderTracking();
-                            showToast(`Order #${orderId} is ready!`);
-                        }
-                    }, 10000);
                 }
             }, 5000); 
         }
     </script>
 </body>
 </html>
+
+
+
+
