@@ -146,7 +146,7 @@
 
         .bill-actions { padding: 16px 20px; display: flex; gap: 12px; border-top: 1px solid var(--border); background: white; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
         .btn-print { flex: 1; padding: 12px; background: white; border: 1px solid var(--text-dark); color: var(--text-dark); border-radius: 8px; font-weight: 700; font-size: 0.9rem; display: flex; justify-content: center; align-items: center; gap: 6px; }
-        .btn-settle { flex: 2; padding: 12px; background: var(--success); color: white; border-radius: 8px; font-weight: 700; font-size: 1rem; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-settle { flex: 2; padding: 12px; background: var(--success); color: white; border-radius: 8px; font-weight: 700; font-size: 1rem; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: 0.2s; }
         .btn-settle:active { transform: scale(0.98); }
 
         /* --- THERMAL RECEIPT PRINT STYLES --- */
@@ -229,43 +229,53 @@
         const config = { restaurantName: "Shivam Ka Dhaba", currencySymbol: "₹", totalTables: 12, taxRate: 0.05 };
         let allOrders = [];
         let selectedOrderId = null;
-        let currentTab = 'active'; // 'active' or 'settled'
+        let currentTab = 'active'; 
         
-        // Essential Feature States
         let currentDiscountPct = 0;
         let cashTendered = 0;
 
-        window.onload = () => {
+        // FIXED BUG: Safe initialization on DOMContentLoaded to guarantee instant loading
+        document.addEventListener('DOMContentLoaded', () => {
             startClock();
             initSync();
             setInterval(initSync, 3000); 
             window.addEventListener('storage', initSync);
-        };
+        });
 
         function startClock() {
             const clockEl = document.getElementById('live-clock');
             setInterval(() => { clockEl.innerText = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }); }, 1000);
         }
 
+        // FIXED BUG: Ensured renderDashboard is ALWAYS called, even if local storage is empty
         function initSync() {
             try {
                 const raw = localStorage.getItem('skd_active_orders');
                 if (raw) {
                     allOrders = JSON.parse(raw);
                     if (!Array.isArray(allOrders)) allOrders = [];
-                    renderDashboard();
-                    
-                    if (selectedOrderId) {
-                        // Refresh bill if items changed (e.g. kitchen updates)
-                        const exists = allOrders.find(o => o.id === selectedOrderId);
-                        if (exists && (currentTab === 'active' && exists.status !== 'archived' || currentTab === 'settled' && exists.status === 'archived')) {
-                            renderBill(selectedOrderId);
-                        } else {
-                            closeBill();
-                        }
+                } else {
+                    allOrders = []; // Initialize empty array if first time
+                }
+
+                // ALWAYS render the UI immediately
+                renderDashboard();
+                
+                // Re-render open bill if necessary
+                if (selectedOrderId) {
+                    const exists = allOrders.find(o => o.id === selectedOrderId);
+                    if (exists && (currentTab === 'active' && exists.status !== 'archived' || currentTab === 'settled' && exists.status === 'archived')) {
+                        renderBill(selectedOrderId);
+                    } else {
+                        closeBill();
                     }
                 }
-            } catch(e) { console.error("Cashier Sync Error", e); }
+                
+            } catch(e) { 
+                console.error("Cashier Sync Error", e); 
+                allOrders = [];
+                renderDashboard(); // Fallback render
+            }
         }
 
         function switchTab(tab) {
@@ -273,7 +283,6 @@
             document.getElementById('tab-active').classList.toggle('active', tab === 'active');
             document.getElementById('tab-settled').classList.toggle('active', tab === 'settled');
             
-            // Hide table grid if viewing settled orders (mostly linear list)
             document.getElementById('table-grid').style.display = tab === 'active' ? 'grid' : 'none';
             document.getElementById('table-header').style.display = tab === 'active' ? 'flex' : 'none';
             document.getElementById('queue-title').innerHTML = tab === 'active' ? "<i class='bx bx-shopping-bag'></i> Takeaway Queue" : "<i class='bx bx-history'></i> Order History";
@@ -289,7 +298,6 @@
             let gridHTML = '';
             let tkHTML = '';
 
-            // Filter by Tab Status & Search
             let filteredOrders = allOrders.filter(o => {
                 const matchesTab = currentTab === 'active' ? o.status !== 'archived' : o.status === 'archived';
                 const matchesSearch = o.id.toString().includes(searchQuery) || 
@@ -319,12 +327,12 @@
                 }
 
                 if (takeawayOrders.length === 0) {
-                    tkHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No active takeaways.</div>`;
+                    tkHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px; border: 1px dashed var(--border); border-radius: 12px;">No active takeaways.</div>`;
                 } else {
                     takeawayOrders.forEach(order => tkHTML += buildListCard(order));
                 }
             } else {
-                // Search Mode or Settled Tab (Render everything as a vertical list)
+                // Search Mode or Settled Tab
                 if (filteredOrders.length === 0) {
                     tkHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px;">No orders found.</div>`;
                 } else {
@@ -351,12 +359,11 @@
 
         function selectOrder(orderId) {
             selectedOrderId = orderId;
-            currentDiscountPct = 0; // Reset discount on new selection
+            currentDiscountPct = 0; 
             cashTendered = 0;
             renderDashboard(); 
             renderBill(orderId);
             
-            // Mobile Overlay Logic
             document.getElementById('bill-overlay').classList.add('active');
             document.getElementById('billing-panel').classList.add('active');
         }
@@ -383,38 +390,29 @@
             const typeBadge = isDineIn ? `Dine-In • TBL ${order.tableNo}` : `Takeaway`;
             const isArchived = order.status === 'archived';
 
-            // Extract Raw Subtotal for Calculator
             let rawSubtotal = 0;
             let itemsHTML = '';
 
             if (Array.isArray(order.items)) {
                 itemsHTML = order.items.map(item => {
-                    // Because original cart didn't store item price, we have to calculate it backwards
-                    // *In a real DB, item.price would be saved.* // Since we mock it, we'll try to extract total from string if we must, 
-                    // but we will recalculate based on string matching for demo accuracy.
                     return `<div class="bill-item-row"><span class="bill-item-name">${item.name}</span><span class="bill-item-qty">x${item.qty}</span></div>`;
                 }).join('');
                 
-                // Hack to get subtotal from the saved string "₹XXX"
-                rawSubtotal = parseInt(order.total.replace(/[^0-9]/g, '')); 
-                // Remove the 5% tax to get base subtotal
-                rawSubtotal = Math.round(rawSubtotal / 1.05); 
+                rawSubtotal = parseInt(order.total.replace(/[^0-9]/g, '')) || 0; 
+                rawSubtotal = Math.round(rawSubtotal / (1 + config.taxRate)); 
             } else {
                 itemsHTML = `<div class="bill-item-row"><span class="bill-item-name">${order.items}</span></div>`;
-                rawSubtotal = parseInt(order.total.replace(/[^0-9]/g, ''));
-                rawSubtotal = Math.round(rawSubtotal / 1.05);
+                rawSubtotal = parseInt(order.total.replace(/[^0-9]/g, '')) || 0;
+                rawSubtotal = Math.round(rawSubtotal / (1 + config.taxRate));
             }
 
-            // Essential Feature: Discount Math
             const discountAmount = Math.round(rawSubtotal * (currentDiscountPct / 100));
             const newSubtotal = rawSubtotal - discountAmount;
             const taxAmount = Math.round(newSubtotal * config.taxRate);
             const grandTotal = newSubtotal + taxAmount;
 
-            // Change Math
             const changeDue = cashTendered > grandTotal ? cashTendered - grandTotal : 0;
 
-            // Build Tools Section (Only for active orders)
             let toolsHTML = '';
             let actionBtnHTML = '';
 
@@ -486,9 +484,8 @@
 
         function calcChange(val) {
             cashTendered = parseInt(val) || 0;
-            renderBill(selectedOrderId); // Re-renders to update change due
+            renderBill(selectedOrderId); 
             
-            // Refocus input since re-render steals focus
             setTimeout(() => {
                 const input = document.getElementById('cash-input');
                 if(input) { input.focus(); input.selectionStart = input.value.length; }
@@ -498,12 +495,11 @@
         function settleOrder(orderId, finalTotal) {
             const index = allOrders.findIndex(o => o.id === orderId);
             if (index !== -1) {
-                // Save updated total reflecting discounts
                 allOrders[index].total = `${config.currencySymbol}${finalTotal}`;
                 allOrders[index].status = 'archived';
                 
                 localStorage.setItem('skd_active_orders', JSON.stringify(allOrders));
-                window.dispatchEvent(new Event('storage')); // Sync
+                window.dispatchEvent(new Event('storage')); 
                 closeBill();
             }
         }
@@ -518,7 +514,10 @@
             let itemsPrintHTML = '';
             if (Array.isArray(order.items)) {
                 itemsPrintHTML = order.items.map(i => `
-                    <div class="print-item"><span class="print-item-name">${i.name}</span><span>x${i.qty}</span></div>
+                    <div class="print-item">
+                        <span class="print-item-name">${i.name}</span>
+                        <span>x${i.qty}</span>
+                    </div>
                 `).join('');
             } else {
                 itemsPrintHTML = `<div class="print-item"><span>${order.items}</span></div>`;
@@ -538,10 +537,10 @@
                 <div class="print-divider"></div>
                 <div class="print-items">${itemsPrintHTML}</div>
                 <div class="print-divider"></div>
-                <div class="print-row"><span>Subtotal</span><span>${subtotal}</span></div>
-                ${discount > 0 ? `<div class="print-row"><span>Discount</span><span>-${discount}</span></div>` : ''}
-                <div class="print-row"><span>Taxes</span><span>${tax}</span></div>
-                <div class="print-total print-row"><span>TOTAL</span><span>${grandTotal}</span></div>
+                <div class="print-row"><span>Subtotal</span><span>${config.currencySymbol}${subtotal}</span></div>
+                ${discount > 0 ? `<div class="print-row"><span>Discount</span><span>-${config.currencySymbol}${discount}</span></div>` : ''}
+                <div class="print-row"><span>Taxes</span><span>${config.currencySymbol}${tax}</span></div>
+                <div class="print-total print-row"><span>TOTAL</span><span>${config.currencySymbol}${grandTotal}</span></div>
                 <div class="print-divider"></div>
                 <div class="print-footer">Thank you for visiting!<br>Please visit us again.</div>
             `;
