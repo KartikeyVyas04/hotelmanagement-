@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASHIER | Shivam Ka Dhaba</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        :root {
+            --primary: #fc8019; /* Swiggy Orange */
+            --primary-hover: #e06c10;
+            --success: #10b981; 
+            --danger: #ef4444;
+            --bg-color: #f1f5f9;
+            --surface: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg-color); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        button { cursor: pointer; border: none; outline: none; background: none; transition: 0.2s; }
+
+        /* --- HEADER --- */
+        header { background: var(--surface); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); z-index: 10; }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand i { color: var(--primary); font-size: 2rem; }
+        .brand h1 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .brand span { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+        
+        .header-controls { display: flex; align-items: center; gap: 20px; }
+        .live-clock { font-family: 'Roboto Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); background: var(--bg-color); padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border); }
+
+        /* --- MAIN LAYOUT --- */
+        .layout { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Left: Dashboard (Tables & Queues) */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 24px; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .section-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
+        .section-header h2 i { color: var(--text-muted); }
+        
+        /* Table Grid */
+        .table-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        
+        .table-card { background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: 0.2s; height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; }
+        .table-card:hover { border-color: var(--text-muted); }
+        .table-card i { font-size: 2rem; color: var(--text-muted); opacity: 0.5; }
+        .table-card .t-num { font-weight: 700; font-size: 1.1rem; color: var(--text-muted); }
+        
+        /* Active Table State */
+        .table-card.active { border: 2px solid var(--primary); background: #fffaf5; box-shadow: var(--shadow-sm); }
+        .table-card.active i { color: var(--primary); opacity: 1; }
+        .table-card.active .t-num { color: var(--text-dark); }
+        .table-card.active .t-amount { font-weight: 700; color: var(--success); font-size: 1.1rem; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 6px; }
+        .table-card.selected { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+        /* Takeaway Queue */
+        .takeaway-list { display: flex; flex-direction: column; gap: 12px; }
+        .takeaway-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary); }
+        .takeaway-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .takeaway-card.selected { border: 2px solid var(--primary); border-left: 6px solid var(--primary); }
+        
+        .tk-info { display: flex; flex-direction: column; gap: 4px; }
+        .tk-id { font-weight: 700; font-size: 1rem; color: var(--text-dark); }
+        .tk-name { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+        .tk-amount { font-weight: 700; font-size: 1.2rem; color: var(--success); }
+
+        /* --- RIGHT PANEL: BILLING DETAILS --- */
+        .billing-panel { width: 400px; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; box-shadow: -4px 0 15px rgba(0,0,0,0.03); z-index: 5; }
+        
+        .empty-bill { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); opacity: 0.6; }
+        .empty-bill i { font-size: 4rem; margin-bottom: 16px; }
+
+        .bill-content { display: flex; flex-direction: column; height: 100%; }
+        .bill-header { padding: 24px; border-bottom: 1px dashed var(--border); background: #f8fafc; }
+        .bill-type-badge { display: inline-block; background: var(--text-dark); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+        .bill-id { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .bill-customer { font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+
+        .bill-items { flex: 1; overflow-y: auto; padding: 24px; }
+        .bill-item-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .bill-item-name { font-weight: 500; color: var(--text-dark); flex: 1; padding-right: 12px; }
+        .bill-item-qty { color: var(--text-muted); font-family: 'Roboto Mono', monospace; width: 30px; }
+        .bill-item-price { font-weight: 600; font-family: 'Roboto Mono', monospace; width: 70px; text-align: right; }
+
+        .bill-summary { padding: 24px; border-top: 1px dashed var(--border); background: #f8fafc; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
+        .summary-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 1.4rem; font-weight: 700; color: var(--text-dark); }
+        
+        .bill-actions { padding: 24px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--border); }
+        
+        .btn-print { width: 100%; padding: 14px; background: white; border: 2px solid var(--text-dark); color: var(--text-dark); border-radius: 8px; font-weight: 700; font-size: 1rem; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-print:hover { background: #f1f5f9; }
+        
+        .btn-settle { width: 100%; padding: 16px; background: var(--success); color: white; border-radius: 8px; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: 0.2s; }
+        .btn-settle:active { transform: scale(0.98); }
+
+        /* --- THERMAL RECEIPT PRINT STYLES --- */
+        #print-section { display: none; }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #print-section, #print-section * { visibility: visible; }
+            #print-section { display: block; position: absolute; left: 0; top: 0; width: 80mm; /* Standard thermal printer width */ padding: 5mm; font-family: 'Roboto Mono', monospace; font-size: 12px; color: #000; }
+            
+            .print-center { text-align: center; margin-bottom: 10px; }
+            .print-brand { font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+            .print-address { font-size: 10px; margin-bottom: 10px; }
+            .print-divider { border-bottom: 1px dashed #000; margin: 10px 0; }
+            .print-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+            .print-items { margin: 15px 0; }
+            .print-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
+            .print-item-name { flex: 1; padding-right: 10px; }
+            .print-total { font-size: 16px; font-weight: 700; margin-top: 10px; border-top: 1px dashed #000; padding-top: 10px; }
+            .print-footer { text-align: center; margin-top: 20px; font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <i class='bx bx-calculator'></i>
+            <div>
+                <h1>BILLING & CASHIER</h1>
+                <span>Shivam Ka Dhaba</span>
+            </div>
+        </div>
+        
+        <div class="header-controls">
+            <div class="live-clock" id="live-clock">00:00:00</div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="main-content">
+            
+            <div class="section-header">
+                <h2><i class='bx bx-grid-alt'></i> Dine-In Tables</h2>
+            </div>
+            
+            <div class="table-grid" id="table-grid">
+                </div>
+
+            <div class="section-header" style="margin-top: 16px;">
+                <h2><i class='bx bx-shopping-bag'></i> Takeaway Queue</h2>
+            </div>
+            
+            <div class="takeaway-list" id="takeaway-list">
+                </div>
+            
+        </main>
+
+        <aside class="billing-panel" id="billing-panel">
+            <div class="empty-bill" id="empty-bill">
+                <i class='bx bx-receipt'></i>
+                <p>Select a table or order to view bill</p>
+            </div>
+            
+            <div class="bill-content hidden" id="active-bill">
+                </div>
+        </aside>
+    </div>
+
+    <div id="print-section">
+        </div>
+
+    <script>
+        const config = { restaurantName: "Shivam Ka Dhaba", currencySymbol: "₹", totalTables: 12 };
+        let activeOrders = [];
+        let selectedOrderId = null;
+
+        window.onload = () => {
+            startClock();
+            initSync();
+            
+            // Poll for updates from customer/kitchen tabs
+            setInterval(initSync, 2000); 
+            window.addEventListener('storage', initSync);
+        };
+
+        function startClock() {
+            const clockEl = document.getElementById('live-clock');
+            setInterval(() => {
+                clockEl.innerText = new Date().toLocaleTimeString('en-US', { hour12: false });
+            }, 1000);
+        }
+
+        function initSync() {
+            try {
+                const raw = localStorage.getItem('skd_active_orders');
+                if (raw) {
+                    activeOrders = JSON.parse(raw);
+                    if (!Array.isArray(activeOrders)) activeOrders = [];
+                    renderDashboard();
+                    
+                    // If an order is currently selected, re-render its bill to reflect any new items
+                    if (selectedOrderId) {
+                        const stillActive = activeOrders.find(o => o.id === selectedOrderId && o.status !== 'archived');
+                        if (stillActive) {
+                            renderBill(selectedOrderId);
+                        } else {
+                            closeBill(); // Order was archived elsewhere
+                        }
+                    }
+                }
+            } catch(e) {
+                console.error("Cashier Sync Error", e);
+            }
+        }
+
+        function renderDashboard() {
+            const grid = document.getElementById('table-grid');
+            const tkList = document.getElementById('takeaway-list');
+            
+            let gridHTML = '';
+            let tkHTML = '';
+
+            // Separate orders
+            const dineInOrders = activeOrders.filter(o => o.status !== 'archived' && o.tableNo && o.tableNo !== 'N/A');
+            const takeawayOrders = activeOrders.filter(o => o.status !== 'archived' && (!o.tableNo || o.tableNo === 'N/A'));
+
+            // Render Table Grid (Fixed 12 Tables)
+            for (let i = 1; i <= config.totalTables; i++) {
+                // Find if this table has an active order
+                const activeOrder = dineInOrders.find(o => parseInt(o.tableNo) === i);
+                
+                if (activeOrder) {
+                    const isSelected = selectedOrderId === activeOrder.id ? 'selected' : '';
+                    gridHTML += `
+                        <div class="table-card active ${isSelected}" onclick="selectOrder(${activeOrder.id})">
+                            <i class='bx bx-restaurant'></i>
+                            <span class="t-num">Table ${i}</span>
+                            <span class="t-amount">${activeOrder.total}</span>
+                        </div>
+                    `;
+                } else {
+                    gridHTML += `
+                        <div class="table-card">
+                            <i class='bx bx-chair'></i>
+                            <span class="t-num">Table ${i}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            // Render Takeaway Queue
+            if (takeawayOrders.length === 0) {
+                tkHTML = `<div style="padding: 20px; text-align: center; color: var(--text-muted); border: 1px dashed var(--border); border-radius: 12px;">No active takeaway orders.</div>`;
+            } else {
+                takeawayOrders.forEach(order => {
+                    const isSelected = selectedOrderId === order.id ? 'selected' : '';
+                    tkHTML += `
+                        <div class="takeaway-card ${isSelected}" onclick="selectOrder(${order.id})">
+                            <div class="tk-info">
+                                <span class="tk-id">Order #${order.id}</span>
+                                <span class="tk-name"><i class='bx bx-user'></i> ${order.customerName || 'Guest'}</span>
+                            </div>
+                            <div class="tk-amount">${order.total}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            grid.innerHTML = gridHTML;
+            tkList.innerHTML = tkHTML;
+        }
+
+        function selectOrder(orderId) {
+            selectedOrderId = orderId;
+            renderDashboard(); // Re-render to show selected state outlines
+            renderBill(orderId);
+        }
+
+        function closeBill() {
+            selectedOrderId = null;
+            document.getElementById('empty-bill').classList.remove('hidden');
+            document.getElementById('active-bill').classList.add('hidden');
+            renderDashboard();
+        }
+
+        function renderBill(orderId) {
+            const order = activeOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            document.getElementById('empty-bill').classList.add('hidden');
+            const billPanel = document.getElementById('active-bill');
+            billPanel.classList.remove('hidden');
+
+            const isDineIn = order.tableNo && order.tableNo !== 'N/A';
+            const typeBadge = isDineIn ? `Dine-In • TBL ${order.tableNo}` : `Takeaway`;
+
+            // Format Items (Handle both legacy strings and new object arrays)
+            let itemsHTML = '';
+            let rawSubtotal = 0; // Try to extract raw number for bill math
+
+            if (Array.isArray(order.items)) {
+                itemsHTML = order.items.map(item => {
+                    // Hack to get price if not stored directly in item obj (we know total from cart)
+                    // For a robust system, price should be stored in order.items. Here we just display.
+                    return `
+                    <div class="bill-item-row">
+                        <span class="bill-item-name">${item.name}</span>
+                        <span class="bill-item-qty">x${item.qty}</span>
+                    </div>`;
+                }).join('');
+            } else {
+                // Fallback for legacy string format
+                itemsHTML = `<div class="bill-item-row"><span class="bill-item-name">${order.items}</span></div>`;
+            }
+
+            billPanel.innerHTML = `
+                <div class="bill-header">
+                    <span class="bill-type-badge">${typeBadge}</span>
+                    <div class="bill-id">Order #${order.id}</div>
+                    <div class="bill-customer"><i class='bx bx-user'></i> ${order.customerName || 'Guest'} • ${order.status.toUpperCase()}</div>
+                </div>
+                
+                <div class="bill-items">
+                    ${itemsHTML}
+                </div>
+
+                <div class="bill-summary">
+                    <div class="summary-total">
+                        <span>Grand Total</span>
+                        <span style="color: var(--primary);">${order.total}</span>
+                    </div>
+                </div>
+
+                <div class="bill-actions">
+                    <button class="btn-print" onclick="printReceipt(${order.id})">
+                        <i class='bx bx-printer'></i> Print Bill
+                    </button>
+                    <button class="btn-settle" onclick="settleOrder(${order.id})">
+                        Settle & Archive <i class='bx bx-check-double'></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- CASHIER ACTIONS ---
+        
+        function settleOrder(orderId) {
+            if(!confirm("Mark this bill as Paid and clear the table?")) return;
+            
+            const index = activeOrders.findIndex(o => o.id === orderId);
+            if (index !== -1) {
+                activeOrders[index].status = 'archived';
+                localStorage.setItem('skd_active_orders', JSON.stringify(activeOrders));
+                window.dispatchEvent(new Event('storage')); // Sync
+                
+                closeBill();
+            }
+        }
+
+        function printReceipt(orderId) {
+            const order = activeOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const printSection = document.getElementById('print-section');
+            const dateStr = new Date(order.timestamp || Date.now()).toLocaleString();
+            
+            let itemsPrintHTML = '';
+            if (Array.isArray(order.items)) {
+                itemsPrintHTML = order.items.map(i => `
+                    <div class="print-item">
+                        <span class="print-item-name">${i.name}</span>
+                        <span>x${i.qty}</span>
+                    </div>
+                `).join('');
+            } else {
+                itemsPrintHTML = `<div class="print-item"><span>${order.items}</span></div>`;
+            }
+
+            printSection.innerHTML = `
+                <div class="print-center">
+                    <div class="print-brand">${config.restaurantName}</div>
+                    <div class="print-address">Pimpri-Chinchwad, MH</div>
+                    <div>Phone: +91 99999 00000</div>
+                </div>
+                
+                <div class="print-divider"></div>
+                
+                <div class="print-row"><span>Order: #${order.id}</span></div>
+                <div class="print-row"><span>Date: ${dateStr}</span></div>
+                <div class="print-row"><span>Type: ${order.tableNo !== 'N/A' ? 'Table '+order.tableNo : 'Takeaway'}</span></div>
+                <div class="print-row"><span>Name: ${order.customerName || 'Guest'}</span></div>
+                
+                <div class="print-divider"></div>
+                
+                <div class="print-items">
+                    ${itemsPrintHTML}
+                </div>
+                
+                <div class="print-total print-row">
+                    <span>TOTAL</span>
+                    <span>${order.total}</span>
+                </div>
+                
+                <div class="print-divider"></div>
+                <div class="print-footer">
+                    Thank you for visiting!<br>
+                    Please visit us again.
+                </div>
+            `;
+
+            // Trigger Browser Print
+            window.print();
+        }
+    </script>
+</body>
+</html>
