@@ -28,30 +28,69 @@
             --swiggy: #fc8019;
         }
 
-        /* Anti-zoom for mobile */
+        /* Native App Lock - Prevents Header Disappearing */
         html { touch-action: manipulation; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg-color); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body { 
+            background: var(--bg-color); 
+            color: var(--text-dark); 
+            height: 100dvh; /* Dynamic viewport height fixes mobile browser jumps */
+            width: 100vw;
+            position: fixed; /* Locks the body */
+            inset: 0;
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+        
         button { cursor: pointer; border: none; outline: none; background: none; transition: 0.2s; }
         input { font-family: 'Poppins', sans-serif; outline: none; }
         .hidden { display: none !important; }
 
-        /* --- HEADER --- */
-        header { background: var(--surface); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); z-index: 20; flex-wrap: wrap; gap: 12px; }
+        /* --- HEADER (MOBILE OPTIMIZED) --- */
+        header { 
+            background: var(--surface); 
+            display: flex; 
+            flex-direction: column; 
+            border-bottom: 1px solid var(--border); 
+            box-shadow: var(--shadow-sm); 
+            z-index: 20; 
+            flex-shrink: 0; /* Prevents header from squishing */
+        }
+        
+        .header-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid rgba(0,0,0,0.02); }
         .brand { display: flex; align-items: center; gap: 10px; }
         .brand i { color: var(--primary); font-size: 1.8rem; }
         .brand h1 { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.1; }
         .brand span { color: var(--text-muted); font-size: 0.75rem; font-weight: 500; }
         
-        #table-status-container { display: flex; gap: 10px; align-items: center; }
-        .header-controls { display: flex; align-items: center; gap: 16px; margin-left: 10px; }
         .live-clock { font-family: 'Roboto Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--text-dark); background: var(--bg-color); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); }
+
+        .header-actions { 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
+            padding: 10px 20px; 
+            background: #f8fafc;
+        }
+        
+        /* Mobile Scrollable Action Bar */
+        @media (max-width: 800px) {
+            .header-actions { overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding: 10px 16px; }
+            .header-actions::-webkit-scrollbar { display: none; }
+            .brand span { display: none; }
+            .brand h1 { font-size: 1rem; }
+            .live-clock { font-size: 0.9rem; padding: 4px 10px; }
+        }
+
+        .scan-btn { background: white; color: var(--primary); padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--primary); display: inline-flex; align-items: center; gap: 6px; box-shadow: var(--shadow-sm); flex-shrink: 0; }
+        .scan-btn:active { background: #fff5eb; transform: scale(0.98); }
 
         /* --- MAIN LAYOUT --- */
         .layout { display: flex; flex: 1; overflow: hidden; position: relative; }
         
         /* LEFT: DASHBOARD */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 20px; }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
         
         /* Dashboard Controls (Search & Tabs) */
         .dash-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; justify-content: space-between; align-items: center; }
@@ -68,16 +107,16 @@
         .section-header h2 i { color: var(--text-muted); }
         
         /* Table Grid */
-        .table-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 32px; }
+        .table-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 32px; }
         .table-card { background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: 0.2s; height: 110px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; }
         .table-card i { font-size: 1.8rem; color: var(--text-muted); opacity: 0.4; }
-        .table-card .t-num { font-weight: 700; font-size: 1rem; color: var(--text-muted); }
+        .table-card .t-num { font-weight: 700; font-size: 0.95rem; color: var(--text-muted); }
         
         /* Active Table State */
         .table-card.active { border: 2px solid var(--primary); background: #fffaf5; box-shadow: var(--shadow-sm); }
         .table-card.active i { color: var(--primary); opacity: 1; }
         .table-card.active .t-num { color: var(--text-dark); }
-        .table-card.active .t-amount { font-weight: 700; color: var(--success); font-size: 1rem; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 6px; }
+        .table-card.active .t-amount { font-weight: 700; color: var(--success); font-size: 0.95rem; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 6px; }
         
         /* Selected State */
         .table-card.selected { outline: 3px solid rgba(252, 128, 25, 0.4); outline-offset: 2px; }
@@ -87,8 +126,8 @@
         .takeaway-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
         .takeaway-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow-sm); border-left: 4px solid var(--primary); }
         .takeaway-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .tk-info { display: flex; flex-direction: column; gap: 2px; }
-        .tk-id { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+        .tk-info { display: flex; flex-direction: column; gap: 4px; }
+        .tk-id { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
         .tk-name { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
         .tk-amount { font-weight: 700; font-size: 1.1rem; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 6px; }
 
@@ -104,11 +143,36 @@
         
         .billing-panel { background: var(--surface); display: flex; flex-direction: column; box-shadow: -4px 0 20px rgba(0,0,0,0.05); z-index: 100; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         
+        /* Mobile: Bottom Sheet */
+        @media (max-width: 799px) {
+            .dash-controls { flex-direction: column; align-items: stretch; }
+            .tab-group { width: 100%; justify-content: space-between; }
+            .tab-btn { flex: 1; text-align: center; }
+            .takeaway-list { grid-template-columns: 1fr; }
+            
+            .bill-overlay.active { opacity: 1; visibility: visible; }
+            .billing-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 92dvh; border-radius: 20px 20px 0 0; transform: translateY(100%); }
+            .billing-panel.active { transform: translateY(0); }
+            
+            /* Action Buttons Fix */
+            .bill-actions { flex-direction: column; gap: 10px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+            .btn-print, .btn-settle { width: 100%; padding: 14px; }
+            .discount-row { flex-wrap: wrap; }
+            .cash-calc-row { flex-direction: column; align-items: stretch; gap: 12px; }
+            .change-display { text-align: left; }
+        }
+        
+        /* Desktop: Right Panel */
+        @media (min-width: 800px) {
+            .billing-panel { position: relative; width: 420px; border-left: 1px solid var(--border); height: 100%; transform: none !important; }
+            .bill-overlay { display: none; }
+        }
+
         .empty-bill { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); opacity: 0.6; }
         .empty-bill i { font-size: 4rem; margin-bottom: 16px; }
 
-        .bill-content { display: flex; flex-direction: column; height: 100%; }
-        .bill-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: space-between; align-items: flex-start; border-radius: 20px 20px 0 0; }
+        .bill-content { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+        .bill-header { padding: 20px; border-bottom: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: space-between; align-items: flex-start; border-radius: 20px 20px 0 0; flex-shrink: 0; }
         .bill-header-info { flex: 1; }
         .bill-type-badge { display: inline-block; background: var(--text-dark); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
         .bill-type-badge.swiggy { background: var(--swiggy); }
@@ -117,14 +181,15 @@
         .bill-customer { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
         
         .close-bill-btn { font-size: 1.8rem; color: var(--text-dark); background: white; border: 1px solid var(--border); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+        @media (min-width: 800px) { .close-bill-btn { display: none; } } /* Hide close btn on desktop */
 
-        .bill-items { flex: 1; overflow-y: auto; padding: 20px; }
+        .bill-items { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
         .bill-item-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.9rem; }
         .bill-item-name { font-weight: 500; color: var(--text-dark); flex: 1; padding-right: 12px; }
         .bill-item-qty { color: var(--text-muted); font-family: 'Roboto Mono', monospace; width: 30px; font-size: 0.85rem; }
         .bill-item-price { font-weight: 600; font-family: 'Roboto Mono', monospace; width: 60px; text-align: right; }
 
-        .tools-section { padding: 15px 20px; background: white; border-top: 1px dashed var(--border); }
+        .tools-section { padding: 15px 20px; background: white; border-top: 1px dashed var(--border); flex-shrink: 0; }
         .tool-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
         
         .discount-row { display: flex; gap: 10px; margin-bottom: 15px; }
@@ -139,66 +204,14 @@
         .change-display { flex: 1; text-align: right; font-size: 0.85rem; color: var(--text-muted); }
         .change-amount { font-weight: 700; font-size: 1.1rem; color: var(--danger); font-family: 'Roboto Mono', monospace; display: block; }
 
-        .bill-summary { padding: 15px 20px; border-top: 1px solid var(--border); background: #f8fafc; }
+        .bill-summary { padding: 15px 20px; border-top: 1px solid var(--border); background: #f8fafc; flex-shrink: 0; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
         .summary-total { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 1.3rem; font-weight: 700; color: var(--text-dark); align-items: center; }
 
-        .bill-actions { padding: 16px 20px; display: flex; gap: 12px; border-top: 1px solid var(--border); background: white; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+        .bill-actions { padding: 16px 20px; display: flex; gap: 12px; border-top: 1px solid var(--border); background: white; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); flex-shrink: 0; }
         .btn-print { flex: 1; padding: 12px; background: white; border: 1px solid var(--text-dark); color: var(--text-dark); border-radius: 8px; font-weight: 700; font-size: 0.9rem; display: flex; justify-content: center; align-items: center; gap: 6px; }
         .btn-settle { flex: 2; padding: 12px; background: var(--success); color: white; border-radius: 8px; font-weight: 700; font-size: 1rem; text-transform: uppercase; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: 0.2s; }
         .btn-settle:active { transform: scale(0.98); }
-
-        .scan-btn { background: white; color: var(--primary); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--primary); display: flex; align-items: center; gap: 4px; box-shadow: var(--shadow-sm); }
-        .scan-btn:active { background: #fff5eb; }
-
-        /* --- RESPONSIVE MOBILE UPGRADES --- */
-        @media (max-width: 800px) {
-            /* Dashboard Flex Fixes */
-            .dash-controls { flex-direction: column; align-items: stretch; }
-            .search-box { min-width: 100%; width: 100%; }
-            .tab-group { width: 100%; justify-content: space-between; }
-            .tab-btn { flex: 1; text-align: center; }
-            
-            /* Header Fixes */
-            #table-status-container { width: 100%; justify-content: space-between; overflow-x: auto; padding-bottom: 4px; }
-            .header-controls { margin-left: auto; }
-            
-            /* Grids */
-            .table-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-            .takeaway-list { grid-template-columns: 1fr; }
-            
-            /* Bill Drawer Layout */
-            .bill-overlay.active { opacity: 1; visibility: visible; }
-            .billing-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 92dvh; border-radius: 20px 20px 0 0; transform: translateY(100%); }
-            .billing-panel.active { transform: translateY(0); }
-            .bill-header { position: relative; padding-right: 60px; }
-            .close-bill-btn { position: absolute; right: 20px; top: 20px; }
-            
-            /* Action Buttons Fix */
-            .bill-actions { flex-direction: column; gap: 10px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
-            .btn-print, .btn-settle { width: 100%; padding: 14px; }
-            
-            /* Tool Section Fix */
-            .discount-row { flex-wrap: wrap; }
-            .discount-btn { min-width: 30%; }
-            .cash-calc-row { flex-direction: column; align-items: stretch; gap: 12px; }
-            .change-display { text-align: left; }
-        }
-
-        @media (min-width: 801px) {
-            .billing-panel { position: relative; width: 420px; border-left: 1px solid var(--border); height: 100%; transform: none !important; }
-            .bill-overlay { display: none; }
-            .close-bill-btn { display: none; }
-        }
-
-        /* Tiny Screens (e.g. iPhone SE) */
-        @media (max-width: 400px) {
-            .brand span { display: none; }
-            .scan-btn .btn-text { display: none; }
-            .scan-btn { padding: 8px; }
-            .scan-btn i { font-size: 1.3rem; margin: 0; }
-            .live-clock { font-size: 0.85rem; padding: 4px 8px; }
-        }
 
         /* --- THERMAL RECEIPT PRINT STYLES --- */
         #print-section { display: none; }
@@ -222,28 +235,27 @@
 <body>
 
     <header>
-        <div class="brand">
-            <i class='bx bx-calculator'></i>
-            <div>
-                <h1>CASHIER POS</h1>
-                <span>Shivam Ka Dhaba</span>
+        <div class="header-top">
+            <div class="brand">
+                <i class='bx bx-calculator'></i>
+                <div>
+                    <h1>CASHIER POS</h1>
+                    <span>Shivam Ka Dhaba</span>
+                </div>
             </div>
+            <div class="live-clock" id="live-clock">00:00</div>
         </div>
         
-        <div id="table-status-container">
+        <div class="header-actions">
             <button class="scan-btn" onclick="simulateExternalOrder('swiggy')" style="border-color: var(--swiggy); color: var(--swiggy);" title="Simulate Swiggy">
-                <i class='bx bx-mobile'></i> <span class="btn-text">Swiggy</span>
+                <i class='bx bx-mobile'></i> Swiggy
             </button>
             <button class="scan-btn" onclick="simulateExternalOrder('zomato')" style="border-color: var(--zomato); color: var(--zomato);" title="Simulate Zomato">
-                <i class='bx bx-mobile'></i> <span class="btn-text">Zomato</span>
+                <i class='bx bx-mobile'></i> Zomato
             </button>
             <button class="scan-btn" id="btn-scan" onclick="simulateScan()">
-                <i class='bx bx-qr-scan'></i> <span class="btn-text">Scan Table</span>
+                <i class='bx bx-qr-scan'></i> Scan Table
             </button>
-            
-            <div class="header-controls">
-                <div class="live-clock" id="live-clock">00:00</div>
-            </div>
         </div>
     </header>
 
@@ -310,15 +322,65 @@
             setInterval(() => { clockEl.innerText = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }); }, 1000);
         }
 
+        // --- INJECT SAMPLE DATA ON LOAD ---
+        function injectSampleOrders() {
+            const samples = [
+                {
+                    id: 48992,
+                    customerName: "Rahul G.",
+                    tableNo: "N/A",
+                    total: "₹720",
+                    items: [
+                        { name: 'Punjabi Butter Chicken', qty: 1, status: 'cooking' },
+                        { name: 'Garlic Naan', qty: 4, status: 'cooking' }
+                    ],
+                    status: 'placed',
+                    timestamp: Date.now() - (6 * 60000), 
+                    platform: 'swiggy'
+                },
+                {
+                    id: 48993,
+                    customerName: "Priya M.",
+                    tableNo: "N/A",
+                    total: "₹340",
+                    items: [
+                        { name: 'Paneer Butter Masala', qty: 1, status: 'cooking' },
+                        { name: 'Hot Gulab Jamun', qty: 2, status: 'cooking' }
+                    ],
+                    status: 'placed',
+                    timestamp: Date.now() - (2 * 60000), 
+                    platform: 'zomato'
+                },
+                {
+                    id: 48994,
+                    customerName: "Guest",
+                    tableNo: "4",
+                    total: "₹540",
+                    items: [
+                        { name: 'Chicken Tikka Dry', qty: 1, status: 'ready' },
+                        { name: 'Dal Makhani', qty: 1, status: 'cooking' }
+                    ],
+                    status: 'preparing',
+                    timestamp: Date.now() - (16 * 60000), 
+                    platform: 'direct'
+                }
+            ];
+            localStorage.setItem('skd_active_orders', JSON.stringify(samples));
+            return samples;
+        }
+
         function initSync() {
             try {
                 const raw = localStorage.getItem('skd_active_orders');
-                if (raw) {
-                    allOrders = JSON.parse(raw);
-                    if (!Array.isArray(allOrders)) allOrders = [];
+                
+                // If local storage is empty, populate with samples for testing
+                if (!raw || raw === "[]" || JSON.parse(raw).length === 0) {
+                    allOrders = injectSampleOrders();
                 } else {
-                    allOrders = [];
+                    allOrders = JSON.parse(raw);
                 }
+
+                if (!Array.isArray(allOrders)) allOrders = [];
 
                 renderDashboard();
                 
@@ -333,7 +395,7 @@
                 
             } catch(e) { 
                 console.error("Cashier Sync Error", e); 
-                allOrders = [];
+                allOrders = injectSampleOrders();
                 renderDashboard(); 
             }
         }
